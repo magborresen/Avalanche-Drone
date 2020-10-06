@@ -147,6 +147,25 @@ runWaypointMission(Vehicle* vehicle, uint8_t numWaypoints, int responseTimeout)
   else
   {
     std::cout << "Starting Waypoint Mission.\n";
+    sleep(5);
+    ACK::ErrorCode pauseAck = vehicle->missionManager->wpMission->stop(responseTimeout);
+    if (ACK::getError(pauseAck))
+    {
+        ACK::getErrorCodeMessage(initAck, __func__);
+    }
+    else
+    {
+        std::cout << "Pausing....\n";
+    }
+    //ACK::ErrorCode resumeAck = vehicle->missionManager->wpMission->resume(responseTimeout);
+    //if (ACK::getError(resumeAck))
+    //{
+    //    ACK::getErrorCodeMessage(initAck, __func__);
+    //}
+    //else
+    //{
+    //    std::cout << "Resuming...\n";
+    //}
   }
 
   // Cleanup before return. The mission isn't done yet, but it doesn't need any
