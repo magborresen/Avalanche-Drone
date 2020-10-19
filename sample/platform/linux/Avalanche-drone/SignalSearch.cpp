@@ -39,7 +39,7 @@ using namespace DJI::OSDK;
 using namespace DJI::OSDK::Telemetry;  
 
 std::ofstream myfile;
-string filename = "codeLog.txt";
+std::String filename = "codeLog.txt";
 
 void openFile(){
     myfile.open(filename,  std::ofstream::out | std::ofstream::trunc);
