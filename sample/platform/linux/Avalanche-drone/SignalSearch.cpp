@@ -38,15 +38,13 @@
 using namespace DJI::OSDK;
 using namespace DJI::OSDK::Telemetry;  
 
-std::ofstream myfile;
-std::String filename = "codeLog.txt";
+std::fstream myfile;
+std::string filename = "codeLog.txt";
 
-void openFile(){
+void openFile()
+{
     myfile.open(filename,  std::ofstream::out | std::ofstream::trunc);
-}
-
-void closeFile(){
-    myfile.close(filename);
+    myfile.close();
 }
 
 bool runSignalSearchMission(Vehicle* vehicle, uint8_t maxNumWaypoint, int responseTimeout)
@@ -87,7 +85,6 @@ bool runSignalSearchMission(Vehicle* vehicle, uint8_t maxNumWaypoint, int respon
     {
         std::cout << "Starting Waypoint Mission.\n";
     }
-    closeFile();
     return true;
 }
 
@@ -219,7 +216,6 @@ std::vector<DJI::OSDK::WayPointSettings> calculateWaypoints(Telemetry::GlobalPos
         }
         std::cout << "Point " << i << " - lat: " << wp.latitude << " long: " << wp. longitude << "\n";
     }
-    std:cout << "v0: " << v[0] << "v1" << v[1] << "\n";
     return wp_list;
 }
 
@@ -245,10 +241,11 @@ Telemetry::GlobalPosition turningPointCalculator(WayPointSettings pos1 , WayPoin
     //calculate unit vector
     vE_XY[0] = v_XY[0] / vD; 
     vE_XY[1] = v_XY[1] / vD; 
+    myfile.open(filename, std::fstream::out);
     myfile << "v[0]: " << v[0] << " v[1]: " << v[1] << "\n";
     myfile << "v_XY[0]: " << v_XY[0] << " v_XY[1]: " << v_XY[1] << "\n";
     myfile << "vD" << vD << "\n";
-
+    myfile.close();
     /*
         Using rotation matrix th = theta
               [ cos(th)    -sin(th) ]
