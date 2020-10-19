@@ -109,7 +109,7 @@ void setWaypointInitDefaults(WayPointInitSettings* fdata)
     fdata->gimbalPitch    = 0;
     fdata->latitude       = 0;
     fdata->longitude      = 0;
-    fdata->altitude       = 0;
+    fdata->altitude       = 3;
 }
 
 std::vector<DJI::OSDK::WayPointSettings> createWaypoints(DJI::OSDK::Vehicle* vehicle, int maxNumWaypoint, float32_t fly_alt)
