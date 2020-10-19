@@ -245,7 +245,7 @@ Telemetry::GlobalPosition turningPointCalculator(WayPointSettings pos1 , WayPoin
     myfile << "v[0]: " << v[0] << " v[1]: " << v[1] << "\n";
     myfile << "v_XY[0]: " << v_XY[0] << " v_XY[1]: " << v_XY[1] << "\n";
     myfile << "vD" << vD << "\n";
-    myfile.close();
+    
     /*
         Using rotation matrix th = theta
               [ cos(th)    -sin(th) ]
@@ -271,18 +271,24 @@ Telemetry::GlobalPosition turningPointCalculator(WayPointSettings pos1 , WayPoin
         nD_XY[1] = -1*vE_XY[0];
     }
 
+    myfile << "nD_XY[0]: " << nD_XY[0] << " nD_XY[1]: " << nD_XY[1] << "\n";
     //calculate new vector
     nD_XY[0] = nD_XY[0]*70;
     nD_XY[0] = nD_XY[1]*70;
-
+    myfile << "nD_XY[0]: " << nD_XY[0] << " nD_XY[1]: " << nD_XY[1] << "\n";
     //shift backto long/lat coordinates
     nD[0] = nD_XY[0] * latConvertionFactor;
     nD[1] = nD_XY[1] * longConvertionFactor;
+
+    myfile << "nD[0]: " << nD[0] << " nD[1]: " << nD[1] << "\n";
 
     Telemetry::GlobalPosition pos3;
     pos3.latitude = pos2.latitude + nD[0];
     pos3.longitude = pos2.longitude + nD[1];
 
+    myfile << "New lat: " << pos3.latitude << " long: " << pos3.longitude << "\n";
+
+    myfile.close();
     return pos3;
 }
 /*
