@@ -274,7 +274,7 @@ Telemetry::GlobalPosition turningPointCalculator(WayPointSettings pos1 , WayPoin
     myfile << "nD_XY[0]: " << nD_XY[0] << " nD_XY[1]: " << nD_XY[1] << "\n";
     //calculate new vector
     nD_XY[0] = nD_XY[0]*70;
-    nD_XY[0] = nD_XY[1]*70;
+    nD_XY[1] = nD_XY[1]*70;
     myfile << "nD_XY[0]: " << nD_XY[0] << " nD_XY[1]: " << nD_XY[1] << "\n";
     //shift backto long/lat coordinates
     nD[0] = nD_XY[0] * latConvertionFactor;
