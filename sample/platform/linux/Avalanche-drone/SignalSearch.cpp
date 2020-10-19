@@ -43,8 +43,7 @@ bool runSignalSearchMission(Vehicle* vehicle, uint8_t maxNumWaypoint, int respon
     // Waypoint Mission : Initialization
     WayPointInitSettings fdata;
     setWaypointInitDefaults(&fdata);
-
-    fdata.indexNumber = maxNumWaypoint+1; // Sets the max number of waypint + 1 for return to start 
+    fdata.indexNumber = maxNumWaypoint; // Sets the max number of waypint + 1 for return to start 
 
     float32_t fly_alt = 3; //sets the flying altitude to 3 meters
 
@@ -75,10 +74,9 @@ bool runSignalSearchMission(Vehicle* vehicle, uint8_t maxNumWaypoint, int respon
     else
     {
         std::cout << "Starting Waypoint Mission.\n";
-        sleep(5);
     }
     return true;
-    }
+}
 
 void setWaypointDefaults(WayPointSettings* wp)
 {
@@ -114,8 +112,6 @@ void setWaypointInitDefaults(WayPointInitSettings* fdata)
 
 std::vector<DJI::OSDK::WayPointSettings> createWaypoints(DJI::OSDK::Vehicle* vehicle, int maxNumWaypoint, float32_t fly_alt)
 {
-    // Global position retrieved via subscription
-    Telemetry::TypeMap<TOPIC_GPS_FUSED>::type subscribeGPosition;
     // Global position retrieved via broadcast
     Telemetry::GlobalPosition start_pos_1;
     Telemetry::GlobalPosition start_pos_2;
@@ -139,7 +135,7 @@ void uploadWaypoints(Vehicle* vehicle, std::vector<DJI::OSDK::WayPointSettings>&
 
 std::vector<DJI::OSDK::WayPointSettings> calculateWaypoints(Telemetry::GlobalPosition startPos1 , Telemetry::GlobalPosition startPos2, int maxWaypoints)
 {
-    double v_start[2]; //v vector 
+    float64_t v_start[2]; //v vector 
     std::vector<DJI::OSDK::WayPointSettings> wp_list;
     WayPointSettings prev_wp;
     WayPointSettings old_prev_wp;
@@ -153,6 +149,7 @@ std::vector<DJI::OSDK::WayPointSettings> calculateWaypoints(Telemetry::GlobalPos
     wp.latitude = startPos1.latitude;
     wp.longitude = startPos1.longitude;
     wp_list.push_back(wp);
+    std::cout << "Point " << 0 << " - lat: " << wp.latitude << " long: " << wp. longitude << "\n";
     prev_wp = wp;
     setWaypointDefaults(&wp);
     wp.index = 1;
@@ -161,6 +158,7 @@ std::vector<DJI::OSDK::WayPointSettings> calculateWaypoints(Telemetry::GlobalPos
     old_prev_wp = prev_wp;
     prev_wp = wp;
     wp_list.push_back(wp);
+    std::cout << "Point " << 1 << " - lat: " << wp.latitude << " long: " << wp. longitude << "\n";
 
     int state = 0;
 
@@ -214,13 +212,13 @@ std::vector<DJI::OSDK::WayPointSettings> calculateWaypoints(Telemetry::GlobalPos
 
 Telemetry::GlobalPosition turningPointCalculator(WayPointSettings pos1 , WayPointSettings pos2, int turnWay) //turnway:  0 = ccw, 1 = cw, 
 {
-    double latConvertionFactor    = 0.0000089829;
-    double longConvertionFactor   = 0.00001270; 
-    double v[2]; //v vector 
-    double v_XY[2]; //v in normal coordinates
-    double vE_XY[2]; //v vector as a unit vector
-    double nD_XY[2]; //new direction vector as a unit vector
-    double nD[2];
+    float64_t latConvertionFactor    = 0.0000089829;
+    float64_t longConvertionFactor   = 0.00001270; 
+    float64_t v[2]; //v vector 
+    float64_t v_XY[2]; //v in normal coordinates
+    float64_t vE_XY[2]; //v vector as a unit vector
+    float64_t nD_XY[2]; //new direction vector as a unit vector
+    float64_t nD[2];
     
     v[0] = pos2.latitude - pos1.latitude; //calculate v latitude
     v[1] = pos2.longitude - pos1.longitude; //calculate v longitude
@@ -229,7 +227,7 @@ Telemetry::GlobalPosition turningPointCalculator(WayPointSettings pos1 , WayPoin
     v_XY[0] = v[0] / latConvertionFactor;
     v_XY[1] = v[1] / longConvertionFactor;
     
-    double vD = sqrt(v_XY[0]*v_XY[0]+v_XY[1]*v_XY[1]); //calculate the distance between the two points
+    float64_t vD = sqrt(v_XY[0]*v_XY[0]+v_XY[1]*v_XY[1]); //calculate the distance between the two points
 
     //calculate unit vector
     vE_XY[0] = v_XY[0] / vD; 

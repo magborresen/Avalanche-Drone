@@ -32,8 +32,7 @@ std::vector<DJI::OSDK::WayPointSettings> calculateWaypoints(Telemetry::GlobalPos
 
 Telemetry::GlobalPosition turningPointCalculator(WayPointSettings pos1 , WayPointSettings pos2, int turnWay);
 
-const double latConvertionFactor    = 0.0000089829;
-const double longConvertionFactor   = 0.00001270;   
+
 
 
 #endif // SIGNAL_SEARCH_HPP
