@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8)
-project(djiosdk-mission-sample)
+project(Avalanche-drone)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -pthread -g -O0")
 
@@ -20,5 +20,5 @@ add_executable(${PROJECT_NAME}
     ${CMAKE_CURRENT_SOURCE_DIR}/../common/dji_linux_environment.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/../common/dji_linux_helpers.cpp
     main.cpp
-    mission_sample.cpp)
+    SignalSearch.cpp)
 target_link_libraries(${PROJECT_NAME} djiosdk-core)

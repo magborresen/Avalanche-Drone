@@ -53,6 +53,10 @@ main(int argc, char** argv)
     // Obtain Control Authority
     vehicle->obtainCtrlAuthority(functionTimeout);
 
+    runSignalSearchMission(vehicle, 10 , 1);
+
+    return 0;
+}
 
 
 /* OLD STUFF
@@ -88,5 +92,3 @@ main(int argc, char** argv)
       break;
   }
 */
-    return 0;
-}

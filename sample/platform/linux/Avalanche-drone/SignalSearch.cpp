@@ -36,7 +36,7 @@
 #include "SignalSearch.hpp"
 
 using namespace DJI::OSDK;
-using namespace DJI::OSDK::Telemetry;
+using namespace DJI::OSDK::Telemetry;  
 
 bool runSignalSearchMission(Vehicle* vehicle, uint8_t maxNumWaypoint, int responseTimeout)
 {
@@ -114,56 +114,17 @@ void setWaypointInitDefaults(WayPointInitSettings* fdata)
 
 std::vector<DJI::OSDK::WayPointSettings> createWaypoints(DJI::OSDK::Vehicle* vehicle, int maxNumWaypoint, float32_t fly_alt)
 {
-    // Create Start Waypoint
-    WayPointSettings start_wp;x
-    setWaypointDefaults(&start_wp);
-
     // Global position retrieved via subscription
     Telemetry::TypeMap<TOPIC_GPS_FUSED>::type subscribeGPosition;
     // Global position retrieved via broadcast
-    Telemetry::GlobalPosition broadcastGPosition;
-
+    Telemetry::GlobalPosition start_pos_1;
+    Telemetry::GlobalPosition start_pos_2;
     //gets the current GPS position of the drone
-    broadcastGPosition = vehicle->broadcast->getGlobalPosition();
-    start_wp.latitude  = broadcastGPosition.latitude;
-    start_wp.longitude = broadcastGPosition.longitude;
-    start_wp.altitude  = start_alt;
-    printf("Waypoint created at (LLA): %f \t%f \t%f\n", broadcastGPosition.latitude, broadcastGPosition.longitude, start_alt);
-    std::vector<DJI::OSDK::WayPointSettings> wpVector = generateBoustrophedonWaypoints(&start_wp, maxNumWaypoint);
+    start_pos_1 = vehicle->broadcast->getGlobalPosition();
+    start_pos_2 = start_pos_1;
+    start_pos_2.longitude = start_pos_2.longitude + 0.001270; //move second starting point 100meter in longitude 
+    std::vector<DJI::OSDK::WayPointSettings> wpVector = calculateWaypoints(start_pos_1, start_pos_2, maxNumWaypoint);
     return wpVector;
-}
-
-std::vector<DJI::OSDK::WayPointSettings> generateBoustrophedonWaypoints(WayPointSettings* start_data, int max_wp)
-{
-
-    // Let's create a vector to store our waypoints in.
-    std::vector<DJI::OSDK::WayPointSettings> wp_list;
-
-    //Calculation for second start point
-
-
-    // First waypoint
-    start_data->index = 0;
-    wp_list.push_back(*start_data);
-
-    // Iterative algorithm
-    for (int i = 1; i < num_wp; i++)
-    {
-        WayPointSettings  wp;
-        WayPointSettings* prevWp = &wp_list[i - 1];
-        setWaypointDefaults(&wp);
-        wp.index     = i;
-        wp.latitude  = (prevWp->latitude + (increment * cos(i * extAngle)));
-        wp.longitude = (prevWp->longitude + (increment * sin(i * extAngle)));
-        wp.altitude  = (prevWp->altitude + 1);
-        wp_list.push_back(wp);
-    }
-
-    // Come back home
-    start_data->index = num_wp;
-    wp_list.push_back(*start_data);
-
-    return wp_list;
 }
 
 void uploadWaypoints(Vehicle* vehicle, std::vector<DJI::OSDK::WayPointSettings>& wp_list, int responseTimeout)
@@ -176,7 +137,144 @@ void uploadWaypoints(Vehicle* vehicle, std::vector<DJI::OSDK::WayPointSettings>&
     }
 }
 
-float64_t distanceBetweenGPS(Telemetry::GlobalPosition pos1 , Telemetry::GlobalPosition pos2){ //algoritme stolen from https://www.movable-type.co.uk/scripts/latlong.html
+std::vector<DJI::OSDK::WayPointSettings> calculateWaypoints(Telemetry::GlobalPosition startPos1 , Telemetry::GlobalPosition startPos2, int maxWaypoints)
+{
+    double v_start[2]; //v vector 
+    std::vector<DJI::OSDK::WayPointSettings> wp_list;
+    WayPointSettings prev_wp;
+    WayPointSettings old_prev_wp;
+    v_start[0] = startPos2.latitude - startPos1.latitude; //calculate v latitude
+    v_start[1] = startPos2.longitude - startPos1.longitude; //calculate v longitude
+    
+    //load wp_list with the first two points
+    WayPointSettings  wp;
+    setWaypointDefaults(&wp);
+    wp.index = 0;
+    wp.latitude = startPos1.latitude;
+    wp.longitude = startPos1.longitude;
+    wp_list.push_back(wp);
+    prev_wp = wp;
+    setWaypointDefaults(&wp);
+    wp.index = 1;
+    wp.latitude = startPos2.latitude;
+    wp.longitude = startPos2.longitude;
+    old_prev_wp = prev_wp;
+    prev_wp = wp;
+    wp_list.push_back(wp);
+
+    int state = 0;
+
+    for(int i = 2; i < maxWaypoints ; i++){
+        if(state == 0){
+            Telemetry::GlobalPosition tp1 = turningPointCalculator(old_prev_wp, prev_wp, 0);
+            setWaypointDefaults(&wp);
+            wp.index = i;
+            wp.latitude = tp1.latitude;
+            wp.longitude = tp1.longitude;
+            old_prev_wp = prev_wp;
+            prev_wp = wp;
+            wp_list.push_back(wp);
+            state = 1;
+        }
+        else if(state == 1){
+            setWaypointDefaults(&wp);
+            wp.index = i;
+            wp.latitude = prev_wp.latitude + (-1*v_start[0]);
+            wp.longitude = prev_wp.longitude + (-1*v_start[1]);
+            old_prev_wp = prev_wp;
+            prev_wp = wp;
+            wp_list.push_back(wp);
+            state = 2;
+        }
+        else if(state == 2){
+            Telemetry::GlobalPosition tp2 = turningPointCalculator(old_prev_wp, prev_wp, 1);
+            wp.index = i;
+            wp.latitude = tp2.latitude;
+            wp.longitude = tp2.longitude;
+            old_prev_wp = prev_wp;
+            prev_wp = wp;
+            wp_list.push_back(wp);
+            state = 3;
+        }
+        else if(state == 3){
+            setWaypointDefaults(&wp);
+            wp.index = i;
+            wp.latitude = prev_wp.latitude + v_start[0];
+            wp.longitude = prev_wp.longitude + v_start[1];
+            old_prev_wp = prev_wp;
+            prev_wp = wp;
+            wp_list.push_back(wp);
+            state = 0;
+        }
+        std::cout << "Point " << i << " - lat: " << wp.latitude << " long: " << wp. longitude << "\n";
+    }
+
+    return wp_list;
+}
+
+Telemetry::GlobalPosition turningPointCalculator(WayPointSettings pos1 , WayPointSettings pos2, int turnWay) //turnway:  0 = ccw, 1 = cw, 
+{
+    double latConvertionFactor    = 0.0000089829;
+    double longConvertionFactor   = 0.00001270; 
+    double v[2]; //v vector 
+    double v_XY[2]; //v in normal coordinates
+    double vE_XY[2]; //v vector as a unit vector
+    double nD_XY[2]; //new direction vector as a unit vector
+    double nD[2];
+    
+    v[0] = pos2.latitude - pos1.latitude; //calculate v latitude
+    v[1] = pos2.longitude - pos1.longitude; //calculate v longitude
+    
+    //Shift vector to normal coordinate system
+    v_XY[0] = v[0] / latConvertionFactor;
+    v_XY[1] = v[1] / longConvertionFactor;
+    
+    double vD = sqrt(v_XY[0]*v_XY[0]+v_XY[1]*v_XY[1]); //calculate the distance between the two points
+
+    //calculate unit vector
+    vE_XY[0] = v_XY[0] / vD; 
+    vE_XY[1] = v_XY[1] / vD; 
+    /*
+        Using rotation matrix th = theta
+              [ cos(th)    -sin(th) ]
+        Rot = [ sin(th)     cos(th) ]
+                
+        For making a 90 degrees turn th = 90
+              [ 0   -1 ]
+        rot = [ 1    0 ]
+        The matrix computation therefore yields:
+                  [ 0   -1 ]   [a]    [ -b ]
+        rot * v = [ 1    0 ] * [b] =  [ a  ]
+    */
+
+    //calculate the new direction unit vector from rotation  
+    if(turnWay == 0) //rotate counter clockwise
+    {
+        nD_XY[0] = -1*vE_XY[1];
+        nD_XY[1] = vE_XY[0];
+    }
+    else if(turnWay == 1)
+    {
+        nD_XY[0] = vE_XY[1];
+        nD_XY[1] = -1*vE_XY[0];
+    }
+
+    //calculate new vector
+    nD_XY[0] = nD_XY[0]*70;
+    nD_XY[0] = nD_XY[1]*70;
+
+    //shift backto long/lat coordinates
+    nD[0] = nD_XY[0] * latConvertionFactor;
+    nD[1] = nD_XY[1] * longConvertionFactor;
+
+    Telemetry::GlobalPosition pos3;
+    pos3.latitude = pos2.latitude + nD[0];
+    pos3.longitude = pos2.longitude + nD[1];
+
+    return pos3;
+}
+/*
+float64_t distanceBetweenGPS(Telemetry::GlobalPosition pos1 , Telemetry::GlobalPosition po2){ //algoritme stolen from https://www.movable-type.co.uk/scripts/latlong.html
     R = 6373*10^3; //jordens radius
     distanceLongitude = pos1->longitude - pos2->longitude;
     distanceLatidude = pos1->latitude - pos2->latitude;
@@ -185,3 +283,4 @@ float64_t distanceBetweenGPS(Telemetry::GlobalPosition pos1 , Telemetry::GlobalP
     float64_t distance = R * c;
     return distance;
 }
+*/
