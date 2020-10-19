@@ -38,8 +38,20 @@
 using namespace DJI::OSDK;
 using namespace DJI::OSDK::Telemetry;  
 
+std::ofstream myfile;
+string filename = "codeLog.txt";
+
+void openFile(){
+    myfile.open(filename,  std::ofstream::out | std::ofstream::trunc);
+}
+
+void closeFile(){
+    myfile.close(filename);
+}
+
 bool runSignalSearchMission(Vehicle* vehicle, uint8_t maxNumWaypoint, int responseTimeout)
 {
+    openFile();
     // Waypoint Mission : Initialization
     WayPointInitSettings fdata;
     setWaypointInitDefaults(&fdata);
@@ -75,6 +87,7 @@ bool runSignalSearchMission(Vehicle* vehicle, uint8_t maxNumWaypoint, int respon
     {
         std::cout << "Starting Waypoint Mission.\n";
     }
+    closeFile();
     return true;
 }
 
@@ -88,6 +101,7 @@ void setWaypointDefaults(WayPointSettings* wp)
     wp->actionTimeLimit = 100;
     wp->actionNumber    = 0;
     wp->actionRepeat    = 0;
+    wp->altitude        = 3;
     for (int i = 0; i < 16; ++i)
     {
         wp->commandList[i]      = 0;
@@ -107,7 +121,7 @@ void setWaypointInitDefaults(WayPointInitSettings* fdata)
     fdata->gimbalPitch    = 0;
     fdata->latitude       = 0;
     fdata->longitude      = 0;
-    fdata->altitude       = 3;
+    fdata->altitude       = 0;
 }
 
 std::vector<DJI::OSDK::WayPointSettings> createWaypoints(DJI::OSDK::Vehicle* vehicle, int maxNumWaypoint, float32_t fly_alt)
@@ -141,7 +155,6 @@ std::vector<DJI::OSDK::WayPointSettings> calculateWaypoints(Telemetry::GlobalPos
     WayPointSettings old_prev_wp;
     v_start[0] = startPos2.latitude - startPos1.latitude; //calculate v latitude
     v_start[1] = startPos2.longitude - startPos1.longitude; //calculate v longitude
-    
     //load wp_list with the first two points
     WayPointSettings  wp;
     setWaypointDefaults(&wp);
@@ -206,7 +219,7 @@ std::vector<DJI::OSDK::WayPointSettings> calculateWaypoints(Telemetry::GlobalPos
         }
         std::cout << "Point " << i << " - lat: " << wp.latitude << " long: " << wp. longitude << "\n";
     }
-
+    std:cout << "v0: " << v[0] << "v1" << v[1] << "\n";
     return wp_list;
 }
 
@@ -232,6 +245,10 @@ Telemetry::GlobalPosition turningPointCalculator(WayPointSettings pos1 , WayPoin
     //calculate unit vector
     vE_XY[0] = v_XY[0] / vD; 
     vE_XY[1] = v_XY[1] / vD; 
+    myfile << "v[0]: " << v[0] << " v[1]: " << v[1] << "\n";
+    myfile << "v_XY[0]: " << v_XY[0] << " v_XY[1]: " << v_XY[1] << "\n";
+    myfile << "vD" << vD << "\n";
+
     /*
         Using rotation matrix th = theta
               [ cos(th)    -sin(th) ]

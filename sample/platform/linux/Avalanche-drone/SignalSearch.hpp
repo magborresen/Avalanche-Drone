@@ -11,6 +11,9 @@
 #include <cmath>
 #include <vector>
 
+#include <iostream>
+#include <fstream>
+
 // DJI OSDK includes
 #include <dji_vehicle.hpp>
 #include <dji_telemetry.hpp>
