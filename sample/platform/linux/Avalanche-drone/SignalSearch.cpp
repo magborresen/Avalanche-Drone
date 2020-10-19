@@ -221,8 +221,8 @@ std::vector<DJI::OSDK::WayPointSettings> calculateWaypoints(Telemetry::GlobalPos
 
 Telemetry::GlobalPosition turningPointCalculator(WayPointSettings pos1 , WayPointSettings pos2, int turnWay) //turnway:  0 = ccw, 1 = cw, 
 {
-    float64_t latConvertionFactor    = 0.0000089829;
-    float64_t longConvertionFactor   = 0.00001270; 
+    float64_t latConvertionFactor    = 0.00000001567848; //TODO: FIX CONVERTIONFACTOR
+    float64_t longConvertionFactor   = 0.00001270*3.14592/180; //TODO: FIX CONVERTIONFACTOR
     float64_t v[2]; //v vector 
     float64_t v_XY[2]; //v in normal coordinates
     float64_t vE_XY[2]; //v vector as a unit vector
