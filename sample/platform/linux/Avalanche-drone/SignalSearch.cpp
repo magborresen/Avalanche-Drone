@@ -56,7 +56,7 @@ void openFile()
 
 void calcLatConvertionFactor(float64_t lat)
 {
-    smallCircleRadius = earthRadius * std::sin(pi/2 - lat); //calculate circle of sphere radius
+    float64_t smallCircleRadius = earthRadius * std::sin(pi/2 - lat); //calculate circle of sphere radius
     //smallCircleCircumstance = 2 * smallCircleRadius * pi; //calculate circle of sphere circumstance
     //latMeterPerRad = smallCircleCircumstance / (2*pi) //calculate meter per radian
     latConvertionFactor = 1 / smallCircleRadius;
