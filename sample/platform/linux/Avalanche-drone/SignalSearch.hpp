@@ -37,5 +37,6 @@ Telemetry::GlobalPosition turningPointCalculator(WayPointSettings pos1 , WayPoin
 
 void openFile();
 
+void calcLatConvertionFactor();
 
 #endif // SIGNAL_SEARCH_HPP

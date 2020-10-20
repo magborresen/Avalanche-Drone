@@ -41,10 +41,25 @@ using namespace DJI::OSDK::Telemetry;
 std::fstream myfile;
 std::string filename = "codeLog.txt";
 
+float64_t latConvertionFactor    = 0.0000001567848; //deafult latconvertion is for 45 degrees
+float64_t longConvertionFactor   = 0.00001270*3.14592/180; //deafult longitude, doesn't depend on position
+
+const int earthRadius = 6378137;
+const float64_t pi = 3.14159265359;
+
+//function for clearing log file
 void openFile()
 {
     myfile.open(filename,  std::ofstream::out | std::ofstream::trunc);
     myfile.close();
+}
+
+void calcLatConvertionFactor(float64_t lat)
+{
+    smallCircleRadius = earthRadius * std::sin(pi/2 - lat); //calculate circle of sphere radius
+    //smallCircleCircumstance = 2 * smallCircleRadius * pi; //calculate circle of sphere circumstance
+    //latMeterPerRad = smallCircleCircumstance / (2*pi) //calculate meter per radian
+    latConvertionFactor = 1 / smallCircleRadius;
 }
 
 bool runSignalSearchMission(Vehicle* vehicle, uint8_t maxNumWaypoint, int responseTimeout)
@@ -109,7 +124,7 @@ void setWaypointDefaults(WayPointSettings* wp)
 void setWaypointInitDefaults(WayPointInitSettings* fdata)
 {
     fdata->maxVelocity    = 15;
-    fdata->idleVelocity   = 5;
+    fdata->idleVelocity   = 10;
     fdata->finishAction   = 0;
     fdata->executiveTimes = 1;
     fdata->yawMode        = 0;
@@ -130,6 +145,7 @@ std::vector<DJI::OSDK::WayPointSettings> createWaypoints(DJI::OSDK::Vehicle* veh
     start_pos_1 = vehicle->broadcast->getGlobalPosition();
     start_pos_2 = start_pos_1;
     start_pos_2.longitude = start_pos_2.longitude + (0.001270*3.14592/180); //move second starting point 100meter in longitude 
+    calcLatConvertionFactor(start_pos_1.latitude);
     std::vector<DJI::OSDK::WayPointSettings> wpVector = calculateWaypoints(start_pos_1, start_pos_2, maxNumWaypoint);
     return wpVector;
 }
@@ -221,8 +237,7 @@ std::vector<DJI::OSDK::WayPointSettings> calculateWaypoints(Telemetry::GlobalPos
 
 Telemetry::GlobalPosition turningPointCalculator(WayPointSettings pos1 , WayPointSettings pos2, int turnWay) //turnway:  0 = ccw, 1 = cw, 
 {
-    float64_t latConvertionFactor    = 0.00000001567848; //TODO: FIX CONVERTIONFACTOR
-    float64_t longConvertionFactor   = 0.00001270*3.14592/180; //TODO: FIX CONVERTIONFACTOR
+    
     float64_t v[2]; //v vector 
     float64_t v_XY[2]; //v in normal coordinates
     float64_t vE_XY[2]; //v vector as a unit vector
@@ -232,7 +247,7 @@ Telemetry::GlobalPosition turningPointCalculator(WayPointSettings pos1 , WayPoin
     v[0] = pos2.latitude - pos1.latitude; //calculate v latitude
     v[1] = pos2.longitude - pos1.longitude; //calculate v longitude
     
-    //Shift vector to normal coordinate system
+    //Shift vector to meter coordinate system
     v_XY[0] = v[0] / latConvertionFactor;
     v_XY[1] = v[1] / longConvertionFactor;
     
@@ -291,14 +306,4 @@ Telemetry::GlobalPosition turningPointCalculator(WayPointSettings pos1 , WayPoin
     myfile.close();
     return pos3;
 }
-/*
-float64_t distanceBetweenGPS(Telemetry::GlobalPosition pos1 , Telemetry::GlobalPosition po2){ //algoritme stolen from https://www.movable-type.co.uk/scripts/latlong.html
-    R = 6373*10^3; //jordens radius
-    distanceLongitude = pos1->longitude - pos2->longitude;
-    distanceLatidude = pos1->latitude - pos2->latitude;
-    float64_t a = (sin(distanceLatidude/2))^2+cos(pos1->latitude)*cos(pos2->latitude)*(sin(distanceLongitud/2))^2;
-    float64_t c = 2 * atan2( sqrt(a), sqrt(1-a));
-    float64_t distance = R * c;
-    return distance;
-}
-*/
+
