@@ -144,7 +144,7 @@ std::vector<DJI::OSDK::WayPointSettings> createWaypoints(DJI::OSDK::Vehicle* veh
     //gets the current GPS position of the drone
     start_pos_1 = vehicle->broadcast->getGlobalPosition();
     start_pos_2 = start_pos_1;
-    start_pos_2.longitude = start_pos_2.longitude + (0.001270*3.14592/180); //move second starting point 100meter in longitude 
+    start_pos_2.longitude = start_pos_2.longitude + (longConvertionFactor*100*3.14592/180); //move second starting point 100meter in longitude 
     calcLatConvertionFactor(start_pos_1.latitude);
     std::vector<DJI::OSDK::WayPointSettings> wpVector = calculateWaypoints(start_pos_1, start_pos_2, maxNumWaypoint);
     return wpVector;
