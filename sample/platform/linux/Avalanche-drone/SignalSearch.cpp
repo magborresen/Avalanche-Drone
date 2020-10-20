@@ -38,14 +38,14 @@
 using namespace DJI::OSDK;
 using namespace DJI::OSDK::Telemetry;  
 
+const int earthRadius = 6378137;
+const float64_t pi = 3.14159265359;
+
 std::fstream myfile;
 std::string filename = "codeLog.txt";
 
 float64_t latConvertionFactor    = 0.0000001567848; //deafult latconvertion is for 45 degrees
-float64_t longConvertionFactor   = 0.00001270*3.14592/180; //deafult longitude, doesn't depend on position
-
-const int earthRadius = 6378137;
-const float64_t pi = 3.14159265359;
+float64_t longConvertionFactor   = 2*pi/(earthRadius*2*pi); //deafult longitude, doesn't depend on position
 
 //function for clearing log file
 void openFile()
