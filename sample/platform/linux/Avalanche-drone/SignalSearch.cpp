@@ -186,10 +186,25 @@ std::vector<DJI::OSDK::WayPointSettings> calculateWaypoints(Telemetry::GlobalPos
     wp_list.push_back(wp);
     std::cout << "Point " << 1 << " - lat: " << wp.latitude << " long: " << wp. longitude << "\n";
 
+    //calculate the next points using a state machine
+    /*
+                       state = 3
+                          v
+                    o-----------o
+                    |
+       state = 2 -> |    state = 1
+                    |       v
+                    o-----------o
+                                |
+                                | <- state = 0
+                                |
+                    o-----------o
+    */
     int state = 0;
 
     for(int i = 2; i < maxWaypoints ; i++){
         if(state == 0){
+            //calculate first turning point counter clockwise
             Telemetry::GlobalPosition tp1 = turningPointCalculator(old_prev_wp, prev_wp, 0);
             setWaypointDefaults(&wp);
             wp.index = i;
@@ -201,6 +216,7 @@ std::vector<DJI::OSDK::WayPointSettings> calculateWaypoints(Telemetry::GlobalPos
             state = 1;
         }
         else if(state == 1){
+            //calculate next point, same vector as first line just opposite direction
             setWaypointDefaults(&wp);
             wp.index = i;
             wp.latitude = prev_wp.latitude + (-1*v_start[0]);
@@ -211,6 +227,7 @@ std::vector<DJI::OSDK::WayPointSettings> calculateWaypoints(Telemetry::GlobalPos
             state = 2;
         }
         else if(state == 2){
+            //calculate turning point clockwise
             Telemetry::GlobalPosition tp2 = turningPointCalculator(old_prev_wp, prev_wp, 1);
             wp.index = i;
             wp.latitude = tp2.latitude;
@@ -221,6 +238,7 @@ std::vector<DJI::OSDK::WayPointSettings> calculateWaypoints(Telemetry::GlobalPos
             state = 3;
         }
         else if(state == 3){
+            //calculate line point from the first vector line.
             setWaypointDefaults(&wp);
             wp.index = i;
             wp.latitude = prev_wp.latitude + v_start[0];
@@ -242,7 +260,7 @@ Telemetry::GlobalPosition turningPointCalculator(WayPointSettings pos1 , WayPoin
     float64_t v_XY[2]; //v in normal coordinates
     float64_t vE_XY[2]; //v vector as a unit vector
     float64_t nD_XY[2]; //new direction vector as a unit vector
-    float64_t nD[2];
+    float64_t nD[2]; //new direction vector in GPS coordinates
     
     v[0] = pos2.latitude - pos1.latitude; //calculate v latitude
     v[1] = pos2.longitude - pos1.longitude; //calculate v longitude
@@ -298,6 +316,7 @@ Telemetry::GlobalPosition turningPointCalculator(WayPointSettings pos1 , WayPoin
     myfile << "nD[0]: " << nD[0] << " nD[1]: " << nD[1] << "\n";
 
     Telemetry::GlobalPosition pos3;
+    //calculate the point for the turning point to end up in.
     pos3.latitude = pos2.latitude + nD[0];
     pos3.longitude = pos2.longitude + nD[1];
 
