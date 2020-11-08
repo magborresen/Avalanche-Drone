@@ -31,6 +31,7 @@
  */
 
 #include "SignalSearch.hpp"
+#include <wiringPi.h>
 
 using namespace DJI::OSDK;
 using namespace DJI::OSDK::Telemetry;
@@ -38,24 +39,31 @@ using namespace DJI::OSDK::Telemetry;
 int
 main(int argc, char** argv)
 {
-    // Initialize variables
-    int functionTimeout = 1;
+  wiringPiSetup () ;
+  pinMode (1, OUTPUT) ;
+  // Initialize variables
+  int functionTimeout = 1;
 
-    // Setup OSDK.
-    LinuxSetup linuxEnvironment(argc, argv);
-    Vehicle*   vehicle = linuxEnvironment.getVehicle();
-    if (vehicle == NULL)
-    {
-        std::cout << "Vehicle not initialized, exiting.\n";
-        return -1;
-    }
+  // Setup OSDK.
+  LinuxSetup linuxEnvironment(argc, argv);
+  Vehicle*   vehicle = linuxEnvironment.getVehicle();
+  if (vehicle == NULL)
+  {
+      std::cout << "Vehicle not initialized, exiting.\n";
+      return -1;
+  }
 
-    // Obtain Control Authority
-    vehicle->obtainCtrlAuthority(functionTimeout);
+  // Obtain Control Authority
+  vehicle->obtainCtrlAuthority(functionTimeout);
 
-    runSignalSearchMission(vehicle, 5 , 1);
-
-    return 0;
+  runSignalSearchMission(vehicle, 8 , 1);
+  
+  for (;;)
+  {
+    digitalWrite (1, HIGH) ; delay (500) ;
+    digitalWrite (1,  LOW) ; delay (500) ;
+  }
+  return 0;
 }
 
 
