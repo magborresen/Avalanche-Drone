@@ -20,8 +20,9 @@ add_executable(${PROJECT_NAME}
     ${CMAKE_CURRENT_SOURCE_DIR}/../common/dji_linux_environment.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/../common/dji_linux_helpers.cpp
     main.cpp
-    SignalSearch.cpp)
+    SignalSearch.cpp
+	StepResponse.cpp)
 
-find_library(WIRINGPI_LIBRARIES NAMES wiringPi)
-target_link_libraries(${PROJECT_NAME} ${WIRINGPI_LIBRARIES})
+#find_library(WIRINGPI_LIBRARIES NAMES wiringPi)
+#target_link_libraries(${PROJECT_NAME} ${WIRINGPI_LIBRARIES})
 target_link_libraries(${PROJECT_NAME} djiosdk-core)
