@@ -1,6 +1,3 @@
-
-
-
 /*! @file mission_sample.cpp
  *  @version 3.3
  *  @date Jun 05 2017

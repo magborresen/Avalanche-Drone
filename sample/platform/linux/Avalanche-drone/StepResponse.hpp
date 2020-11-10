@@ -16,6 +16,10 @@
 // DJI OSDK includes
 #include <dji_vehicle.hpp>
 #include <dji_telemetry.hpp>
+#include <dji_control.hpp>
 
 // Helpers
 #include <dji_linux_helpers.hpp>
+
+
+#endif 
