@@ -10,7 +10,7 @@ std::string logFile = "logFile.txt";
 
 void clearFile()
 {
-    myFile.open(logFile,  std::ofstream::out | std::ofstream::trunc);
+    myFile.open(logFile, std::ofstream::trunc);
     myFile.close();
 }
 
