@@ -73,7 +73,7 @@ void doStep(Vehicle* vehicle)
 	std::cout << "Rotating";
 	vehicle->control->positionAndYawCtrl(xPos, yPos, zPos, yawPos);
 	usleep(5000000);
-	yawPosos = 180;
+	yawPos = 180;
 	vehicle->control->positionAndYawCtrl(xPos, yPos, zPos, yawPos);
 	getYaw(vehicle, measuringTimeMs);
 	
