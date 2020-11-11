@@ -4,9 +4,6 @@
 using namespace DJI::OSDK;
 using namespace DJI::OSDK::Telemetry;
 
-
-
-
 std::fstream myFile;
 std::string logFile = "logFile.txt";
 // Create a function to get the yaw that takes the vehicle as a parameter and a timeout parameter
@@ -19,7 +16,7 @@ void clearFile()
 
 void appendToFile(float yaw, uint32_t timeStamp)
 {
-	myFile.open(logFile, std::ios_base::app);
+	myFile.open(logFile, std::fstream::out | std::ios_base::app);
 	myFile << yaw << "," << timeStamp;
 	myFile << "\n";
 	myFile.close();
@@ -312,12 +309,13 @@ void doStep(Vehicle* vehicle)
 	//vehicle->control->velocityAndYawRateCtrl(xCmd, yCmd, zCmd, yawCmd);
 	std::cout << "Yaw Rate set..." << "\n";
 	usleep(1000*1000);
-	std::cout << "Rotating";
+	std::cout << "Rotating..." << "\n";
 	vehicle->control->positionAndYawCtrl(xPos, yPos, zPos, yawPos);
 	usleep(5000000);
-	yawPos = 180;
+	yawPos = 3.14;
 	vehicle->control->positionAndYawCtrl(xPos, yPos, zPos, yawPos);
 	usleep(1000*1000);
+	cout << "Rotated..." << "\n";
 	getYaw(vehicle, measuringTimeMs);
 	
 	
