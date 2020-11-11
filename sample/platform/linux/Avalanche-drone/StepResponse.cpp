@@ -5,8 +5,7 @@ using namespace DJI::OSDK;
 using namespace DJI::OSDK::Telemetry;
 
 
-Telemetry::Quaternion quaternion;
-Telemetry::TimeStamp timeStamp;
+
 
 std::fstream myFile;
 std::string logFile = "logFile.txt";
@@ -28,6 +27,11 @@ void appendToFile(float yaw, uint32_t timeStamp)
 
 void getYaw(Vehicle* vehicle, int timeoutParamInMs)
 {
+	Telemetry::Quaternion quaternion;
+	Telemetry::TimeStamp timeStamp;
+	const int TIMEOUT = 20;
+	ACK::ErrorCode ack = vehicle->broadcast->setBroadcastFreqDefaults(TIMEOUT);
+	
 	float yaw;
 	int elapsedTimeInMs = 0;
 	while(elapsedTimeInMs < timeoutParamInMs)
@@ -54,7 +58,8 @@ void doStep(Vehicle* vehicle)
 	float xPos = 0;
 	float yPos = 0;
 	float zPos = 2;
-	float yawPos = 180;
+	float yawPos = 0;
+	
 	
 	int measuringTimeMs = 5000;
 	
@@ -66,6 +71,9 @@ void doStep(Vehicle* vehicle)
 	vehicle->control->velocityAndYawRateCtrl(xCmd, yCmd, zCmd, yawCmd);
 	std::cout << "Yaw Rate set...";
 	std::cout << "Rotating";
+	vehicle->control->positionAndYawCtrl(xPos, yPos, zPos, yawPos);
+	msleep(5000);
+	yawpos = 180;
 	vehicle->control->positionAndYawCtrl(xPos, yPos, zPos, yawPos);
 	getYaw(vehicle, measuringTimeMs);
 	
