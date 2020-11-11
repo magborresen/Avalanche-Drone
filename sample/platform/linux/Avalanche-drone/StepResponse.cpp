@@ -64,12 +64,14 @@ void doStep(Vehicle* vehicle)
 	int measuringTimeMs = 5000;
 	
 	clearFile();
-	std::cout << "Taking off...";
+	std::cout << "Taking off..." << "\n";
 	vehicle->control->takeoff();
-	std::cout << "TakeOff succeeded...";
-	std::cout << "Setting Yaw rate...";
+	std::cout << "TakeOff succeeded..." << "\n";
+	usleep(1000*1000);
+	std::cout << "Setting Yaw rate..." << "\n";
 	vehicle->control->velocityAndYawRateCtrl(xCmd, yCmd, zCmd, yawCmd);
-	std::cout << "Yaw Rate set...";
+	std::cout << "Yaw Rate set..." << "\n";
+	usleep(1000*1000);
 	std::cout << "Rotating";
 	vehicle->control->positionAndYawCtrl(xPos, yPos, zPos, yawPos);
 	usleep(5000000);
