@@ -31,6 +31,7 @@
  */
 
 #include "SignalSearch.hpp"
+#include "StepResponse.hpp"
 //#include <wiringPi.h>
 
 using namespace DJI::OSDK;
@@ -55,6 +56,8 @@ main(int argc, char** argv)
 
 	// Obtain Control Authority
 	vehicle->obtainCtrlAuthority(functionTimeout);
+	
+	doStep(vehicle);
 	
 	//Run Step Response test
 	
