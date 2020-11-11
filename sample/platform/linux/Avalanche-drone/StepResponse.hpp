@@ -21,6 +21,9 @@
 // Helpers
 #include <dji_linux_helpers.hpp>
 
+#define C_EARTH (double)6378137.0
+#define DEG2RAD 0.01745329252
+
 void doStep(Vehicle* vehicle);
 
 void getYaw(Vehicle* vehicle, int timeoutParamInMs);
@@ -30,5 +33,13 @@ void appendToFile(float yaw, uint32_t timeStamp);
 void clearFile();
 
 bool monitoredTakeoff(Vehicle* vehicle, int timeout = 1);
+
+bool moveByPositionOffset(DJI::OSDK::Vehicle *vehicle, float xOffsetDesired, float yOffsetDesired, float zOffsetDesired, float yawDesired, float posThresholdInM = 0.5,float yawThresholdInDeg = 1.0);
+						  
+void localOffsetFromGpsOffset(DJI::OSDK::Vehicle*             vehicle,
+                              DJI::OSDK::Telemetry::Vector3f& deltaNed,
+                              void* target, void* origin);
+
+DJI::OSDK::Telemetry::Vector3f toEulerAngle(void* quaternionData);
 
 #endif 

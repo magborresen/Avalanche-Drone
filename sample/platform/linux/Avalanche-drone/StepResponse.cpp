@@ -574,6 +574,65 @@ moveByPositionOffset(Vehicle *vehicle, float xOffsetDesired,
   return ACK::SUCCESS;
 }
 
+Telemetry::Vector3f
+toEulerAngle(void* quaternionData)
+{
+  Telemetry::Vector3f    ans;
+  Telemetry::Quaternion* quaternion = (Telemetry::Quaternion*)quaternionData;
+
+  double q2sqr = quaternion->q2 * quaternion->q2;
+  double t0    = -2.0 * (q2sqr + quaternion->q3 * quaternion->q3) + 1.0;
+  double t1 =
+    +2.0 * (quaternion->q1 * quaternion->q2 + quaternion->q0 * quaternion->q3);
+  double t2 =
+    -2.0 * (quaternion->q1 * quaternion->q3 - quaternion->q0 * quaternion->q2);
+  double t3 =
+    +2.0 * (quaternion->q2 * quaternion->q3 + quaternion->q0 * quaternion->q1);
+  double t4 = -2.0 * (quaternion->q1 * quaternion->q1 + q2sqr) + 1.0;
+
+  t2 = (t2 > 1.0) ? 1.0 : t2;
+  t2 = (t2 < -1.0) ? -1.0 : t2;
+
+  ans.x = asin(t2);
+  ans.y = atan2(t3, t4);
+  ans.z = atan2(t1, t0);
+
+  return ans;
+}
+
+void
+localOffsetFromGpsOffset(Vehicle* vehicle, Telemetry::Vector3f& deltaNed,
+                         void* target, void* origin)
+{
+  Telemetry::GPSFused*       subscriptionTarget;
+  Telemetry::GPSFused*       subscriptionOrigin;
+  Telemetry::GlobalPosition* broadcastTarget;
+  Telemetry::GlobalPosition* broadcastOrigin;
+  double                     deltaLon;
+  double                     deltaLat;
+
+  if (!vehicle->isM100() && !vehicle->isLegacyM600())
+  {
+    subscriptionTarget = (Telemetry::GPSFused*)target;
+    subscriptionOrigin = (Telemetry::GPSFused*)origin;
+    deltaLon   = subscriptionTarget->longitude - subscriptionOrigin->longitude;
+    deltaLat   = subscriptionTarget->latitude - subscriptionOrigin->latitude;
+    deltaNed.x = deltaLat * C_EARTH;
+    deltaNed.y = deltaLon * C_EARTH * cos(subscriptionTarget->latitude);
+    deltaNed.z = subscriptionTarget->altitude - subscriptionOrigin->altitude;
+  }
+  else
+  {
+    broadcastTarget = (Telemetry::GlobalPosition*)target;
+    broadcastOrigin = (Telemetry::GlobalPosition*)origin;
+    deltaLon        = broadcastTarget->longitude - broadcastOrigin->longitude;
+    deltaLat        = broadcastTarget->latitude - broadcastOrigin->latitude;
+    deltaNed.x      = deltaLat * C_EARTH;
+    deltaNed.y      = deltaLon * C_EARTH * cos(broadcastTarget->latitude);
+    deltaNed.z      = broadcastTarget->altitude - broadcastOrigin->altitude;
+  }
+}
+
 
 // Create a function that gives the yaw a step response
 
