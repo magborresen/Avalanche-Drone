@@ -72,8 +72,8 @@ void doStep(Vehicle* vehicle)
 	std::cout << "Yaw Rate set...";
 	std::cout << "Rotating";
 	vehicle->control->positionAndYawCtrl(xPos, yPos, zPos, yawPos);
-	msleep(5000);
-	yawpos = 180;
+	usleep(5000000);
+	yawPosos = 180;
 	vehicle->control->positionAndYawCtrl(xPos, yPos, zPos, yawPos);
 	getYaw(vehicle, measuringTimeMs);
 	
