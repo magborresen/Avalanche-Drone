@@ -24,6 +24,7 @@ void appendToFile(float yaw, uint32_t timeStamp)
 
 void getYaw(Vehicle* vehicle, int timeoutParamInMs)
 {
+	std::cout << "Getting Yaw... \n";
 	Telemetry::Quaternion quaternion;
 	Telemetry::TimeStamp timeStamp;
 	const int TIMEOUT = 20;
@@ -309,10 +310,10 @@ void doStep(Vehicle* vehicle)
 	//vehicle->control->velocityAndYawRateCtrl(xCmd, yCmd, zCmd, yawCmd);
 	std::cout << "Yaw Rate set..." << "\n";
 	usleep(1000*1000);
-	std::cout << "Rotating..." << "\n";
 	vehicle->control->positionAndYawCtrl(xPos, yPos, zPos, yawPos);
 	usleep(5000000);
 	yawPos = 3.14;
+	std::cout << "Rotating..." << "\n";
 	vehicle->control->positionAndYawCtrl(xPos, yPos, zPos, yawPos);
 	usleep(1000*1000);
 	std::cout << "Rotated..." << "\n";
