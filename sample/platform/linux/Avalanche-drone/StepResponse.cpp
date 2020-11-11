@@ -633,6 +633,53 @@ localOffsetFromGpsOffset(Vehicle* vehicle, Telemetry::Vector3f& deltaNed,
   }
 }
 
+bool startGlobalPositionBroadcast(Vehicle* vehicle)
+{
+  uint8_t freq[16];
+
+  /* Channels definition for A3/N3/M600
+   * 0 - Timestamp
+   * 1 - Attitude Quaternions
+   * 2 - Acceleration
+   * 3 - Velocity (Ground Frame)
+   * 4 - Angular Velocity (Body Frame)
+   * 5 - Position
+   * 6 - GPS Detailed Information
+   * 7 - RTK Detailed Information
+   * 8 - Magnetometer
+   * 9 - RC Channels Data
+   * 10 - Gimbal Data
+   * 11 - Flight Status
+   * 12 - Battery Level
+   * 13 - Control Information
+   */
+  freq[0]  = DataBroadcast::FREQ_HOLD;
+  freq[1]  = DataBroadcast::FREQ_HOLD;
+  freq[2]  = DataBroadcast::FREQ_HOLD;
+  freq[3]  = DataBroadcast::FREQ_HOLD;
+  freq[4]  = DataBroadcast::FREQ_HOLD;
+  freq[5]  = DataBroadcast::FREQ_50HZ; // This is the only one we want to change
+  freq[6]  = DataBroadcast::FREQ_HOLD;
+  freq[7]  = DataBroadcast::FREQ_HOLD;
+  freq[8]  = DataBroadcast::FREQ_HOLD;
+  freq[9]  = DataBroadcast::FREQ_HOLD;
+  freq[10] = DataBroadcast::FREQ_HOLD;
+  freq[11] = DataBroadcast::FREQ_HOLD;
+  freq[12] = DataBroadcast::FREQ_HOLD;
+  freq[13] = DataBroadcast::FREQ_HOLD;
+
+  ACK::ErrorCode ack = vehicle->broadcast->setBroadcastFreq(freq, 1);
+  if (ACK::getError(ack))
+  {
+    ACK::getErrorCodeMessage(ack, __func__);
+    return false;
+  }
+  else
+  {
+    return true;
+  }
+}
+
 
 // Create a function that gives the yaw a step response
 

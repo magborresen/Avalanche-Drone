@@ -41,5 +41,6 @@ void localOffsetFromGpsOffset(DJI::OSDK::Vehicle*             vehicle,
                               void* target, void* origin);
 
 DJI::OSDK::Telemetry::Vector3f toEulerAngle(void* quaternionData);
+bool startGlobalPositionBroadcast(DJI::OSDK::Vehicle* vehicle);
 
 #endif 
