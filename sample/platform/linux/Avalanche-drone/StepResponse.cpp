@@ -4,13 +4,13 @@
 using namespace DJI::OSDK;
 using namespace DJI::OSDK::Telemetry;
 
-std::fstream myFile;
+std::ofstream myFile;
 std::string logFile = "logFile.txt";
 // Create a function to get the yaw that takes the vehicle as a parameter and a timeout parameter
 
 void clearFile()
 {
-    myFile.open(logFile,  std::ofstream::out | std::ofstream::trunc);
+    myFile.open(logFile,  std::ofstream::out | std::fstream::trunc);
     myFile.close();
 }
 
