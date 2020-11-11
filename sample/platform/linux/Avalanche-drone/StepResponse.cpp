@@ -69,7 +69,7 @@ void doStep(Vehicle* vehicle)
 	std::cout << "TakeOff succeeded..." << "\n";
 	usleep(1000*1000);
 	std::cout << "Setting Yaw rate..." << "\n";
-	vehicle->control->velocityAndYawRateCtrl(xCmd, yCmd, zCmd, yawCmd);
+	//vehicle->control->velocityAndYawRateCtrl(xCmd, yCmd, zCmd, yawCmd);
 	std::cout << "Yaw Rate set..." << "\n";
 	usleep(1000*1000);
 	std::cout << "Rotating";
@@ -77,6 +77,7 @@ void doStep(Vehicle* vehicle)
 	usleep(5000000);
 	yawPos = 180;
 	vehicle->control->positionAndYawCtrl(xPos, yPos, zPos, yawPos);
+	usleep(1000*1000);
 	getYaw(vehicle, measuringTimeMs);
 	
 	
