@@ -291,7 +291,7 @@ void doStep(Vehicle* vehicle)
 	float xCmd = 1;
 	float yCmd = 1;
 	float zCmd = 1;
-	float yawCmd = 50;
+	float yawCmd = 150;
 	
 	float xPos = 0;
 	float yPos = 0;
@@ -312,8 +312,8 @@ void doStep(Vehicle* vehicle)
 	usleep(1000*1000);
 	vehicle->control->positionAndYawCtrl(xPos, yPos, zPos, yawPos);
 	usleep(5000000);
-	yawPos = 3.14;
-	std::cout << "Rotating..." << "\n";
+	yawPos = 180;
+	std::cout << "Rotating to " << yawPos << "\n";
 	vehicle->control->positionAndYawCtrl(xPos, yPos, zPos, yawPos);
 	usleep(1000*1000);
 	std::cout << "Rotated..." << "\n";
