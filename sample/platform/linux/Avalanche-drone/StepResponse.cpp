@@ -459,27 +459,13 @@ moveByPositionOffset(Vehicle *vehicle, float xOffsetDesired,
     elapsedTimeInMs += cycleTimeInMs;
 
     //! Get current position in required coordinates and units
-    if (!vehicle->isM100() && !vehicle->isLegacyM600())
-    {
-      subscriptionQ = vehicle->subscribe->getValue<TOPIC_QUATERNION>();
-      yawInRad      = toEulerAngle((static_cast<void*>(&subscriptionQ))).z;
-      currentSubscriptionGPS = vehicle->subscribe->getValue<TOPIC_GPS_FUSED>();
-      localOffsetFromGpsOffset(vehicle, localOffset,
-                               static_cast<void*>(&currentSubscriptionGPS),
-                               static_cast<void*>(&originSubscriptionGPS));
-
-      // Get the broadcast GP since we need the height for zCmd
-      currentBroadcastGP = vehicle->broadcast->getGlobalPosition();
-    }
-    else
-    {
+    
       broadcastQ         = vehicle->broadcast->getQuaternion();
       yawInRad           = toEulerAngle((static_cast<void*>(&broadcastQ))).z;
       currentBroadcastGP = vehicle->broadcast->getGlobalPosition();
       localOffsetFromGpsOffset(vehicle, localOffset,
                                static_cast<void*>(&currentBroadcastGP),
                                static_cast<void*>(&originBroadcastGP));
-    }
 
     //! See how much farther we have to go
     xOffsetRemaining = xOffsetDesired - localOffset.x;
@@ -496,17 +482,7 @@ moveByPositionOffset(Vehicle *vehicle, float xOffsetDesired,
       yCmd = yOffsetRemaining;
     }
 
-    if (vehicle->isM100() && std::abs(xOffsetRemaining) < posThresholdInM &&
-        std::abs(yOffsetRemaining) < posThresholdInM &&
-        std::abs(yawInRad - yawDesiredRad) < yawThresholdInRad)
-    {
-      //! 1. We are within bounds; start incrementing our in-bound counter
-      withinBoundsCounter += cycleTimeInMs;
-    }
-    else if (std::abs(xOffsetRemaining) < posThresholdInM &&
-             std::abs(yOffsetRemaining) < posThresholdInM &&
-             std::abs(zOffsetRemaining) < posThresholdInM &&
-             std::abs(yawInRad - yawDesiredRad) < yawThresholdInRad)
+    if (vehicle->isM100() && std::abs(xOffsetRemaining) < posThresholdInM && std::abs(yOffsetRemaining) < posThresholdInM && std::abs(yawInRad - yawDesiredRad) < yawThresholdInRad)
     {
       //! 1. We are within bounds; start incrementing our in-bound counter
       withinBoundsCounter += cycleTimeInMs;
@@ -558,18 +534,6 @@ moveByPositionOffset(Vehicle *vehicle, float xOffsetDesired,
       }
     }
     return ACK::FAIL;
-  }
-
-  if (!vehicle->isM100() && !vehicle->isLegacyM600())
-  {
-    ACK::ErrorCode ack =
-      vehicle->subscribe->removePackage(pkgIndex, responseTimeout);
-    if (ACK::getError(ack))
-    {
-      std::cout
-        << "Error unsubscribing; please restart the drone/FC to get back "
-           "to a clean state.\n";
-    }
   }
 
   return ACK::SUCCESS;
