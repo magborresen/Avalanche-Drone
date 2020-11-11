@@ -29,6 +29,6 @@ void appendToFile(float yaw, uint32_t timeStamp);
 
 void clearFile();
 
-bool monitoredTakeoff(Vehicle* vehicle, int timeout);
+bool monitoredTakeoff(Vehicle* vehicle, int timeout = 1);
 
 #endif 
