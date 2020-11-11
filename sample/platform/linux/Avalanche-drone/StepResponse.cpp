@@ -10,7 +10,7 @@ std::string logFile = "logFile.txt";
 
 void clearFile()
 {
-    myFile.open(logFile, std::ofstream::trunc);
+    myFile.open(logFile,  std::ofstream::out | std::ofstream::trunc);
     myFile.close();
 }
 
@@ -315,7 +315,7 @@ void doStep(Vehicle* vehicle)
 	yawPos = 3.14;
 	vehicle->control->positionAndYawCtrl(xPos, yPos, zPos, yawPos);
 	usleep(1000*1000);
-	cout << "Rotated..." << "\n";
+	std::cout << "Rotated..." << "\n";
 	getYaw(vehicle, measuringTimeMs);
 	
 	
