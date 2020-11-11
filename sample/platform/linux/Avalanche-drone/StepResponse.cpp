@@ -288,10 +288,10 @@ bool monitoredTakeoff(Vehicle* vehicle, int timeout)
 
 void doStep(Vehicle* vehicle)
 {
-	float xCmd = 0;
-	float yCmd = 0;
-	float zCmd = 0;
-	float yawCmd = 150;
+	float xCmd = 1;
+	float yCmd = 1;
+	float zCmd = 1;
+	float yawCmd = 50;
 	
 	float xPos = 0;
 	float yPos = 0;
