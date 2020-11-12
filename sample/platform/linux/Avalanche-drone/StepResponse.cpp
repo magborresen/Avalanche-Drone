@@ -417,7 +417,7 @@ bool moveByPositionOffset(Vehicle *vehicle, float xOffsetDesired,
 		localOffsetFromGpsOffset(vehicle, localOffset, static_cast<void*>(&currentBroadcastGP), static_cast<void*>(&originBroadcastGP));
 		timeStamp 			= vehicle->broadcast->getTimeStamp();
 
-		appendToFile(yawInRad / DEG2RAD, timeStamp.time_ms);
+		//appendToFile(yawInRad / DEG2RAD, timeStamp.time_ms);
 
 		//! See how much farther we have to go
 		xOffsetRemaining = xOffsetDesired - localOffset.x;
