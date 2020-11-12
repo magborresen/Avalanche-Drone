@@ -20,7 +20,7 @@ void clearFile()
 void appendToFile(double yaw, uint32_t timeStamp)
 {
 	std::cout << "Appending...\n";
-	myFileIn.open();
+	myFileIn.open(logFile);
 	myFileOut.open(logFile, std::ofstream::out|std::ofstream::app);
 	myFileOut << yaw << "," << timeStamp;
 	myFileOut << "\n";
