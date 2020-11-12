@@ -12,6 +12,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <string>
 
 // DJI OSDK includes
 #include <dji_vehicle.hpp>
