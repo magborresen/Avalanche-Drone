@@ -306,8 +306,7 @@ bool moveByPositionOffset(Vehicle *vehicle, float xOffsetDesired,
 	int       numTopic = sizeof(topicList50Hz) / sizeof(topicList50Hz[0]);
 	bool      enableTimestamp = false;
 
-	bool pkgStatus = vehicle->subscribe->initPackageFromTopicList(
-	  pkgIndex, numTopic, topicList50Hz, enableTimestamp, freq);
+	bool pkgStatus = vehicle->subscribe->initPackageFromTopicList(pkgIndex, numTopic, topicList50Hz, enableTimestamp, freq);
 	if (!(pkgStatus))
 	{
 		return pkgStatus;
