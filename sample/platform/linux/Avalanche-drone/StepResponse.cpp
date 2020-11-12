@@ -283,190 +283,289 @@ bool moveByPositionOffset(Vehicle *vehicle, float xOffsetDesired,
                      float yawDesired, float posThresholdInM,
                      float yawThresholdInDeg)
 {
-	// Set timeout: this timeout is the time you allow the drone to take to finish
-	// the
-	// mission
-	int responseTimeout              = 1;
-	int timeoutInMilSec              = 40000;
-	int controlFreqInHz              = 50; // Hz
-	int cycleTimeInMs                = 1000 / controlFreqInHz;
-	int outOfControlBoundsTimeLimit  = 10 * cycleTimeInMs; // 10 cycles
-	int withinControlBoundsTimeReqmt = 50 * cycleTimeInMs; // 50 cycles
-	int pkgIndex;
+  // Set timeout: this timeout is the time you allow the drone to take to finish
+  // the
+  // mission
+  int responseTimeout              = 1;
+  int timeoutInMilSec              = 40000;
+  int controlFreqInHz              = 50; // Hz
+  int cycleTimeInMs                = 1000 / controlFreqInHz;
+  int outOfControlBoundsTimeLimit  = 10 * cycleTimeInMs; // 10 cycles
+  int withinControlBoundsTimeReqmt = 50 * cycleTimeInMs; // 50 cycles
+  int pkgIndex;
 
-	//@todo: remove this once the getErrorCode function signature changes
-	char func[50];
-	ACK::ErrorCode subscribeStatus;
+  //@todo: remove this once the getErrorCode function signature changes
+  char func[50];
 
-	// Telemetry: Subscribe to quaternion, fused lat/lon and altitude at freq 50
-	// Hz
-	pkgIndex                  = 0;
-	int       freq            = 50;
-	TopicName topicList50Hz[] = { TOPIC_QUATERNION, TOPIC_GPS_FUSED };
-	int       numTopic = sizeof(topicList50Hz) / sizeof(topicList50Hz[0]);
-	bool      enableTimestamp = false;
+  if (!vehicle->isM100() && !vehicle->isLegacyM600())
+  {
+    // Telemetry: Verify the subscription
+    ACK::ErrorCode subscribeStatus;
+    subscribeStatus = vehicle->subscribe->verify(responseTimeout);
+    if (ACK::getError(subscribeStatus) != ACK::SUCCESS)
+    {
+      ACK::getErrorCodeMessage(subscribeStatus, func);
+      return false;
+    }
 
-	bool pkgStatus = vehicle->subscribe->initPackageFromTopicList(pkgIndex, numTopic, topicList50Hz, enableTimestamp, freq);
-	if (!(pkgStatus))
-	{
-		return pkgStatus;
-	}
-	subscribeStatus = vehicle->subscribe->startPackage(pkgIndex, responseTimeout);
-	if (ACK::getError(subscribeStatus) != ACK::SUCCESS)
-	{
-		ACK::getErrorCodeMessage(subscribeStatus, func);
-		// Cleanup before return
-		vehicle->subscribe->removePackage(pkgIndex, responseTimeout);
-		return false;
-	}
+    // Telemetry: Subscribe to quaternion, fused lat/lon and altitude at freq 50
+    // Hz
+    pkgIndex                  = 0;
+    int       freq            = 50;
+    TopicName topicList50Hz[] = { TOPIC_QUATERNION, TOPIC_GPS_FUSED };
+    int       numTopic = sizeof(topicList50Hz) / sizeof(topicList50Hz[0]);
+    bool      enableTimestamp = false;
 
-	// Also, since we don't have a source for relative height through subscription,
-	// start using broadcast height
-	if (!startGlobalPositionBroadcast(vehicle))
-	{
-	  // Cleanup before return
-		vehicle->subscribe->removePackage(pkgIndex, responseTimeout);
-		return false;
-	}
+    bool pkgStatus = vehicle->subscribe->initPackageFromTopicList(
+      pkgIndex, numTopic, topicList50Hz, enableTimestamp, freq);
+    if (!(pkgStatus))
+    {
+      return pkgStatus;
+    }
+    subscribeStatus =
+      vehicle->subscribe->startPackage(pkgIndex, responseTimeout);
+    if (ACK::getError(subscribeStatus) != ACK::SUCCESS)
+    {
+      ACK::getErrorCodeMessage(subscribeStatus, func);
+      // Cleanup before return
+      vehicle->subscribe->removePackage(pkgIndex, responseTimeout);
+      return false;
+    }
 
-	// Wait for data to come in
-	sleep(1);
+    // Also, since we don't have a source for relative height through subscription,
+    // start using broadcast height
+    if (!startGlobalPositionBroadcast(vehicle))
+    {
+      // Cleanup before return
+      vehicle->subscribe->removePackage(pkgIndex, responseTimeout);
+      return false;
+    }
+  }
 
-	// Get data
+  // Wait for data to come in
+  sleep(1);
 
-	// Global position retrieved via subscription
-	Telemetry::TypeMap<TOPIC_GPS_FUSED>::type currentSubscriptionGPS;
-	Telemetry::TypeMap<TOPIC_GPS_FUSED>::type originSubscriptionGPS;
-	// Global position retrieved via broadcast
-	Telemetry::GlobalPosition currentBroadcastGP;
-	Telemetry::GlobalPosition originBroadcastGP;
+  // Get data
 
-	// Convert position offset from first position to local coordinates
-	Telemetry::Vector3f localOffset;
-	
-	Telemetry::TimeStamp timeStamp;
+  // Global position retrieved via subscription
+  Telemetry::TypeMap<TOPIC_GPS_FUSED>::type currentSubscriptionGPS;
+  Telemetry::TypeMap<TOPIC_GPS_FUSED>::type originSubscriptionGPS;
+  // Global position retrieved via broadcast
+  Telemetry::GlobalPosition currentBroadcastGP;
+  Telemetry::GlobalPosition originBroadcastGP;
 
-	currentBroadcastGP = vehicle->broadcast->getGlobalPosition();
-	originBroadcastGP  = currentBroadcastGP;
-	localOffsetFromGpsOffset(vehicle, localOffset, static_cast<void*>(&currentBroadcastGP), static_cast<void*>(&originBroadcastGP));
- 
+  // Convert position offset from first position to local coordinates
+  Telemetry::Vector3f localOffset;
 
-	// Get initial offset. We will update this in a loop later.
-	double xOffsetRemaining = xOffsetDesired - localOffset.x;
-	double yOffsetRemaining = yOffsetDesired - localOffset.y;
-	double zOffsetRemaining = zOffsetDesired - localOffset.z;
+  if (!vehicle->isM100() && !vehicle->isLegacyM600())
+  {
+    currentSubscriptionGPS = vehicle->subscribe->getValue<TOPIC_GPS_FUSED>();
+    originSubscriptionGPS  = currentSubscriptionGPS;
+    localOffsetFromGpsOffset(vehicle, localOffset,
+                             static_cast<void*>(&currentSubscriptionGPS),
+                             static_cast<void*>(&originSubscriptionGPS));
 
-	// Conversions
-	double yawDesiredRad     = DEG2RAD * yawDesired;
-	double yawThresholdInRad = DEG2RAD * yawThresholdInDeg;
+    // Get the broadcast GP since we need the height for zCmd
+    currentBroadcastGP = vehicle->broadcast->getGlobalPosition();
+  }
+  else
+  {
+    currentBroadcastGP = vehicle->broadcast->getGlobalPosition();
+    originBroadcastGP  = currentBroadcastGP;
+    localOffsetFromGpsOffset(vehicle, localOffset,
+                             static_cast<void*>(&currentBroadcastGP),
+                             static_cast<void*>(&originBroadcastGP));
+  }
 
-	//! Get Euler angle
+  // Get initial offset. We will update this in a loop later.
+  double xOffsetRemaining = xOffsetDesired - localOffset.x;
+  double yOffsetRemaining = yOffsetDesired - localOffset.y;
+  double zOffsetRemaining = zOffsetDesired - localOffset.z;
 
-	// Quaternion retrieved via subscription
-	Telemetry::TypeMap<TOPIC_QUATERNION>::type subscriptionQ;
-	// Quaternion retrieved via broadcast
-	Telemetry::Quaternion broadcastQ;
+  // Conversions
+  double yawDesiredRad     = DEG2RAD * yawDesired;
+  double yawThresholdInRad = DEG2RAD * yawThresholdInDeg;
 
-	double yawInRad;
+  //! Get Euler angle
 
-	broadcastQ = vehicle->broadcast->getQuaternion();
-	yawInRad   = toEulerAngle((static_cast<void*>(&broadcastQ))).z / DEG2RAD;
-  
+  // Quaternion retrieved via subscription
+  Telemetry::TypeMap<TOPIC_QUATERNION>::type subscriptionQ;
+  // Quaternion retrieved via broadcast
+  Telemetry::Quaternion broadcastQ;
 
-	int   elapsedTimeInMs     = 0;
-	int   withinBoundsCounter = 0;
-	int   outOfBounds         = 0;
-	int   brakeCounter        = 0;
-	int   speedFactor         = 2;
-	float xCmd, yCmd, zCmd;
+  double yawInRad;
+  if (!vehicle->isM100() && !vehicle->isLegacyM600())
+  {
+    subscriptionQ = vehicle->subscribe->getValue<TOPIC_QUATERNION>();
+    yawInRad = toEulerAngle((static_cast<void*>(&subscriptionQ))).z / DEG2RAD;
+  }
+  else
+  {
+    broadcastQ = vehicle->broadcast->getQuaternion();
+    yawInRad   = toEulerAngle((static_cast<void*>(&broadcastQ))).z / DEG2RAD;
+  }
 
-	/*! Calculate the inputs to send the position controller. We implement basic
-	*  receding setpoint position control and the setpoint is always 1 m away
-	*  from the current position - until we get within a threshold of the goal.
-	*  From that point on, we send the remaining distance as the setpoint.
-	*/
-	if (xOffsetDesired > 0)
-		xCmd = (xOffsetDesired < speedFactor) ? xOffsetDesired : speedFactor;
-	else if (xOffsetDesired < 0)
-		xCmd = (xOffsetDesired > -1 * speedFactor) ? xOffsetDesired : -1 * speedFactor;
-	else
-		xCmd = 0;
+  int   elapsedTimeInMs     = 0;
+  int   withinBoundsCounter = 0;
+  int   outOfBounds         = 0;
+  int   brakeCounter        = 0;
+  int   speedFactor         = 2;
+  float xCmd, yCmd, zCmd;
 
-	if (yOffsetDesired > 0)
-		yCmd = (yOffsetDesired < speedFactor) ? yOffsetDesired : speedFactor;
-	else if (yOffsetDesired < 0)
-		yCmd = (yOffsetDesired > -1 * speedFactor) ? yOffsetDesired : -1 * speedFactor;
-	else
-		yCmd = 0;
+  /*! Calculate the inputs to send the position controller. We implement basic
+   *  receding setpoint position control and the setpoint is always 1 m away
+   *  from the current position - until we get within a threshold of the goal.
+   *  From that point on, we send the remaining distance as the setpoint.
+   */
+  if (xOffsetDesired > 0)
+    xCmd = (xOffsetDesired < speedFactor) ? xOffsetDesired : speedFactor;
+  else if (xOffsetDesired < 0)
+    xCmd =
+      (xOffsetDesired > -1 * speedFactor) ? xOffsetDesired : -1 * speedFactor;
+  else
+    xCmd = 0;
 
+  if (yOffsetDesired > 0)
+    yCmd = (yOffsetDesired < speedFactor) ? yOffsetDesired : speedFactor;
+  else if (yOffsetDesired < 0)
+    yCmd =
+      (yOffsetDesired > -1 * speedFactor) ? yOffsetDesired : -1 * speedFactor;
+  else
+    yCmd = 0;
+
+  if (!vehicle->isM100() && !vehicle->isLegacyM600())
+  {
+    zCmd = currentBroadcastGP.height + zOffsetDesired; //Since subscription cannot give us a relative height, use broadcast.
+  }
+  else
+  {
     zCmd = currentBroadcastGP.height + zOffsetDesired;
+  }
 
-	//! Main closed-loop receding setpoint position control
-	while (elapsedTimeInMs < timeoutInMilSec)
-	{
-		vehicle->control->positionAndYawCtrl(xCmd, yCmd, zCmd, yawDesiredRad / DEG2RAD);
+  //! Main closed-loop receding setpoint position control
+  while (elapsedTimeInMs < timeoutInMilSec)
+  {
+    vehicle->control->positionAndYawCtrl(xCmd, yCmd, zCmd,
+                                         yawDesiredRad / DEG2RAD);
 
-		usleep(cycleTimeInMs * 1000);
-		elapsedTimeInMs += cycleTimeInMs;
+    usleep(cycleTimeInMs * 1000);
+    elapsedTimeInMs += cycleTimeInMs;
 
-		//! Get current position in required coordinates and units
+    //! Get current position in required coordinates and units
+    if (!vehicle->isM100() && !vehicle->isLegacyM600())
+    {
+      subscriptionQ = vehicle->subscribe->getValue<TOPIC_QUATERNION>();
+      yawInRad      = toEulerAngle((static_cast<void*>(&subscriptionQ))).z;
+      currentSubscriptionGPS = vehicle->subscribe->getValue<TOPIC_GPS_FUSED>();
+      localOffsetFromGpsOffset(vehicle, localOffset,
+                               static_cast<void*>(&currentSubscriptionGPS),
+                               static_cast<void*>(&originSubscriptionGPS));
 
-		broadcastQ         	= vehicle->broadcast->getQuaternion();
-		yawInRad           	= toEulerAngle((static_cast<void*>(&broadcastQ))).z;
-		currentBroadcastGP 	= vehicle->broadcast->getGlobalPosition();
-		localOffsetFromGpsOffset(vehicle, localOffset, static_cast<void*>(&currentBroadcastGP), static_cast<void*>(&originBroadcastGP));
-		timeStamp 			= vehicle->broadcast->getTimeStamp();
+      // Get the broadcast GP since we need the height for zCmd
+      currentBroadcastGP = vehicle->broadcast->getGlobalPosition();
+    }
+    else
+    {
+      broadcastQ         = vehicle->broadcast->getQuaternion();
+      yawInRad           = toEulerAngle((static_cast<void*>(&broadcastQ))).z;
+      currentBroadcastGP = vehicle->broadcast->getGlobalPosition();
+      localOffsetFromGpsOffset(vehicle, localOffset,
+                               static_cast<void*>(&currentBroadcastGP),
+                               static_cast<void*>(&originBroadcastGP));
+    }
 
-		//appendToFile(yawInRad / DEG2RAD, timeStamp.time_ms);
+    //! See how much farther we have to go
+    xOffsetRemaining = xOffsetDesired - localOffset.x;
+    yOffsetRemaining = yOffsetDesired - localOffset.y;
+    zOffsetRemaining = zOffsetDesired - localOffset.z;
 
-		//! See how much farther we have to go
-		xOffsetRemaining = xOffsetDesired - localOffset.x;
-		yOffsetRemaining = yOffsetDesired - localOffset.y;
-		zOffsetRemaining = zOffsetDesired - localOffset.z;
+    //! See if we need to modify the setpoint
+    if (std::abs(xOffsetRemaining) < speedFactor)
+    {
+      xCmd = xOffsetRemaining;
+    }
+    if (std::abs(yOffsetRemaining) < speedFactor)
+    {
+      yCmd = yOffsetRemaining;
+    }
 
-		//! See if we need to modify the setpoint
-		if (std::abs(xOffsetRemaining) < speedFactor)
-		{
-		  xCmd = xOffsetRemaining;
-		}
-		if (std::abs(yOffsetRemaining) < speedFactor)
-		{
-		  yCmd = yOffsetRemaining;
-		}
+    if (vehicle->isM100() && std::abs(xOffsetRemaining) < posThresholdInM &&
+        std::abs(yOffsetRemaining) < posThresholdInM &&
+        std::abs(yawInRad - yawDesiredRad) < yawThresholdInRad)
+    {
+      //! 1. We are within bounds; start incrementing our in-bound counter
+      withinBoundsCounter += cycleTimeInMs;
+    }
+    else if (std::abs(xOffsetRemaining) < posThresholdInM &&
+             std::abs(yOffsetRemaining) < posThresholdInM &&
+             std::abs(zOffsetRemaining) < posThresholdInM &&
+             std::abs(yawInRad - yawDesiredRad) < yawThresholdInRad)
+    {
+      //! 1. We are within bounds; start incrementing our in-bound counter
+      withinBoundsCounter += cycleTimeInMs;
+    }
+    else
+    {
+      if (withinBoundsCounter != 0)
+      {
+        //! 2. Start incrementing an out-of-bounds counter
+        outOfBounds += cycleTimeInMs;
+      }
+    }
+    //! 3. Reset withinBoundsCounter if necessary
+    if (outOfBounds > outOfControlBoundsTimeLimit)
+    {
+      withinBoundsCounter = 0;
+      outOfBounds         = 0;
+    }
+    //! 4. If within bounds, set flag and break
+    if (withinBoundsCounter >= withinControlBoundsTimeReqmt)
+    {
+      break;
+    }
+  }
 
-		if (vehicle->isM100() && std::abs(xOffsetRemaining) < posThresholdInM && std::abs(yOffsetRemaining) < posThresholdInM && std::abs(yawInRad - yawDesiredRad) < yawThresholdInRad)
-		{
-		  //! 1. We are within bounds; start incrementing our in-bound counter
-		  withinBoundsCounter += cycleTimeInMs;
-		}
-		else
-		{
-		  if (withinBoundsCounter != 0)
-		  {
-			//! 2. Start incrementing an out-of-bounds counter
-			outOfBounds += cycleTimeInMs;
-		  }
-		}
-		//! 3. Reset withinBoundsCounter if necessary
-		if (outOfBounds > outOfControlBoundsTimeLimit)
-		{
-		  withinBoundsCounter = 0;
-		  outOfBounds         = 0;
-		}
-		//! 4. If within bounds, set flag and break
-		if (withinBoundsCounter >= withinControlBoundsTimeReqmt)
-		{
-		  break;
-		}
-	}
+  //! Set velocity to zero, to prevent any residual velocity from position
+  //! command
+  if (!vehicle->isM100() && !vehicle->isLegacyM600())
+  {
+    while (brakeCounter < withinControlBoundsTimeReqmt)
+    {
+      vehicle->control->emergencyBrake();
+      usleep(cycleTimeInMs * 10);
+      brakeCounter += cycleTimeInMs;
+    }
+  }
 
-	if (elapsedTimeInMs >= timeoutInMilSec)
-	{
-		std::cout << "Task timeout!\n";
-		return ACK::FAIL;
-	}
+  if (elapsedTimeInMs >= timeoutInMilSec)
+  {
+    std::cout << "Task timeout!\n";
+    if (!vehicle->isM100() && !vehicle->isLegacyM600())
+    {
+      ACK::ErrorCode ack =
+        vehicle->subscribe->removePackage(pkgIndex, responseTimeout);
+      if (ACK::getError(ack))
+      {
+        std::cout << "Error unsubscribing; please restart the drone/FC to get "
+                     "back to a clean state.\n";
+      }
+    }
+    return ACK::FAIL;
+  }
 
-	return ACK::SUCCESS;
+  if (!vehicle->isM100() && !vehicle->isLegacyM600())
+  {
+    ACK::ErrorCode ack =
+      vehicle->subscribe->removePackage(pkgIndex, responseTimeout);
+    if (ACK::getError(ack))
+    {
+      std::cout
+        << "Error unsubscribing; please restart the drone/FC to get back "
+           "to a clean state.\n";
+    }
+  }
+
+  return ACK::SUCCESS;
 }
 
 Telemetry::Vector3f
