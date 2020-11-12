@@ -19,10 +19,16 @@ void clearFile()
 
 void appendToFile(double yaw, uint32_t timeStamp)
 {
-	std::cout << "Appending...\n";
 	myFileIn.open(logFile);
 	myFileOut.open(logFile, std::ofstream::out|std::ofstream::app);
-	myFileOut << yaw << "," << timeStamp;
+	if(myFileIn.is_open())
+	{
+		myFileOut << yaw << "," << timeStamp;
+	}
+	else
+	{
+		std::cout << "myFileIn not open.. \n";
+	}
 	myFileOut << "\n";
 	myFileIn.close();
 	myFileOut.close();
