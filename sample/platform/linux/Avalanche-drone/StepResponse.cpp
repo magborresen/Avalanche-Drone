@@ -472,7 +472,7 @@ bool moveByPositionOffset(Vehicle *vehicle, float xOffsetDesired,
 	
 	timeStamp = vehicle->broadcast->getTimeStamp();
 	
-	FILE * pFILE;
+	FILE * pFile;
 	
 	pFile = fopen("logFile.txt", "w");
 	
