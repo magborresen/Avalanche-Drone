@@ -25,7 +25,6 @@
 #define C_EARTH (double)6378137.0
 #define DEG2RAD 0.01745329252
 
-void doStep(Vehicle* vehicle);
 
 void getYaw(Vehicle* vehicle, int timeoutParamInMs);
 
@@ -43,5 +42,7 @@ void localOffsetFromGpsOffset(DJI::OSDK::Vehicle*             vehicle,
 
 DJI::OSDK::Telemetry::Vector3f toEulerAngle(void* quaternionData);
 bool startGlobalPositionBroadcast(DJI::OSDK::Vehicle* vehicle);
+
+void doStep(Vehicle* vehicle);
 
 #endif 
