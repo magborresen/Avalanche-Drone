@@ -4,21 +4,28 @@
 using namespace DJI::OSDK;
 using namespace DJI::OSDK::Telemetry;
 
-std::fstream myFile;
+std::ofstream myFileOut;
+std::ifstream myFileIn;
 std::string logFile = "logFile.txt";
 // Create a function to get the yaw that takes the vehicle as a parameter and a timeout parameter
 
 void clearFile()
 {
-    myFile.open(logFile,  std::ofstream::out | std::ofstream::trunc);
-    myFile.close();
+	myFileIn.open(logFile);
+    myFileOut.open(logFile,  std::ofstream::out | std::ofstream::trunc);
+	myFileIn.close();
+    myFileOut.close();
 }
 
 void appendToFile(double yaw, uint32_t timeStamp)
 {
-	myFile.open(logFile, std::ios_base::app);
-	myFile << yaw << "," << timeStamp << "\n";
-	myFile.close();
+	std::cout << "Appending...\n";
+	myFileIn.open(logFile);
+	myFileOut.open(logFile, std::ofstream::out|std::ofstream::app);
+	myFileOut << yaw << "," << timeStamp;
+	myFileOut << "\n";
+	myFileIn.close();
+	myFileOut.close();
 }
 /*
 void getYaw(Vehicle* vehicle, int timeoutParamInMs)
