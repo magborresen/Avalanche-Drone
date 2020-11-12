@@ -610,7 +610,6 @@ void doStep(Vehicle* vehicle)
 	moveByPositionOffset(vehicle, xPos, yPos, zPos, yawPos);
 	usleep(1000*1000);
 	std::cout << "Rotated..." << "\n";
-	getYaw(vehicle, measuringTimeMs);
 	
 	
 }
