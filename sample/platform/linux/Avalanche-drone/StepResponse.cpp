@@ -16,10 +16,8 @@ void clearFile()
 
 void appendToFile(double yaw, uint32_t timeStamp)
 {
-	std::cout << "Appending...\n";
 	myFile.open(logFile, std::ios_base::app);
-	myFile << yaw << "," << timeStamp;
-	myFile << "\n";
+	myFile << yaw << "," << timeStamp << "\n";
 	myFile.close();
 }
 /*
