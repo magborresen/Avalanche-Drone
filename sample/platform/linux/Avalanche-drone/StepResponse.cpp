@@ -455,7 +455,7 @@ bool moveByPositionOffset(Vehicle *vehicle, float xOffsetDesired,
 	
 	timeStamp = vehicle->broadcast->getTimeStamp();
 	
-	appendToFile(yaw / DEG2RAD, timeStamp.time_ms);
+	appendToFile(yawInRad / DEG2RAD, timeStamp.time_ms);
 
     //! Get current position in required coordinates and units
     if (!vehicle->isM100() && !vehicle->isLegacyM600())
