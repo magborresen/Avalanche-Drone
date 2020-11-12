@@ -28,7 +28,7 @@ void doStep(Vehicle* vehicle);
 
 void getYaw(Vehicle* vehicle, int timeoutParamInMs);
 
-void appendToFile(float yaw, uint32_t timeStamp);
+void appendToFile(double yaw, uint32_t timeStamp);
 
 void clearFile();
 

@@ -356,6 +356,8 @@ bool moveByPositionOffset(Vehicle *vehicle, float xOffsetDesired,
 
   // Convert position offset from first position to local coordinates
   Telemetry::Vector3f localOffset;
+  
+  Telemetry::TimeStamp timeStamp;
 
   if (!vehicle->isM100() && !vehicle->isLegacyM600())
   {
@@ -450,6 +452,10 @@ bool moveByPositionOffset(Vehicle *vehicle, float xOffsetDesired,
 
     usleep(cycleTimeInMs * 1000);
     elapsedTimeInMs += cycleTimeInMs;
+	
+	timeStamp = vehicle->broadcast->getTimeStamp();
+	
+	appendToFile(yaw / DEG2RAD, timeStamp.time_ms);
 
     //! Get current position in required coordinates and units
     if (!vehicle->isM100() && !vehicle->isLegacyM600())
