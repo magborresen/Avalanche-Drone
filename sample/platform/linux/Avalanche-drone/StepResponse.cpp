@@ -24,10 +24,11 @@ void appendToFile(double yaw, uint32_t timeStamp)
 	if(myFileIn.is_open())
 	{
 		myFileOut << yaw << "," << timeStamp;
+		std::cout << "myFileIn is open! :D \n";
 	}
 	else
 	{
-		std::cout << "myFileIn not open.. \n";
+		std::cout << "myFileIn not open.. :| \n";
 	}
 	myFileOut << "\n";
 	myFileIn.close();
