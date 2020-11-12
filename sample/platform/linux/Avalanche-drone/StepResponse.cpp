@@ -296,7 +296,7 @@ bool moveByPositionOffset(Vehicle *vehicle, float xOffsetDesired,
 
 	//@todo: remove this once the getErrorCode function signature changes
 	char func[50];
-
+	ACK::ErrorCode subscribeStatus;
 
 	// Telemetry: Subscribe to quaternion, fused lat/lon and altitude at freq 50
 	// Hz
@@ -417,7 +417,7 @@ bool moveByPositionOffset(Vehicle *vehicle, float xOffsetDesired,
 		localOffsetFromGpsOffset(vehicle, localOffset, static_cast<void*>(&currentBroadcastGP), static_cast<void*>(&originBroadcastGP));
 		timeStamp 			= vehicle->broadcast->getTimeStamp();
 
-		appendToFile(yawInRad / DEG2RAD, timeStamp);
+		appendToFile(yawInRad / DEG2RAD, timeStamp.time_ms);
 
 		//! See how much farther we have to go
 		xOffsetRemaining = xOffsetDesired - localOffset.x;
