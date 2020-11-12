@@ -21,7 +21,7 @@ void appendToFile(double yaw, uint32_t timeStamp)
 	myFile << "\n";
 	myFile.close();
 }
-
+/*
 void getYaw(Vehicle* vehicle, int timeoutParamInMs)
 {
 	std::cout << "Getting Yaw... \n";
@@ -37,7 +37,7 @@ void getYaw(Vehicle* vehicle, int timeoutParamInMs)
 		elapsedTimeInMs += 5;
 	}
 }
-
+*/
 bool monitoredTakeoff(Vehicle* vehicle, int timeout)
 {
   //@todo: remove this once the getErrorCode function signature changes
