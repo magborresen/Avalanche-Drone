@@ -460,9 +460,7 @@ bool moveByPositionOffset(Vehicle *vehicle, float xOffsetDesired,
   {
     zCmd = currentBroadcastGP.height + zOffsetDesired;
   }
-	FILE * pFile;
-	
-	pFile = fopen("logFile.txt", "w");
+
   //! Main closed-loop receding setpoint position control
   while (elapsedTimeInMs < timeoutInMilSec)
   {
@@ -473,10 +471,6 @@ bool moveByPositionOffset(Vehicle *vehicle, float xOffsetDesired,
     elapsedTimeInMs += cycleTimeInMs;
 	
 	timeStamp = vehicle->broadcast->getTimeStamp();
-	
-	
-	
-	fprintf(pFile, "%f, %d \n", yawInRad / DEG2RAD, timeStamp.time_ms);
 	
 	//appendToFile(yawInRad / DEG2RAD, timeStamp.time_ms);
 
@@ -593,7 +587,6 @@ bool moveByPositionOffset(Vehicle *vehicle, float xOffsetDesired,
            "to a clean state.\n";
     }
   }
-	fclose(pFile);
   return ACK::SUCCESS;
 }
 
