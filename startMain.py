@@ -30,6 +30,7 @@ try:
     os.system("cd /home/pi/Avalanche-Drone/build/bin && ./Avalanche-drone UserConfig.txt UserConfig.txt")
 
 except:
+	print("Except occured")
     pass
 
 GPIO.cleanup()
