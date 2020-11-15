@@ -25,8 +25,10 @@ try:
     GPIO.wait_for_edge(gpio_pin_number, GPIO.FALLING)
     #Use falling edge detection to see if pin is pulled 
     #low to avoid repeated polling
+	
+	#Send command to system to shutdown
     os.system("cd /home/pi/Avalanche-Drone/build/bin && ./Avalanche-drone UserConfig.txt UserConfig.txt")
-    #Send command to system to shutdown
+
 except:
     pass
 
