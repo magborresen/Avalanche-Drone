@@ -7,7 +7,7 @@
 import RPi.GPIO as GPIO
 import os
 
-gpio_pin_number=23
+gpio_pin_number=26
 #Replace YOUR_CHOSEN_GPIO_NUMBER_HERE with the GPIO pin number you wish to use
 #Make sure you know which rapsberry pi revision you are using first
 #The line should look something like this e.g. "gpio_pin_number=7"
