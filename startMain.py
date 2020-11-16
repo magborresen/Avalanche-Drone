@@ -1,13 +1,18 @@
 #!/bin/python
 
-from gpiozero import Button
-import time
-import os
+import RPi.GPIO as GPIO
 
-startButton = Button(26)
+gpio_number = 26
 
-while True:
-    if startButton.is_pressed:
-        os.system("cd /home/pi/Avalanche-Drone/build/bin && sudo ./Avalanche-drone UserConfig.txt UserConfig.txt")
-        break
-    time.sleep(1)
+GPIO.setmode(GPIO.BCM)
+
+GPIO.setup(gpio_number, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+
+try:
+    GPIO.wait_for_edge(gpio_number, GPIO.FALLING)
+    os.system("cd /home/pi/Avalanche-Drone/build/bin && ./Avalanche-drone UserConfig.txt UserConfig.txt")
+
+except:
+    pass
+
+GPIO.cleanup()
