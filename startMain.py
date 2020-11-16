@@ -1,18 +1,12 @@
-#!/bin/python
+from gpiozero import Button #import button from the Pi GPIO library
+import time # import time functions
+import os #imports OS library for Shutdown control
 
-import RPi.GPIO as GPIO
+startButton = Button(26) # defines the button as an object and chooses GPIO 26
 
-gpio_number = 26
+while True: #infinite loop
+     if startButton.is_pressed: #Check to see if button is pressed
+		os.system("cd /home/pi/Avalanche-Drone/build/bin && sudo ./Avalanche-drone UserConfig.txt UserConfig.txt")
+		break
+    time.sleep(1) # wait to loop again so we don’t use the processor too much.
 
-GPIO.setmode(GPIO.BCM)
-
-GPIO.setup(gpio_number, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-
-try:
-    GPIO.wait_for_edge(gpio_number, GPIO.FALLING)
-    os.system("cd /home/pi/Avalanche-Drone/build/bin && ./Avalanche-drone UserConfig.txt UserConfig.txt")
-
-except:
-    pass
-
-GPIO.cleanup()
