@@ -22,13 +22,15 @@ GPIO.setup(gpio_pin_number, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 #The pull-up resistor means the pin is high by default
 
 try:
-    GPIO.wait_for_edge(gpio_pin_number, GPIO.FALLING)
-    #Use falling edge detection to see if pin is pulled 
-    #low to avoid repeated polling
-    os.system("cd ~/Avalanche-Drone/build/bin && sudo ./Avalanche-drone UserConfig.txt UserConfig.txt")
-    #Send command to system to shutdown
+    	GPIO.wait_for_edge(gpio_pin_number, GPIO.FALLING)
+    	#Use falling edge detection to see if pin is pulled 
+    	#low to avoid repeated polling
+	#Send command to system to shutdown
+	 os.system("cd /home/pi/Avalanche-Drone/build/bin && ./Avalanche-drone UserConfig.txt UserConfig.txt")
+
 except:
-    pass
+	print("Except occured")
+   	pass
 
 GPIO.cleanup()
 #Revert all GPIO pins to their normal states (i.e. input = safe)
