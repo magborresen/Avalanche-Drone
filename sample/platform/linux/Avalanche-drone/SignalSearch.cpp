@@ -65,7 +65,7 @@ bool runSignalSearchMission(Vehicle* vehicle, uint8_t maxNumWaypoint, int respon
     // Waypoint Mission : Initialization
     WayPointInitSettings fdata;
     setWaypointInitDefaults(&fdata);
-    fdata.indexNumber = maxNumWaypoint; // Sets the max number of waypint + 1 for return to start 
+    fdata.indexNumber = maxNumWaypoint +1; // Sets the max number of waypint + 1 for return to start 
 
     float32_t fly_alt = 3; //sets the flying altitude to 3 meters
 
@@ -107,7 +107,7 @@ void setWaypointDefaults(WayPointSettings* wp)
     wp->gimbalPitch     = 0;
     wp->turnMode        = 0;
     wp->hasAction       = 0;
-    wp->actionTimeLimit = 100;
+    wp->actionTimeLimit = 1000;
     wp->actionNumber    = 0;
     wp->actionRepeat    = 0;
     wp->altitude        = 3;
@@ -126,7 +126,7 @@ void setWaypointInitDefaults(WayPointInitSettings* fdata)
     fdata->executiveTimes = 1;
     fdata->yawMode        = 0;
     fdata->traceMode      = 0;
-    fdata->RCLostAction   = 1; //TODO: should maybe be zero when testing IRL
+    fdata->RCLostAction   = 0; //TODO: should maybe be zero when testing IRL
     fdata->gimbalPitch    = 0;
     fdata->latitude       = 0;
     fdata->longitude      = 0;
@@ -142,7 +142,7 @@ std::vector<DJI::OSDK::WayPointSettings> createWaypoints(DJI::OSDK::Vehicle* veh
     start_pos_1 = vehicle->broadcast->getGlobalPosition();
     start_pos_2 = start_pos_1;
 	    calcLatConvertionFactor(start_pos_1.latitude);
-    start_pos_2.longitude = start_pos_2.longitude + (longConvertionFactor*100); //move second starting point 100meter in longitude 
+    start_pos_2.longitude = start_pos_2.longitude + (longConvertionFactor*10); //move second starting point 100meter in longitude 
     std::vector<DJI::OSDK::WayPointSettings> wpVector = calculateWaypoints(start_pos_1, start_pos_2, maxNumWaypoint);
     return wpVector;
 }

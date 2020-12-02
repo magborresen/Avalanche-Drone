@@ -57,24 +57,25 @@ main(int argc, char** argv)
 	// Obtain Control Authority
 	vehicle->obtainCtrlAuthority(functionTimeout);
 	
-	doStep(vehicle);
+	//doStep(vehicle);
 	
 	//Run Step Response test
 	
 	
 
 
-	/* 
+	 
 	//Run signal search mission 
 	runSignalSearchMission(vehicle, 8 , 1);
-
+/*
 	for (;;)
 	{
 	digitalWrite (1, HIGH) ; delay (500) ;
 	digitalWrite (1,  LOW) ; delay (500) ;
-	}*/
+	}
 	return 0;
 }
+
 
 
 /* OLD STUFF
