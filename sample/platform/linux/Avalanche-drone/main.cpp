@@ -57,13 +57,13 @@ main(int argc, char** argv)
   vehicle->obtainCtrlAuthority(functionTimeout);
 
   runSignalSearchMission(vehicle, 8 , 1);
-  
+  /*
   for (;;)
   {
     digitalWrite (1, HIGH) ; delay (500) ;
     digitalWrite (1,  LOW) ; delay (500) ;
   }
-  return 0;
+  return 0;*/
 }
 
 
