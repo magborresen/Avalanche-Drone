@@ -65,7 +65,7 @@ bool runSignalSearchMission(Vehicle* vehicle, uint8_t maxNumWaypoint, int respon
     // Waypoint Mission : Initialization
     WayPointInitSettings fdata;
     setWaypointInitDefaults(&fdata);
-    fdata.indexNumber = maxNumWaypoint+1; // Sets the max number of waypint + 1 for return to start 
+    fdata.indexNumber = maxNumWaypoint; // Sets the max number of waypint + 1 for return to start 
 
     float32_t fly_alt = 3; //sets the flying altitude to 3 meters
 
