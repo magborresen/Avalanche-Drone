@@ -67,6 +67,7 @@ main(int argc, char** argv)
 	 
 	//Run signal search mission 
 	runSignalSearchMission(vehicle, 8 , 1);
+}
 /*
 	for (;;)
 	{
