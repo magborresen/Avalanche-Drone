@@ -126,7 +126,7 @@ void setWaypointInitDefaults(WayPointInitSettings* fdata)
     fdata->executiveTimes = 1;
     fdata->yawMode        = 0;
     fdata->traceMode      = 0;
-    fdata->RCLostAction   = 0; //TODO: should maybe be zero when testing IRL
+    fdata->RCLostAction   = 1; //TODO: should maybe be zero when testing IRL
     fdata->gimbalPitch    = 0;
     fdata->latitude       = 0;
     fdata->longitude      = 0;
