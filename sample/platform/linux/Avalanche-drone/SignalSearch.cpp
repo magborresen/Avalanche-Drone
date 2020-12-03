@@ -142,7 +142,7 @@ std::vector<DJI::OSDK::WayPointSettings> createWaypoints(DJI::OSDK::Vehicle* veh
     start_pos_1 = vehicle->broadcast->getGlobalPosition();
     start_pos_2 = start_pos_1;
 	    calcLatConvertionFactor(start_pos_1.latitude);
-    start_pos_2.longitude = start_pos_2.longitude + (longConvertionFactor*10); //move second starting point 100meter in longitude 
+    start_pos_2.longitude = start_pos_2.longitude + (longConvertionFactor*100); //move second starting point 100meter in longitude 
     std::vector<DJI::OSDK::WayPointSettings> wpVector = calculateWaypoints(start_pos_1, start_pos_2, maxNumWaypoint);
     return wpVector;
 }
@@ -303,8 +303,8 @@ Telemetry::GlobalPosition turningPointCalculator(WayPointSettings pos1 , WayPoin
 
     myfile << "nD_XY[0]: " << nD_XY[0] << " nD_XY[1]: " << nD_XY[1] << "\n";
     //calculate new vector
-    nD_XY[0] = nD_XY[0]*10;
-    nD_XY[1] = nD_XY[1]*10;
+    nD_XY[0] = nD_XY[0]*70;
+    nD_XY[1] = nD_XY[1]*70;
     myfile << "nD_XY[0]: " << nD_XY[0] << " nD_XY[1]: " << nD_XY[1] << "\n";
     //shift backto long/lat coordinates
     nD[0] = nD_XY[0] * latConvertionFactor;
