@@ -3,5 +3,5 @@
 
 int main(){
 	//printhej();
-	calc_Angle(0.5,0.5);	
+	calc_Angle(0.5,0.5,1,1);	
 }
