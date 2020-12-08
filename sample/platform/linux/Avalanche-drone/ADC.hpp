@@ -9,12 +9,18 @@
 
 using namespace std;
 
-/* Send SPI command to ADC to start reading and send back
-result. Results are saved as unsigned 16-bit integers.
-Return result */
 
+/* Start the SPI interface */
 int startADCSPI();
+
+/* Stop the SPI interface */
 int stopADCSPI();
+
+/* Reads data from both adc's.
+Returns a vector containing results from both adc's
+CS0 is saved on the first position
+CS1 is saved on the second position
+*/
 vector<uint16_t> readADC();
 
 #endif
