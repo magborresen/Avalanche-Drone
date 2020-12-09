@@ -30,16 +30,18 @@
  *
  */
 
-#include "SignalSearch.hpp"
-#include <wiringPi.h>
+//#include "SignalSearch.hpp"
+//#include <wiringPi.h>
+#include "Kontrol.hpp"
 
-using namespace DJI::OSDK;
-using namespace DJI::OSDK::Telemetry;
+//using namespace DJI::OSDK;
+//using namespace DJI::OSDK::Telemetry;
 
 int
-main(int argc, char** argv)
+main()
 {
-  wiringPiSetup () ;
+/*  
+wiringPiSetup () ;
   pinMode (1, OUTPUT) ;
   // Initialize variables
   int functionTimeout = 1;
@@ -55,14 +57,49 @@ main(int argc, char** argv)
 
   // Obtain Control Authority
   vehicle->obtainCtrlAuthority(functionTimeout);
+*/
+  // FFT setup
+  fftw_complex *FFToutput1;
+  fftw_complex *FFTinput1;
+  fftw_complex *FFToutput2;
+  fftw_complex *FFTinput2;
+  double filter_output1[L];
+  double filter_output2[L];
+  double mag1;
+  double mag2;
+  double phase1;
+  double phase2;
+  double res;
+  FFTinput1 = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * N);
+  FFToutput1 = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * N);
+  FFTinput2 = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * N);
+  FFToutput2 = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * N);
+  fftw_plan plan1 = fftw_plan_dft_1d(N,
+													  FFTinput1,
+													  FFToutput1,
+													  FFTW_FORWARD,
+													  FFTW_ESTIMATE);
 
-  runSignalSearchMission(vehicle, 8 , 1);
+  fftw_plan plan2 = fftw_plan_dft_1d(N,
+													  FFTinput2,
+													  FFToutput2,
+													  FFTW_FORWARD,
+													  FFTW_ESTIMATE);
+													  
+													  
+//  runSignalSearchMission(vehicle, 8 , 1);
   
-  for (;;)
-  {
-    digitalWrite (1, HIGH) ; delay (500) ;
-    digitalWrite (1,  LOW) ; delay (500) ;
-  }
+  // Full simulation from filteroutput to angle , alpha should equal SIMANGLE
+  input_sim(filter_output1, filter_output2);
+  cast2complex(filter_output1, FFTinput1);
+  cast2complex(filter_output2, FFTinput2);
+  do_FFT(&plan1, FFToutput1, &mag1, &phase1);
+  do_FFT(&plan2, FFToutput2, &mag2, &phase2);
+  
+  res = calc_Angle(mag1, mag2, phase1, phase2);
+  
+  
+  
   return 0;
 }
 
