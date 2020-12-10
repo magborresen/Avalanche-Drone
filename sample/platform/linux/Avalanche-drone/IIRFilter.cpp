@@ -35,10 +35,10 @@ double IIRFilter::section(int sec, double in){
     return y;
 }
 
-void resetFilter(){
+void IIRFilter::resetFilter(){
     for(int i = 0 ; i< numberofSections ; i++){
         for(int j = 0 ; j < 3 ; j++){
-            w[i][j] = 0
+            w[i][j] = 0;
         }
     }
 }
