@@ -1,4 +1,4 @@
-#include "Irr_impl.hpp"
+#include "IIRFilter.hpp"
 
 double filter(double input){
     //first section
