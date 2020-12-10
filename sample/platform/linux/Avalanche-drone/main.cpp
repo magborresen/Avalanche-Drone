@@ -74,6 +74,9 @@ int main()
       FFTinput2[i][REAL] = filter2.filter(ADC_store2[i]);
       FFTinput2[i][IMAG] = 0;
     }  
+
+    filter1.resetFilter();
+    filter2.resetFilter();
     
     do_FFT(&plan1, FFToutput1, &mag1, &phase1);
     do_FFT(&plan2, FFToutput2, &mag2, &phase2);
