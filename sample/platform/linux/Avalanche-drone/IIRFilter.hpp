@@ -1,5 +1,5 @@
-#ifndef IIRFilter
-#define IIRFilter
+#ifndef IIRFilter_H
+#define IIRFilter_H
 
 class IIRFilter{
     public:

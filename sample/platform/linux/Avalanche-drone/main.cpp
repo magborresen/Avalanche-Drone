@@ -51,7 +51,7 @@ int main()
 
   //setup filter
   //Make 2 filter objects so that the stored w in each filter is preserved and do not interfer with the other. 
-  IIRFilter filter1;
+  IIRFilter filter1 = new IIRFilter();
   IIRFilter filter2;
 
 
