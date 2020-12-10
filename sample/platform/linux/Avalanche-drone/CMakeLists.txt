@@ -24,7 +24,11 @@ add_executable(${PROJECT_NAME}
     ${CMAKE_CURRENT_SOURCE_DIR}/../common/dji_linux_environment.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/../common/dji_linux_helpers.cpp
     main.cpp
-    SignalSearch.cpp)
+    SignalSearch.cpp
+    ADC.cpp
+    IIRFilter.cpp
+    Kontrol.cpp
+    )
 
 find_library(WIRINGPI_LIBRARIES NAMES wiringPi)
 find_library(BCM2835_LIBRARIES NAMES bcm2835)
