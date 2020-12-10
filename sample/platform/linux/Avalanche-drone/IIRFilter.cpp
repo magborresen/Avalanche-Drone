@@ -1,6 +1,6 @@
 #include "IIRFilter.hpp"
 
-double filter(double input){
+double IIRFilter::filter(double input){
     //first section
     double y;
     y = section(0, input);
@@ -22,7 +22,7 @@ double filter(double input){
     */
 }
 
-double section(int sec, double in){
+double IIRFilter::section(int sec, double in){
     // calculate the difference equation 
     //  w = x*gain - w[n-1]*a1 - w[n-2]*a2
     //  y = w[n]*b0 + w[n-1]*b1 + w[n-2]*b2
