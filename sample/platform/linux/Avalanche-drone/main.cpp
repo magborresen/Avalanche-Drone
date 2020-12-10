@@ -4,6 +4,7 @@
 #include "IIRFilter.hpp"
 #include <vector>
 #include <iostream>
+#include <fstream>
 
 
 using namespace DJI::OSDK;
@@ -55,8 +56,11 @@ int main()
   IIRFilter filter2;
 
 
-  while (true){
-    //read L number of datapoints from ADC
+  std::fstream file;
+  file.open("TestData.txt", std::fstream::out | std::fstream::trunc); 
+
+  for(int j = 0; j < 20 ; j++){
+      //read L number of datapoints from ADC
     for(int i = 0; i < L ; i++){
       ADC_read = readADC();
       ADC_store1[i] = ADC_read[0];
@@ -73,13 +77,14 @@ int main()
     
     do_FFT(&plan1, FFToutput1, &mag1, &phase1);
     do_FFT(&plan2, FFToutput2, &mag2, &phase2);
-    
-    res = calc_Angle(mag1, mag2, phase1, phase2);
     cout << "A1 = " << mag1 << "\n";
     cout << "A2 = " << mag2 << "\n";
     cout << "Mag1 = " << phase1 << "\n";
     cout << "Mag1 = " << phase2 << "\n";
-  }
+    file << j << "," << mag1 << "," << mag2 << "," << phase1 << "," << phase2 << "\n";
+  
+  } 
+    
   
   return 0;
 }
