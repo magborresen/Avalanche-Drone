@@ -28,7 +28,6 @@ using namespace std;
 
 double calc_Angle(double FFT_output1, double FFT_output2, double FFT_phase1, double FFT_phase2); // for calculating the angle
 
-
 void cast2complex (double *iir_output, fftw_complex* FFT_input);
 
 void do_FFT (fftw_plan* plan, fftw_complex* FFToutput, double *mag , double *phase);

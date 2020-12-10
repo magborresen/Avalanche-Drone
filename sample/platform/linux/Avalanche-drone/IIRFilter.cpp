@@ -1,7 +1,5 @@
 #include "Irr_impl.hpp"
 
-double w[8][3] = {0}; //set all w to zero else they will be undetermined ie. have random values
-
 double filter(double input){
     //first section
     double y;
@@ -35,4 +33,12 @@ double section(int sec, double in){
     w[sec][2] = w[sec][1]; //shift w[1] into w[2] so ready for next step
     w[sec][1] = w[sec][0]; //shift w[0] into w[1] so ready for next step
     return y;
+}
+
+void resetFilter(){
+    for(int i = 0 ; i< numberofSections ; i++){
+        for(int j = 0 ; j < 3 ; j++){
+            w[i][j] = 0
+        }
+    }
 }

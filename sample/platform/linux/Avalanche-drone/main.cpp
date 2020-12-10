@@ -1,19 +1,17 @@
 #include "SignalSearch.hpp"
 #include "Kontrol.hpp"
 #include "ADC.hpp"
-#include "Irr_impl.hpp"
+#include "IIRFilter.hpp"
+#include <vector>
+#include <iostream>
+
 
 using namespace DJI::OSDK;
 using namespace DJI::OSDK::Telemetry;
 
 int main()
 {
-/*  
-  wiringPiSetup () ;
-  pinMode (1, OUTPUT) ;
-  // Initialize variables
-  int functionTimeout = 1;
-
+/*
   // Setup OSDK.
   LinuxSetup linuxEnvironment(argc, argv);
   Vehicle*   vehicle = linuxEnvironment.getVehicle();
@@ -22,13 +20,11 @@ int main()
       std::cout << "Vehicle not initialized, exiting.\n";
       return -1;
   }
-
+  //  runSignalSearchMission(vehicle, 8 , 1);
   // Obtain Control Authority
   vehicle->obtainCtrlAuthority(functionTimeout);
 */
-
   // FFT setup
-  /*
   fftw_complex *FFToutput1;
   fftw_complex *FFTinput1;
   fftw_complex *FFToutput2;
@@ -44,32 +40,47 @@ int main()
   FFToutput1 = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * N);
   FFTinput2 = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * N);
   FFToutput2 = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * N);
-  fftw_plan plan1 = fftw_plan_dft_1d(N,
-													  FFTinput1,
-													  FFToutput1,
-													  FFTW_FORWARD,
-													  FFTW_ESTIMATE);
+  fftw_plan plan1 = fftw_plan_dft_1d(N, FFTinput1, FFToutput1, FFTW_FORWARD, FFTW_ESTIMATE);
+  fftw_plan plan2 = fftw_plan_dft_1d(N, FFTinput2, FFToutput2, FFTW_FORWARD, FFTW_ESTIMATE);
 
-  fftw_plan plan2 = fftw_plan_dft_1d(N,
-													  FFTinput2,
-													  FFToutput2,
-													  FFTW_FORWARD,
-													  FFTW_ESTIMATE);
-													  
-													  
-//  runSignalSearchMission(vehicle, 8 , 1);
+  // ADC setup
+  startADCSPI();
+  vector<uint16_t> ADC_read;
+  uint16_t ADC_store1[L];
+  uint16_t ADC_store2[L];
+
+  //setup filter
+  //Make 2 filter objects so that the stored w in each filter is preserved and do not interfer with the other. 
+  IIRFilter filter1;
+  IIRFilter filter2;
+
+
+  while (true){
+    //read L number of datapoints from ADC
+    for(int i = 0; i < L ; i++){
+      ADC_read = readADC();
+      ADC_store1[i] = ADC_read[0];
+      ADC_store2[i] = ADC_read[1];
+    }
+
+    //Filter the read data and move into FFT array
+    for(int i = 0; i < L ; i++){
+      FFTinput1[i][REAL] = filter1.filter(ADC_store1[i]);
+      FFTinput1[i][IMAG] = 0;
+      FFTinput2[i][REAL] = filter2.filter(ADC_store2[i]);
+      FFTinput2[i][IMAG] = 0;
+    }  
+    
+    do_FFT(&plan1, FFToutput1, &mag1, &phase1);
+    do_FFT(&plan2, FFToutput2, &mag2, &phase2);
+    
+    res = calc_Angle(mag1, mag2, phase1, phase2);
+    cout << "A1 = " << mag1 << "\n";
+    cout << "A2 = " << mag2 << "\n";
+    cout << "Mag1 = " << phase1 << "\n";
+    cout << "Mag1 = " << phase2 << "\n";
+  }
   
-  // Full simulation from filteroutput to angle , alpha should equal SIMANGLE
-  input_sim(filter_output1, filter_output2);
-  cast2complex(filter_output1, FFTinput1);
-  cast2complex(filter_output2, FFTinput2);
-  do_FFT(&plan1, FFToutput1, &mag1, &phase1);
-  do_FFT(&plan2, FFToutput2, &mag2, &phase2);
-  
-  res = calc_Angle(mag1, mag2, phase1, phase2);
-  
-  
-  */
   return 0;
 }
 
