@@ -11,7 +11,9 @@ include_directories(${ONBOARDSDK_SOURCE}/platform/linux/inc)
 include_directories(${MODULES_HEADER_DIR})
 include_directories(${FLIGHT_MODULES_HEADER_DIR})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../common)
-include_directories(/usr/local/fftw)
+include_directories(/usr/local/fftw/include)
+link_directories(/usr/local/fftw/lib)
+
 
 FILE(GLOB SOURCE_FILES *.hpp *.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/../common/dji_linux_environment.cpp
