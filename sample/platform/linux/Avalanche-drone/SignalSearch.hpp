@@ -3,7 +3,6 @@
     The header contains the functions needed to complete this part of the system.
 */
 
-
 #ifndef SIGNAL_SEARCH_HPP
 #define SIGNAL_SEARCH_HPP
 

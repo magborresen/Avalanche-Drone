@@ -23,5 +23,9 @@ add_executable(${PROJECT_NAME}
     SignalSearch.cpp)
 
 find_library(WIRINGPI_LIBRARIES NAMES wiringPi)
+find_library(BCM2835_LIBRARIES NAMES bcm2835)
+find_library(FFTW3_LIBRARIES NAMES fftw3)
 target_link_libraries(${PROJECT_NAME} ${WIRINGPI_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} ${BCM2835_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} ${FFTW3_LIBRARIES})
 target_link_libraries(${PROJECT_NAME} djiosdk-core)
