@@ -24,7 +24,8 @@ add_executable(${PROJECT_NAME}
 
 find_library(WIRINGPI_LIBRARIES NAMES wiringPi)
 find_library(BCM2835_LIBRARIES NAMES bcm2835)
+find_library(FFTW_LIBRARIES NAMES fftw3)
 target_link_libraries(${PROJECT_NAME} ${WIRINGPI_LIBRARIES})
 target_link_libraries(${PROJECT_NAME} ${BCM2835_LIBRARIES})
-target_link_libraries(${PROJECT_NAME} fftw3)
+target_link_libraries(${PROJECT_NAME} ${{FFTW_LIBRARIES})
 target_link_libraries(${PROJECT_NAME} djiosdk-core)
