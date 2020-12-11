@@ -5,10 +5,38 @@
 #include <vector>
 #include <iostream>
 #include <fstream>
-
+#include <thread>
+#include <mutex>
+#include <chrono>
 
 using namespace DJI::OSDK;
 using namespace DJI::OSDK::Telemetry;
+
+void thr_adc_read(){
+  static int i_adc = 0;
+  vector<uint16_t> ADC_read;
+  static uint16_t ADC_store1[L];
+  static uint16_t ADC_store2[L];
+  ADC_read = readADC();
+  ADC_store1[i_adc] = ADC_read[0];
+  ADC_store2[i_adc] = ADC_read[1];
+  cout << ADC_read[0];
+  if(i_adc >= L){
+    i_adc = 0;
+  }
+  else{
+    i_adc++;
+  }
+}
+
+void calcThread(){
+  while(true){
+    static int calcer = 0;
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    cout << "I AM HERE: " << calcer;
+    calcer++;
+  }
+}
 
 int main()
 {
@@ -46,19 +74,25 @@ int main()
 
   // ADC setup
   startADCSPI();
-  vector<uint16_t> ADC_read;
-  uint16_t ADC_store1[L];
-  uint16_t ADC_store2[L];
-
+  std::thread tADC(thr_adc_read);
+  std::thread tC(calcThread);
   //setup filter
   //Make 2 filter objects so that the stored w in each filter is preserved and do not interfer with the other. 
   IIRFilter filter1;
   IIRFilter filter2;
 
+  //make thread to read ADCs
 
   std::fstream file;
-  file.open("TestData.txt", std::fstream::out | std::fstream::trunc); 
+  file.open("TestData.txt", std::fstream::out | std::fstream::trunc);
 
+  return 0;
+}
+
+
+
+
+ /*
   for(int j = 0; j < 20 ; j++){
       //read L number of datapoints from ADC
     for(int i = 0; i < L ; i++){
@@ -82,15 +116,13 @@ int main()
     do_FFT(&plan2, FFToutput2, &mag2, &phase2);
     cout << "A1 = " << mag1 << "\n";
     cout << "A2 = " << mag2 << "\n";
-    cout << "Mag1 = " << phase1 << "\n";
+    cout << "Phase1 = " << phase1 << "\n";
     cout << "Mag1 = " << phase2 << "\n";
     file << j << "," << mag1 << "," << mag2 << "," << phase1 << "," << phase2 << "\n";
   
   } 
-    
-  
-  return 0;
-}
+  */
+
 
 
 /* OLD STUFF

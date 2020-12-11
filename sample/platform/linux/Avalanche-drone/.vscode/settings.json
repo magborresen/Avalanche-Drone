@@ -24,6 +24,7 @@
         "xtr1common": "cpp",
         "xutility": "cpp",
         "fstream": "cpp",
-        "iostream": "cpp"
+        "iostream": "cpp",
+        "thread": "cpp"
     }
 }
