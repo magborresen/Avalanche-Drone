@@ -12,31 +12,72 @@
 using namespace DJI::OSDK;
 using namespace DJI::OSDK::Telemetry;
 
+std::mutex mtx_adc_store;
+std::mutex mtx_fft_signal;
+
+int smph_FFT = 1;
+
+uint16_t ADC_store1[L];
+uint16_t ADC_store2[L];
+
+fftw_complex *FFToutput1;
+fftw_complex *FFTinput1;
+fftw_complex *FFToutput2;
+fftw_complex *FFTinput2;
+
+fftw_plan plan1;
+fftw_plan plan2;
+
+
 void thr_adc_read(){
-  static int i_adc = 0;
-  vector<uint16_t> ADC_read;
-  static uint16_t ADC_store1[L];
-  static uint16_t ADC_store2[L];
-  ADC_read = readADC();
-  ADC_store1[i_adc] = ADC_read[0];
-  ADC_store2[i_adc] = ADC_read[1];
-  cout << ADC_read[0];
-  if(i_adc >= L){
-    i_adc = 0;
-  }
-  else{
-    i_adc++;
+  while(true){
+    static int i_adc = 0;
+    vector<uint16_t> ADC_read;
+
+    ADC_read = readADC();
+    mtx_adc_store.lock();
+    ADC_store1[i_adc] = ADC_read[0];
+    ADC_store2[i_adc] = ADC_read[1];
+    mtx_adc_store.unlock();
+    if(i_adc >= L){
+      i_adc = 0;
+    }
+    else{
+      i_adc++;
+    }
   }
 }
 
-void calcThread(){
+void thr_filter(){  
   while(true){
-    static int calcer = 0;
-    std::this_thread::sleep_for(std::chrono::milliseconds(100));
-    cout << "I AM HERE: " << calcer;
-    calcer++;
+    static int counter = 0;
+    static IIRFilter filter1;
+    static IIRFilter filter2;
+    mtx_adc_store.lock();
+    FFTinput1[i][REAL] = filter1.filter(ADC_store1[counter]);
+    FFTinput2[i][REAL] = filter2.filter(ADC_store2[counter]);
+    mtx_adc_store.unlock();
+    if(counter >= L){
+      counter = 0;
+      smph_FFT = 1;
+    }
+    else{
+      counter++;
+    }
   }
 }
+
+
+void thr_fft(){
+  static double mag1, mag2, phase1, phase2;
+  if(smph_FFT == 1){
+    do_FFT(&plan1, FFToutput1, &mag1, &phase1);
+    do_FFT(&plan2, FFToutput2, &mag2, &phase2);
+    cout << "Mag1: " << mag1 << "\n Mag2: " << mag2 << "\n phase1: " << phase1 << "\n phase2: " << phase2 << "\n";
+    smph_FFT = 0;
+  }
+}
+
 
 int main()
 {
@@ -54,10 +95,6 @@ int main()
   vehicle->obtainCtrlAuthority(functionTimeout);
 */
   // FFT setup
-  fftw_complex *FFToutput1;
-  fftw_complex *FFTinput1;
-  fftw_complex *FFToutput2;
-  fftw_complex *FFTinput2;
   double filter_output1[L];
   double filter_output2[L];
   double mag1;
@@ -65,21 +102,27 @@ int main()
   double phase1;
   double phase2;
   double res;
+  //setup fft
   FFTinput1 = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * N);
   FFToutput1 = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * N);
   FFTinput2 = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * N);
   FFToutput2 = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * N);
-  fftw_plan plan1 = fftw_plan_dft_1d(N, FFTinput1, FFToutput1, FFTW_FORWARD, FFTW_ESTIMATE);
-  fftw_plan plan2 = fftw_plan_dft_1d(N, FFTinput2, FFToutput2, FFTW_FORWARD, FFTW_ESTIMATE);
+  plan1 = fftw_plan_dft_1d(N, FFTinput1, FFToutput1, FFTW_FORWARD, FFTW_ESTIMATE);
+  plan2 = fftw_plan_dft_1d(N, FFTinput2, FFToutput2, FFTW_FORWARD, FFTW_ESTIMATE);
 
   // ADC setup
   startADCSPI();
   std::thread tADC(thr_adc_read);
-  std::thread tC(calcThread);
+  std::thread tFilter(thr_filter);
+  std::thread tFFT(thr_fft);
+
   //setup filter
   //Make 2 filter objects so that the stored w in each filter is preserved and do not interfer with the other. 
-  IIRFilter filter1;
-  IIRFilter filter2;
+
+
+  tADC.join();
+  tFilter.join();
+  tFFT.join();
 
   //make thread to read ADCs
 
