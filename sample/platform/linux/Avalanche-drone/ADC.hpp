@@ -28,6 +28,6 @@ Returns a vector containing results from both adc's
 CS0 is saved on the first position
 CS1 is saved on the second position
 */
-vector<uint16_t> readADC();
+vector<uint16_t> readADC(int numberOfSamples);
 
 #endif
