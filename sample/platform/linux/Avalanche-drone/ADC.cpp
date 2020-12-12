@@ -35,14 +35,12 @@ int startADCSPI() {
 
 //readADC takes in number of samples to perform in a row and return the result in a uint16 vector
 vector<uint16_t> readADC(int numberOfSamples) {
-	
 	vector<uint16_t> result;
-	char buf[numberOfSamples] = {0};
+	char buf[numberOfSamples*2] = {0};
 	
 	// read from first ADC
 	bcm2835_spi_chipSelect(BCM2835_SPI_CS0);
 	bcm2835_spi_transfern(buf, numberOfSamples*2);
-
 	for (int i = 0; i < numberOfSamples/2; i++)
 	{
 		result.push_back( ((buf[i] << 8) + buf[i+1]) >> 2 );
