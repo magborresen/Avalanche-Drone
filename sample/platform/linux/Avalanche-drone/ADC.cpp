@@ -37,7 +37,33 @@ int startADCSPI() {
 vector<uint16_t> readADC(int numberOfSamples) {
 	vector<uint16_t> result;
 	char buf[numberOfSamples*2] = {0};
-	
+
+	uint32_t RXCnt=0;
+
+	volatile uint32_t* paddr = bcm2835_spi0 + BCM2835_SPI0_CS/4;
+    volatile uint32_t* fifo = bcm2835_spi0 + BCM2835_SPI0_FIFO/4;
+
+	char txEmpty = 0;
+ 
+
+	/* Clear TX and RX fifos */
+	bcm2835_peri_set_bits(paddr, BCM2835_SPI0_CS_CLEAR, BCM2835_SPI0_CS_CLEAR);
+
+	while(true){
+		/* Set TA = 1 */
+		bcm2835_peri_set_bits(paddr, BCM2835_SPI0_CS_TA, BCM2835_SPI0_CS_TA);
+		while(((bcm2835_peri_read(paddr) & BCM2835_SPI0_CS_RXD))&&( RXCnt < 2 ))
+		{
+			rbuf[RXCnt] = bcm2835_peri_read_nb(fifo);
+			RXCnt++;
+		}
+		/* Set TA = 0 */
+		bcm2835_peri_set_bits(paddr, 0, BCM2835_SPI0_CS_TA);
+		//while (!(bcm2835_peri_read_nb(paddr) & BCM2835_SPI0_CS_DONE));
+	}
+    
+
+	/*
 	// read from first ADC
 	bcm2835_spi_chipSelect(BCM2835_SPI_CS0);
 	while(true){
@@ -49,7 +75,9 @@ vector<uint16_t> readADC(int numberOfSamples) {
 	{
 		result.push_back( ((buf[i] << 8) + buf[i+1]) >> 2 );
 	}
+	*/
 	return result;
+	
 }
 
 int closeADCSPI() {
