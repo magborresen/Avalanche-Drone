@@ -75,7 +75,7 @@ void thr_fft(){
     if(smph_FFT == 1){
       do_FFT(&plan1, FFToutput1, &mag1, &phase1);
       do_FFT(&plan2, FFToutput2, &mag2, &phase2);
-      cout << "Mag1: " << mag1 << "\n Mag2: " << mag2 << "\n phase1: " << phase1 << "\n phase2: " << phase2 << "\n";
+      //cout << "Mag1: " << mag1 << "\n Mag2: " << mag2 << "\n phase1: " << phase1 << "\n phase2: " << phase2 << "\n";
       smph_FFT = 0;
     }
   }
