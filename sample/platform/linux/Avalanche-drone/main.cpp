@@ -54,8 +54,10 @@ void thr_filter(){
     static IIRFilter filter1;
     static IIRFilter filter2;
     mtx_adc_store.lock();
-    FFTinput1[counter][REAL] = filter1.filter(ADC_store1[counter]);
-    FFTinput2[counter][REAL] = filter2.filter(ADC_store2[counter]);
+    //FFTinput1[counter][REAL] = filter1.filter(ADC_store1[counter]);
+    //FFTinput2[counter][REAL] = filter2.filter(ADC_store2[counter]);
+    FFTinput1[counter][REAL] = ADC_store1[counter];
+    FFTinput2[counter][REAL] = ADC_store2[counter];
     mtx_adc_store.unlock();
     if(counter >= L){
       counter = 0;
