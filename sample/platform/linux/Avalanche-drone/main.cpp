@@ -32,14 +32,14 @@ fftw_plan plan2;
 
 void thr_adc_read(){
   while(true){
+
     static int i_adc = 0;
     vector<uint16_t> ADC_read;
+    for (int i = 0; i < ADC_read.size(); i++)
+    {
+      cout << ADC_read(i);
+    }
 
-    ADC_read = readADC();
-    mtx_adc_store.lock();
-    ADC_store1[i_adc] = ADC_read[0];
-    ADC_store2[i_adc] = ADC_read[1];
-    mtx_adc_store.unlock();
     if(i_adc >= L){
       i_adc = 0;
     }

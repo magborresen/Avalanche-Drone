@@ -36,12 +36,18 @@ int startADCSPI() {
 vector<uint16_t> readADC() {
 	
 	vector<uint16_t> result;
-	char buf[2] = {0};
+	char buf[1000] = {0};
 	
 	// read from first ADC
 	bcm2835_spi_chipSelect(BCM2835_SPI_CS0);
-	bcm2835_spi_transfern(buf, 2);
-	result.push_back( ((buf[0] << 8) + buf[1]) >> 2 );
+	bcm2835_spi_transfern(buf, 1000);
+
+	for (int i = 0; i < 500; i++)
+	{
+		result.push_back( ((buf[i] << 8) + buf[i+1]) >> 2 );
+	}
+	
+	
 	//cout << "Read from SPI 0: " << result[0] << endl;
 	// Read from second ADC
 	//bcm2835_spi_chipSelect(BCM2835_SPI_CS1);
