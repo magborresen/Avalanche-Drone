@@ -26,7 +26,7 @@ int startADCSPI() {
 	bcm2835_spi_setDataMode(BCM2835_SPI_MODE2);
 	
 	// Set clock divider
-	bcm2835_spi_setClockDivider(BCM2835_SPI_CLOCK_DIVIDER_16);
+	bcm2835_spi_setClockDivider(BCM2835_SPI_CLOCK_DIVIDER_8);
 	bcm2835_spi_setChipSelectPolarity(BCM2835_SPI_CS0, LOW);
 	bcm2835_spi_setChipSelectPolarity(BCM2835_SPI_CS1, LOW);
 	bcm2835_spi_chipSelect(BCM2835_SPI_CS0);
@@ -41,6 +41,7 @@ vector<uint16_t> readADC(int numberOfSamples) {
 	// read from first ADC
 	bcm2835_spi_chipSelect(BCM2835_SPI_CS0);
 	bcm2835_spi_transfern(buf, numberOfSamples*2);
+
 	for (int i = 0; i < numberOfSamples/2; i++)
 	{
 		result.push_back( ((buf[i] << 8) + buf[i+1]) >> 2 );
