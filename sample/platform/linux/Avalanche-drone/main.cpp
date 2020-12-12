@@ -37,7 +37,7 @@ void thr_adc_read(){
     vector<uint16_t> ADC_read;
     for (int i = 0; i < ADC_read.size(); i++)
     {
-      cout << ADC_read(i);
+      cout << ADC_read[i];
     }
 
     if(i_adc >= L){
