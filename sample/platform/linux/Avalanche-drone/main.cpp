@@ -67,14 +67,15 @@ void thr_filter(){
   }
 }
 
-
 void thr_fft(){
-  static double mag1, mag2, phase1, phase2;
-  if(smph_FFT == 1){
-    do_FFT(&plan1, FFToutput1, &mag1, &phase1);
-    do_FFT(&plan2, FFToutput2, &mag2, &phase2);
-    cout << "Mag1: " << mag1 << "\n Mag2: " << mag2 << "\n phase1: " << phase1 << "\n phase2: " << phase2 << "\n";
-    smph_FFT = 0;
+  while(true){
+    static double mag1, mag2, phase1, phase2;
+    if(smph_FFT == 1){
+      do_FFT(&plan1, FFToutput1, &mag1, &phase1);
+      do_FFT(&plan2, FFToutput2, &mag2, &phase2);
+      cout << "Mag1: " << mag1 << "\n Mag2: " << mag2 << "\n phase1: " << phase1 << "\n phase2: " << phase2 << "\n";
+      smph_FFT = 0;
+    }
   }
 }
 
@@ -112,20 +113,20 @@ int main()
 
   // ADC setup
   startADCSPI();
-  std::thread tADC(thr_adc_read);
-  std::thread tFilter(thr_filter);
-  std::thread tFFT(thr_fft);
-
+  
   //setup filter
   //Make 2 filter objects so that the stored w in each filter is preserved and do not interfer with the other. 
 
+  //thread setup
+  std::thread tADC(thr_adc_read);
+  std::thread tFilter(thr_filter);
+  std::thread tFFT(thr_fft);
 
   tADC.join();
   tFilter.join();
   tFFT.join();
 
   //make thread to read ADCs
-
   std::fstream file;
   file.open("TestData.txt", std::fstream::out | std::fstream::trunc);
 

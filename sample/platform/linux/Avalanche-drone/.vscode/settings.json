@@ -52,6 +52,8 @@
         "xlocale": "cpp",
         "xlocinfo": "cpp",
         "xlocnum": "cpp",
-        "xtree": "cpp"
+        "xtree": "cpp",
+        "compare": "cpp",
+        "concepts": "cpp"
     }
 }
