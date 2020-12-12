@@ -75,10 +75,6 @@ int main()
       file << i << "," << FFTinput1[k][0] << "," << std::sqrt(std::pow(FFToutput2[k][0],2) + std::pow(FFToutput2[k][1],2)) << "\n";
     }
   }
-  //make thread to read ADCs
-  std::fstream file;
-  file.open("TestData.txt", std::fstream::out | std::fstream::trunc);
-
   return 0;
 }
 
