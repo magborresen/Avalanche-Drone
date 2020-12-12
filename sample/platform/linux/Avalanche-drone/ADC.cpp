@@ -43,11 +43,10 @@ vector<uint16_t> readADC() {
 	bcm2835_spi_transfern(buf, 2);
 	result.push_back( ((buf[0] << 8) + buf[1]) >> 2 );
 	//cout << "Read from SPI 0: " << result[0] << endl;
-	
 	// Read from second ADC
-	bcm2835_spi_chipSelect(BCM2835_SPI_CS1);
-	bcm2835_spi_transfern(buf, 2);
-	result.push_back( ((buf[0] << 8) + buf[1]) >> 2 );
+	//bcm2835_spi_chipSelect(BCM2835_SPI_CS1);
+	//bcm2835_spi_transfern(buf, 2);
+	//result.push_back( ((buf[0] << 8) + buf[1]) >> 2 );
 	//cout << "Read from SPI 1: " << result[0] << endl;
 	return result;
 }

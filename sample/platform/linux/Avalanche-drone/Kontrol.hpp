@@ -14,8 +14,8 @@
 using namespace std;
 
 #define PI 3.14159265
-#define N 1950
-#define L 975 //Tager 0,5ms samplingtid at fylde array
+#define N 4096
+#define L 4096 //Tager 0,5ms samplingtid at fylde array
 #define REAL 0
 #define IMAG 1
 #define FS 1950000

@@ -17,7 +17,6 @@
 
 using namespace std;
 
-
 /* Start the SPI interface */
 int startADCSPI();
 
