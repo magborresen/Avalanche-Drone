@@ -52,6 +52,10 @@ vector<uint16_t> readADC(int numberOfSamples) {
 	while(true){
 		/* Set TA = 1 */
 		bcm2835_peri_set_bits(paddr, BCM2835_SPI0_CS_TA, BCM2835_SPI0_CS_TA);
+
+		bcm2835_peri_write_nb(fifo, &txEmpty);
+		bcm2835_peri_write_nb(fifo, &txEmpty);
+
 		while(((bcm2835_peri_read(paddr) & BCM2835_SPI0_CS_RXD))&&( RXCnt < 2 ))
 		{
 			buf[RXCnt] = bcm2835_peri_read_nb(fifo);
