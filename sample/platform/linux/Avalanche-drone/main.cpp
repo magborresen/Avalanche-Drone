@@ -75,6 +75,7 @@ int main()
       file << i << "," << FFTinput1[k][0] << "," << std::sqrt(std::pow(FFToutput2[k][0],2) + std::pow(FFToutput2[k][1],2)) << "\n";
     }
   }
+  file.close();
   return 0;
 }
 
