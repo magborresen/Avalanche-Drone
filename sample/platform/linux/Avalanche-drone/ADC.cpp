@@ -50,7 +50,7 @@ vector<uint16_t> readADC(int numberOfSamples) {
 
 	for (int i = 0; i < numberOfSamples/2; i++)
 	{
-		result.push_back( ((buf[i] << 8) + buf[i+1]) >> 2 );
+		result.push_back( ((&buf[i] << 8) + buf[i+1]) >> 2 );
 	}
 	return result;
 }
