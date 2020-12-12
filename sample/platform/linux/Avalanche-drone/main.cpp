@@ -2,6 +2,7 @@
 //#include "Kontrol.hpp"
 #include "ADC.hpp"
 #include "IIRFilter.hpp"
+#include <fftw3.h>
 #include <vector>
 #include <iostream>
 #include <fstream>
@@ -71,7 +72,7 @@ int main()
     fftw_execute(plan1);
     for (int k = 0; k < N; k++)
     {
-      file << i << "," << FFTinput1[k][0] << "," << std::sqrt(std::pow(FFToutput2[k],2) + std::pow(FFToutput2[k],2)) << "\n";
+      file << i << "," << FFTinput1[k][0] << "," << std::sqrt(std::pow(FFToutput2[k][0],2) + std::pow(FFToutput2[k][1],2)) << "\n";
     }
   }
   //make thread to read ADCs
