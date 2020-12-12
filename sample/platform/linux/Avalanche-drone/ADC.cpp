@@ -42,7 +42,7 @@ vector<uint16_t> readADC(int numberOfSamples) {
 	bcm2835_spi_chipSelect(BCM2835_SPI_CS0);
 	for (int i = 0; i < numberOfSamples; i++)
 	{
-		bcm2835_spi_transfern(buf[i], 2);
+		bcm2835_spi_transfern(&buf[i], 2);
 		i++;
 	}
 	
@@ -50,7 +50,7 @@ vector<uint16_t> readADC(int numberOfSamples) {
 
 	for (int i = 0; i < numberOfSamples/2; i++)
 	{
-		result.push_back( ((&buf[i] << 8) + buf[i+1]) >> 2 );
+		result.push_back( ((buf[i] << 8) + buf[i+1]) >> 2 );
 	}
 	return result;
 }
