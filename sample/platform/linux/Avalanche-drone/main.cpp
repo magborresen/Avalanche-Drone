@@ -8,6 +8,7 @@
 #include <thread>
 #include <mutex>
 #include <chrono>
+#include "bcm2835.h"
 
 using namespace DJI::OSDK;
 using namespace DJI::OSDK::Telemetry;
@@ -82,6 +83,20 @@ void thr_fft(){
 }
 
 
+void adc_poll_self(){
+  while(true){
+    volatile uint32_t* paddr = bcm2835_spi0 + BCM2835_SPI0_CS/4;
+    volatile uint32_t* fifo = bcm2835_spi0 + BCM2835_SPI0_FIFO/4; //pointer to fifo
+
+
+
+  }
+
+
+
+}
+
+
 int main()
 {
 /*
@@ -115,18 +130,19 @@ int main()
 
   // ADC setup
   startADCSPI();
+
   
   //setup filter
   //Make 2 filter objects so that the stored w in each filter is preserved and do not interfer with the other. 
 
   //thread setup
   std::thread tADC(thr_adc_read);
-  std::thread tFilter(thr_filter);
-  std::thread tFFT(thr_fft);
+  //std::thread tFilter(thr_filter);
+  //std::thread tFFT(thr_fft);
 
   tADC.join();
-  tFilter.join();
-  tFFT.join();
+  //tFilter.join();
+  //tFFT.join();
 
   //make thread to read ADCs
   std::fstream file;
