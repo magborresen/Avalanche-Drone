@@ -43,7 +43,7 @@ vector<uint16_t> readADC(int numberOfSamples) {
 	volatile uint32_t* paddr = bcm2835_spi0 + BCM2835_SPI0_CS/4;
     volatile uint32_t* fifo = bcm2835_spi0 + BCM2835_SPI0_FIFO/4;
 
-	char txEmpty = 0;
+	uint32_t txEmpty = 0;
  
 
 	/* Clear TX and RX fifos */
@@ -53,7 +53,6 @@ vector<uint16_t> readADC(int numberOfSamples) {
 		/* Set TA = 1 */
 		bcm2835_peri_set_bits(paddr, BCM2835_SPI0_CS_TA, BCM2835_SPI0_CS_TA);
 
-		bcm2835_peri_write_nb(fifo, &txEmpty);
 		bcm2835_peri_write_nb(fifo, &txEmpty);
 
 		while(((bcm2835_peri_read(paddr) & BCM2835_SPI0_CS_RXD))&&( RXCnt < 2 ))
