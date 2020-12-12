@@ -1,25 +1,24 @@
 #include "SignalSearch.hpp"
-#include "Kontrol.hpp"
+//#include "Kontrol.hpp"
 #include "ADC.hpp"
 #include "IIRFilter.hpp"
 #include <vector>
 #include <iostream>
 #include <fstream>
-#include <thread>
-#include <mutex>
 #include <chrono>
-#include "bcm2835.h"
+#include <cmath>
 
 using namespace DJI::OSDK;
 using namespace DJI::OSDK::Telemetry;
 
-std::mutex mtx_adc_store;
-std::mutex mtx_fft_signal;
 
+#define samples_per_period 20480
+#define N 4096
+#define L 4096 //Tager 0,5ms samplingtid at fylde array
 int smph_FFT = 1;
 
-uint16_t ADC_store1[L];
-uint16_t ADC_store2[L];
+uint16_t ADC_store1[samples_per_period];
+uint16_t ADC_store2[samples_per_period];
 
 fftw_complex *FFToutput1;
 fftw_complex *FFTinput1;
@@ -29,98 +28,22 @@ fftw_complex *FFTinput2;
 fftw_plan plan1;
 fftw_plan plan2;
 
-
-void thr_adc_read(){
-  while(true){
-
-    static int i_adc = 0;
-    vector<uint16_t> ADC_read;
-    ADC_read = readADC();
-    for (int i = 0; i < ADC_read.size(); i++)
-    {
-      cout << ADC_read[i];
-    }
-
-    if(i_adc >= L){
-      i_adc = 0;
-    }
-    else{
-      i_adc++;
-    }
-  }
-}
-
-void thr_filter(){  
-  while(true){
-    static int counter = 0;
-    static IIRFilter filter1;
-    static IIRFilter filter2;
-    mtx_adc_store.lock();
-    //FFTinput1[counter][REAL] = filter1.filter(ADC_store1[counter]);
-    //FFTinput2[counter][REAL] = filter2.filter(ADC_store2[counter]);
-    FFTinput1[counter][REAL] = ADC_store1[counter];
-    FFTinput2[counter][REAL] = ADC_store2[counter];
-    mtx_adc_store.unlock();
-    if(counter >= L){
-      counter = 0;
-      smph_FFT = 1;
-    }
-    else{
-      counter++;
-    }
-  }
-}
-
-void thr_fft(){
-  while(true){
-    static double mag1, mag2, phase1, phase2;
-    if(smph_FFT == 1){
-      do_FFT(&plan1, FFToutput1, &mag1, &phase1);
-      do_FFT(&plan2, FFToutput2, &mag2, &phase2);
-      //cout << "Mag1: " << mag1 << "\n Mag2: " << mag2 << "\n phase1: " << phase1 << "\n phase2: " << phase2 << "\n";
-      smph_FFT = 0;
-    }
-  }
-}
-
-
-void adc_poll_self(){
-  while(true){
-    volatile uint32_t* paddr = bcm2835_spi0 + BCM2835_SPI0_CS/4;
-    volatile uint32_t* fifo = bcm2835_spi0 + BCM2835_SPI0_FIFO/4; //pointer to fifo
-
-
-
-  }
-
-
-
-}
-
-
 int main()
 {
-/*
-  // Setup OSDK.
-  LinuxSetup linuxEnvironment(argc, argv);
-  Vehicle*   vehicle = linuxEnvironment.getVehicle();
-  if (vehicle == NULL)
-  {
-      std::cout << "Vehicle not initialized, exiting.\n";
-      return -1;
-  }
-  //  runSignalSearchMission(vehicle, 8 , 1);
-  // Obtain Control Authority
-  vehicle->obtainCtrlAuthority(functionTimeout);
-*/
+  /*
+    // Setup OSDK.
+    LinuxSetup linuxEnvironment(argc, argv);
+    Vehicle*   vehicle = linuxEnvironment.getVehicle();
+    if (vehicle == NULL)
+    {
+        std::cout << "Vehicle not initialized, exiting.\n";
+        return -1;
+    }
+    //  runSignalSearchMission(vehicle, 8 , 1);
+    // Obtain Control Authority
+    vehicle->obtainCtrlAuthority(functionTimeout);
+  */
   // FFT setup
-  double filter_output1[L];
-  double filter_output2[L];
-  double mag1;
-  double mag2;
-  double phase1;
-  double phase2;
-  double res;
   //setup fft
   FFTinput1 = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * N);
   FFToutput1 = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * N);
@@ -132,19 +55,25 @@ int main()
   // ADC setup
   startADCSPI();
 
-  
-  //setup filter
-  //Make 2 filter objects so that the stored w in each filter is preserved and do not interfer with the other. 
+  vector<uint16_t> sampledData = readADC(samples_per_period);
 
-  //thread setup
-  std::thread tADC(thr_adc_read);
-  //std::thread tFilter(thr_filter);
-  //std::thread tFFT(thr_fft);
+ 
+  std::fstream file;
+  file.open("TestData.txt", std::fstream::out | std::fstream::trunc);
 
-  tADC.join();
-  //tFilter.join();
-  //tFFT.join();
-
+  for (int i = 0; i < samples_per_period/N; i++)
+  {
+    for (int j = 0; j < N; j++)
+    {
+      FFTinput1[j][0] = sampledData[j+i*N];
+      FFTinput1[j][1] = 0;
+    }
+    fftw_execute(plan1);
+    for (int k = 0; k < N; k++)
+    {
+      file << i << "," << FFTinput1[k][0] << "," << std::sqrt(std::pow(FFToutput2[k],2) + std::pow(FFToutput2[k],2)) << "\n";
+    }
+  }
   //make thread to read ADCs
   std::fstream file;
   file.open("TestData.txt", std::fstream::out | std::fstream::trunc);

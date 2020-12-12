@@ -26,34 +26,27 @@ int startADCSPI() {
 	bcm2835_spi_setDataMode(BCM2835_SPI_MODE2);
 	
 	// Set clock divider
-	bcm2835_spi_setClockDivider(BCM2835_SPI_CLOCK_DIVIDER_8);
+	bcm2835_spi_setClockDivider(BCM2835_SPI_CLOCK_DIVIDER_16);
 	bcm2835_spi_setChipSelectPolarity(BCM2835_SPI_CS0, LOW);
 	bcm2835_spi_setChipSelectPolarity(BCM2835_SPI_CS1, LOW);
 	bcm2835_spi_chipSelect(BCM2835_SPI_CS0);
 	return 0;
 }
 
-vector<uint16_t> readADC() {
+//readADC takes in number of samples to perform in a row and return the result in a uint16 vector
+vector<uint16_t> readADC(int numberOfSamples) {
 	
 	vector<uint16_t> result;
-	char buf[1000] = {0};
+	char buf[numberOfSamples] = {0};
 	
 	// read from first ADC
 	bcm2835_spi_chipSelect(BCM2835_SPI_CS0);
-	bcm2835_spi_transfern(buf, 1000);
+	bcm2835_spi_transfern(buf, numberOfSamples*2);
 
-	for (int i = 0; i < 500; i++)
+	for (int i = 0; i < numberOfSamples/2; i++)
 	{
 		result.push_back( ((buf[i] << 8) + buf[i+1]) >> 2 );
 	}
-	
-	
-	//cout << "Read from SPI 0: " << result[0] << endl;
-	// Read from second ADC
-	//bcm2835_spi_chipSelect(BCM2835_SPI_CS1);
-	//bcm2835_spi_transfern(buf, 2);
-	//result.push_back( ((buf[0] << 8) + buf[1]) >> 2 );
-	//cout << "Read from SPI 1: " << result[0] << endl;
 	return result;
 }
 

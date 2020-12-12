@@ -14,8 +14,7 @@
 using namespace std;
 
 #define PI 3.14159265
-#define N 4096
-#define L 4096 //Tager 0,5ms samplingtid at fylde array
+
 #define REAL 0
 #define IMAG 1
 #define FS 1950000
@@ -30,6 +29,6 @@ double calc_Angle(double FFT_output1, double FFT_output2, double FFT_phase1, dou
 
 void cast2complex (double *iir_output, fftw_complex* FFT_input);
 
-void do_FFT (fftw_plan* plan, fftw_complex* FFToutput, double *mag , double *phase);
+void do_FFT(fftw_plan* plan, fftw_complex* FFToutput, double *mag , double *phase);
 
 void input_sim (double *out1, double *out2);
