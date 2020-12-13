@@ -59,7 +59,7 @@ int main()
 
     V3D test;
 
-    
+    avaTrans.printStatus();
 
     for (int i = 0; i < 20; i++)
     {
