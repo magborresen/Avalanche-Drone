@@ -23,6 +23,9 @@
 float64_t latConvertionFactor    = 0.0000001567848; //deafult latconvertion is for 45 degrees
 float64_t longConvertionFactor   = 2*pi/(earthRadius*2*pi); //deafult longitude, doesn't depend on position
 
+#define SS_PI 3.14159265359;
+#define earthRadius 6378137;
+
 bool runSignalSearchMission(Vehicle* vehicle, uint8_t maxNumWaypoint, int responseTimeout);
 
 void setWaypointDefaults(WayPointSettings* wp);

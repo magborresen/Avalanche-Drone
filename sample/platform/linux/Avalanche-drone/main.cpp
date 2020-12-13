@@ -109,7 +109,7 @@ void setupSimulation(){
 		avaTrans.setStartPos(start_pos_1.latitude , start_pos_1.longitude);
 	*/
 	avaTrans.setStartPos(0 , 0);
-	avaTrans.setAvalanchePos(30 , 30)
+	avaTrans.setAvalanchePos(30 , 30);
 }
 
 void simulatingFlying(){

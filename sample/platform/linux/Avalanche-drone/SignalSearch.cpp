@@ -4,7 +4,7 @@ using namespace DJI::OSDK;
 using namespace DJI::OSDK::Telemetry;  
 
 const int earthRadius = 6378137;
-const float64_t pi = 3.14159265359;
+
 
 std::fstream myfile;
 std::string filename = "codeLog.txt";
@@ -18,9 +18,9 @@ void openFile()
 
 void calcLatConvertionFactor(float64_t lat)
 {
-    float64_t smallCircleRadius = earthRadius * std::sin(pi/2 - lat); //calculate circle of sphere radius
-    float64_t smallCircleCircumstance = 2 * smallCircleRadius * pi; //calculate circle of sphere circumstance
-    float64_t latRadPerMeter = (2*pi) / smallCircleCircumstance; //calculate radian per meter
+    float64_t smallCircleRadius = earthRadius * std::sin(SS_PI/2 - lat); //calculate circle of sphere radius
+    float64_t smallCircleCircumstance = 2 * smallCircleRadius * SS_PI; //calculate circle of sphere circumstance
+    float64_t latRadPerMeter = (2*SS_PI) / smallCircleCircumstance; //calculate radian per meter
     longConvertionFactor = latRadPerMeter;
 }
 
