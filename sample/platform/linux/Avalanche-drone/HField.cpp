@@ -1,5 +1,7 @@
 #include "HField.hpp"
 #include "SignalSearch.hpp"
+#include "V3D.hpp"
+
 
 HField::HField(/* args */)
 {
@@ -90,9 +92,9 @@ void HField::calculate_BIOT_vector(){
     Method for calculating the H-field vector at a given position.
     transform the position so that it is relative to start position and avalanche transmitter
 */
-v3d HField::getHFieldVector(double posX, double posY){
+V3D HField::getHFieldVector(double posX, double posY){
     //normalize position so that it is relative to lavinetransmitter and start position
-    v3d posV;
+    V3D posV;
     posV.x = posX;
     posV.y = posY;
     posV.z = 0;
@@ -103,7 +105,7 @@ v3d HField::getHFieldVector(double posX, double posY){
     calculate_Cross_vector();
     calculate_BIOT_vector();
 
-    v3d returnVector;
+    V3D returnVector;
     returnVector.x = 0;
     returnVector.y = 0;
     returnVector.z = 0;
@@ -161,13 +163,13 @@ void HField::setStartPos(double x, double y){
     Input vector should be in lat,long
     resulting vector is a meter vector
 */
-v3d HField::calculate_Relative_Pos(v3d pos){
-    v3d bV;
+V3D HField::calculate_Relative_Pos(V3D pos){
+    V3D bV;
     bV.x = pos.x-pos.x;
     bV.y = pos.y-pos.y;
     bV.z = pos.z-pos.z;
 
-    v3d cV;
+    V3D cV;
     cV.x = (avalanchePos.x + bV.x)*latConvertionFactor;
     cV.y = (avalanchePos.x + bV.y)*longConvertionFactor;
     cV.z = avalanchePos.x + bV.z;

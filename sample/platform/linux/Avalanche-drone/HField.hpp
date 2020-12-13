@@ -10,17 +10,6 @@
 //sets the resolution of coil circle
 #define HFIELD_HPP_N 25
 
-/*
-Struct for 3d vector package just to make life easy
-*/
-struct v3d
-{
-    double x;
-    double y;
-    double z;
-};
-
-
 class HField
 {
 private:
@@ -52,13 +41,13 @@ private:
     void calculate_BIOT_vector();
 
     //Method for calculating postion relative to normalize avalanche transmitter
-    v3d calculate_Relative_Pos(v3d pos);
+    V3D calculate_Relative_Pos(V3D pos);
 
     //artribute for start position of drone
-    v3d startPos;
+    V3D startPos;
 
     //artribute for avalanche transmitter position of drone relative to start position
-    v3d avalanchePos;
+    V3D avalanchePos;
 
     
 public:
@@ -67,7 +56,7 @@ public:
     void setStartPos(double x, double y);
 
     HField(/* args */);
-    v3d getHFieldVector(double posX, double posY);
+    V3D getHFieldVector(double posX, double posY);
     ~HField();
 };
 
