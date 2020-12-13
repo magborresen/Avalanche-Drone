@@ -41,6 +41,7 @@ void setupSimulation(){
 		calcLatConvertionFactor(start_pos_1.latitude);
 		avaTrans.setStartPos(start_pos_1.latitude , start_pos_1.longitude);
 	*/
+    std::cout << "HALLO\n";
 	avaTrans.setStartPos(0 , 0);
 	avaTrans.setAvalanchePos(30 , 30);
 }
