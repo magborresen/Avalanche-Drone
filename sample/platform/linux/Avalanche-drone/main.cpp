@@ -67,7 +67,7 @@ int main()
 	//setup the H-field simulation
 
 
-	void setupSimulation();
+	setupSimulation();
 
     V3D test;
 
