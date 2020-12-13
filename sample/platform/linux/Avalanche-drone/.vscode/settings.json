@@ -54,7 +54,8 @@
         "xlocnum": "cpp",
         "xtree": "cpp",
         "compare": "cpp",
-        "concepts": "cpp"
+        "concepts": "cpp",
+        "cctype": "cpp"
     },
     "cmake.configureOnOpen": true
 }

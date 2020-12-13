@@ -17,9 +17,10 @@ private:
     double Ra = 0.01; //radius of sending antenna
     double I = 0.1399; //current in coil
     int mu0 = 1; //u0
-    std::vector<double> phi;
-    std::vector<double> Xc; //X coordinates of the coil
-    std::vector<double> Yc; //Y coordinates of the coil
+    
+    double phi[HFIELD_HPP_N];
+    double Xc[HFIELD_HPP_N]; //X coordinates of the coil
+    double Yc[HFIELD_HPP_N]; //Y coordinates of the coil
 
     //arrays used for calculating the H-field
     double Rx[HFIELD_HPP_N];

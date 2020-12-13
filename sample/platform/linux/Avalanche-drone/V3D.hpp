@@ -10,7 +10,6 @@ public:
     double y;
     double z;
     V3D();
-    V3D(double ix,double iy,double iz);
     ~V3D();
 };
 

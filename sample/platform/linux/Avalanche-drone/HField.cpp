@@ -6,19 +6,24 @@
 HField::HField(/* args */)
 {
     //initialize phi
-    double i = -PI/2.0;
-    while(i < 3*PI/2){
-        phi.push_back(i);
-        i +=2*PI/(HFIELD_HPP_N-1);
+    double j = -PI/2.0
+    int k = 0;
+    while(j < 3*PI/2){
+        phi[k] = j;
+        j +=2*PI/(HFIELD_HPP_N-1);
+        k++;
+        if(k >= HFIELD_HPP_N){
+            break;
+        }
     }
 
     for (int i = 0; i < phi.size(); i++)
     {
-        Xc.push_back( std::cos(phi[i]) * Ra);
+        Xc[i] = std::cos(phi[i]) * Ra;
     }
     for (int i = 0; i < phi.size(); i++)
     {
-        Yc.push_back( std::sin(phi[i]) * Ra);
+        Yc[i] = std::sin(phi[i]) * Ra;
     }
 
     //reset startPos to 0
