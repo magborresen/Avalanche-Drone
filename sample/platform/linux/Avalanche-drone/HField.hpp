@@ -8,7 +8,7 @@
 #define PI 3.14159265359
 
 //sets the resolution of coil circle
-#define N 25
+#define HFIELD_HPP_N 25
 
 /*
 Struct for 3d vector package just to make life easy
@@ -33,22 +33,21 @@ private:
     std::vector<double> Yc; //Y coordinates of the coil
 
     //arrays used for calculating the H-field
-    double Rx[N];
-    double Ry[N];
-    double Rz[N];
-    double dlx[N];
-    double dly[N];
-    double xCross[N];
-    double yCross[N];
-    double zCross[N];
-    double R[N];
-    double xB[N];
-    double yB[N];
-    double zB[N];
+    double Rx[HFIELD_HPP_N];
+    double Ry[HFIELD_HPP_N];
+    double Rz[HFIELD_HPP_N];
+    double dlx[HFIELD_HPP_N];
+    double dly[HFIELD_HPP_N];
+    double xCross[HFIELD_HPP_N];
+    double yCross[HFIELD_HPP_N];
+    double zCross[HFIELD_HPP_N];
+    double R[HFIELD_HPP_N];
+    double xB[HFIELD_HPP_N];
+    double yB[HFIELD_HPP_N];
+    double zB[HFIELD_HPP_N];
 
     //Method for calculating the H-field
     void calculate_R_vector(double y , double z);
-    void calculate_Cross_vector();
     void calculate_Cross_vector();
     void calculate_BIOT_vector();
 
@@ -64,7 +63,7 @@ private:
     
 public:
     
-    void setLavinePos(double x, double y);
+    void setAvalanchePos(double x, double y);
     void setStartPos(double x, double y);
 
     HField(/* args */);
@@ -112,7 +111,7 @@ HField::~HField()
     dl is the current element vector which will make up the coil
 */
 void HField::calculate_R_vector(double y , double z){
-    for (int i = 0; i < (N-1); i++)
+    for (int i = 0; i < (HFIELD_HPP_N-1); i++)
     {
         Rx[i] = -0.5 * (Xc[i] + Xc[i+1]);
         Ry[i] = (y - ( 0.5 * (Yc[i]+ Yc[i+1]) ));
@@ -121,11 +120,11 @@ void HField::calculate_R_vector(double y , double z){
         dly[i] = Yc[i+1]-Xc[i];
     }
     //set the last element
-    Rx[N] = -0.5 * (Xc[N-1] + Xc[0]);
-    Ry[N] = (y - ( 0.5 * (Yc[N-1]+ Yc[0]) ));
-    Rz[N] = z;
-    dlx[N] = Xc[N-1]-Xc[0];
-    dly[N] = Yc[N-1]-Xc[0];
+    Rx[HFIELD_HPP_N] = -0.5 * (Xc[HFIELD_HPP_N-1] + Xc[0]);
+    Ry[HFIELD_HPP_N] = (y - ( 0.5 * (Yc[HFIELD_HPP_N-1]+ Yc[0]) ));
+    Rz[HFIELD_HPP_N] = z;
+    dlx[HFIELD_HPP_N] = Xc[HFIELD_HPP_N-1]-Xc[0];
+    dly[HFIELD_HPP_N] = Yc[HFIELD_HPP_N-1]-Xc[0];
 }
 
 
@@ -135,7 +134,7 @@ void HField::calculate_R_vector(double y , double z){
     XCross is X-component of the curl of dl and R, similarly I get Y and Z
 */
 void HField::calculate_Cross_vector(){
-    for (int i = 0; i < N; i++)
+    for (int i = 0; i < HFIELD_HPP_N; i++)
     {
         xCross[i] = dly[i]*Rz[i];
         yCross[i] = -dlx[i]*Rz[i];
@@ -149,7 +148,7 @@ void HField::calculate_Cross_vector(){
     This will be the biot savarts law equation
 */
 void HField::calculate_BIOT_vector(){
-    for (int i = 0; i < N; i++)
+    for (int i = 0; i < HFIELD_HPP_N; i++)
     {
         xB[i] = I*mu0 / (std::pow(R[i],3)) * xCross[i];
         yB[i] = I*mu0 / (std::pow(R[i],3)) * yCross[i];
@@ -163,6 +162,11 @@ void HField::calculate_BIOT_vector(){
 */
 v3d HField::getHFieldVector(double posX, double posY){
     //normalize position so that it is relative to lavinetransmitter and start position
+    v3d posV;
+    posV.x = posX;
+    posV.y = posY;
+    posV.z = 0;
+
     posV = calculate_Relative_Pos(posV)
 
     calculate_R_vector(posV.x, posV.y);
@@ -206,7 +210,7 @@ void HField::setAvalanchePos(double x, double y){
     x is the positive longitude means postive x will move start pos EAST
     y is the postive latitude which means positive y will move start pos north
 */
-void setStartPos(double x, double y){
+void HField::setStartPos(double x, double y){
     startPos.x = x;
     startPos.y = y;
 }
@@ -229,9 +233,9 @@ void setStartPos(double x, double y){
 */
 v3d HField::calculate_Relative_Pos(v3d pos){
     v3d bV;
-    bV.x = pos.x-v3d.x
-    bV.y = pos.y-v3d.y
-    bV.z = pos.z-v3d.z
+    bV.x = pos.x-pos.x;
+    bV.y = pos.y-pos.y;
+    bV.z = pos.z-pos.z;
 
     v3d cV;
     cV.x = (avalanchePos.x + bV.x)*latConvertionFactor;
