@@ -1,6 +1,7 @@
 #include "HField.hpp"
 #include "SignalSearch.hpp"
 #include "V3D.hpp"
+#include <iostream>
 
 HField::HField(/* args */)
 {
@@ -137,9 +138,14 @@ void HField::setAvalanchePos(double x, double y){
     //currently in lat,long domain calculate offset in latitude and logitude in normal meters as that is input
     x = longConvertionFactor * x;
     y = latConvertionFactor * y;
-    HField::avalanchePos.x = startPos.x - x;
-    HField::avalanchePos.y = startPos.y - y;
-    HField::avalanchePos.z = 0;
+    avalanchePos.x = startPos.x - x;
+    avalanchePos.y = startPos.y - y;
+    avalanchePos.z = 0;
+
+    std::cout << "X: " <<  avalanchePos.x << " Y: " << avalanchePos.y << " Z: " << avalanchePos.z;
+
+
+
 }
 
 /*  Sets the drone start position wich all calculation is normalized to
@@ -147,8 +153,8 @@ void HField::setAvalanchePos(double x, double y){
     y is the postive latitude which means positive y will move start pos north
 */
 void HField::setStartPos(double x, double y){
-    HField::startPos.x = x;
-    HField::startPos.y = y;
+    startPos.x = x;
+    startPos.y = y;
 }
 
 /*
@@ -169,9 +175,9 @@ void HField::setStartPos(double x, double y){
 */
 V3D HField::calculate_Relative_Pos(V3D pos){
     V3D bV;
-    bV.x = pos.x-pos.x;
-    bV.y = pos.y-pos.y;
-    bV.z = pos.z-pos.z;
+    bV.x = pos.x-avalanchePos.x;
+    bV.y = pos.y-avalanchePos.y;
+    bV.z = pos.z-avalanchePos.z;
 
     V3D cV;
     cV.x = (avalanchePos.x + bV.x)*latConvertionFactor;
