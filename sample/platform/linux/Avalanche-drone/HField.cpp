@@ -138,8 +138,8 @@ void HField::setAvalanchePos(double x, double y){
     //currently in lat,long domain calculate offset in latitude and logitude in normal meters as that is input
     x = longConvertionFactor * x;
     y = latConvertionFactor * y;
-    std::cout << longConvertionFactor;
-    std::cout << latConvertionFactor;
+    std::cout <<"LC" << longConvertionFactor;
+    std::cout <<"\nLC2" << latConvertionFactor;
     avalanchePos.x = startPos.x - x;
     avalanchePos.y = startPos.y - y;
     avalanchePos.z = 0;
