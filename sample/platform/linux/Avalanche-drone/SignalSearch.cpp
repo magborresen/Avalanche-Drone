@@ -3,8 +3,6 @@
 using namespace DJI::OSDK;
 using namespace DJI::OSDK::Telemetry;  
 
-const int earthRadius = 6378137;
-
 
 std::fstream myfile;
 std::string filename = "codeLog.txt";
