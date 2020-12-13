@@ -17,11 +17,11 @@ HField::HField(/* args */)
         }
     }
 
-    for (int i = 0; i < phi.size(); i++)
+    for (int i = 0; i < HFIELD_HPP_N; i++)
     {
         Xc[i] = std::cos(phi[i]) * Ra;
     }
-    for (int i = 0; i < phi.size(); i++)
+    for (int i = 0; i < HFIELD_HPP_N; i++)
     {
         Yc[i] = std::sin(phi[i]) * Ra;
     }
