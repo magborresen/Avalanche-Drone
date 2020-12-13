@@ -3,7 +3,7 @@
 
 #include <vector>
 #include <cmath>
-#include "SignalSeach.hpp"
+#include "SignalSearch.hpp"
 
 #define PI 3.14159265359
 

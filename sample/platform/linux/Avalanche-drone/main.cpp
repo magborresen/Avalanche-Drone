@@ -1,4 +1,4 @@
-#include "SignalSearch.hpp"
+
 //#include "Kontrol.hpp"
 #include "ADC.hpp"
 #include "IIRFilter.hpp"
@@ -9,6 +9,7 @@
 #include <chrono>
 #include <cmath>
 #include "HField.hpp"
+#include "SignalSearch.hpp"
 
 using namespace DJI::OSDK;
 using namespace DJI::OSDK::Telemetry;
