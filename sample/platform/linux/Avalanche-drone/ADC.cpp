@@ -42,7 +42,7 @@ vector<uint16_t> readADC(int numberOfSamples) {
 
 	for (int i = 0; i < numberOfSamples; i++)
 	{
-		bcm2835_spi_transfern(buf, 2 )
+		bcm2835_spi_transfern(buf, 2 );
 		result.push_back(((buf[0] << 8) + buf[1]) >> 2);
 	}
 	return result;
