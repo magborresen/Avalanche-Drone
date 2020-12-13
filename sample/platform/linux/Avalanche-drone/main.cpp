@@ -42,7 +42,7 @@ void setupSimulation(){
 		avaTrans.setStartPos(start_pos_1.latitude , start_pos_1.longitude);
 	*/
 	avaTrans.setStartPos(0 , 0);
-	avaTrans.setAvalanchePos(30 , 30);
+	avaTrans.setAvalanchePosFromOffset(30 , 30);
 }
 
 int main()
@@ -71,7 +71,9 @@ int main()
     V3D test;
 
     avaTrans.printStatus();
-
+    test = avaTrans.getHFieldVector(0,0);
+    test = avaTrans.getHFieldVector(0,1);
+    /*
     for (int i = 0; i < 20; i++)
     {
         test = avaTrans.getHFieldVector(0,i);
@@ -87,7 +89,7 @@ int main()
         test = avaTrans.getHFieldVector(i,i);
         std::cout << "x: " << test.x << " y: " << test.y << "\n"; 
     }
-    
+    */
 
 	/*
 	FFTinput1 = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * N);

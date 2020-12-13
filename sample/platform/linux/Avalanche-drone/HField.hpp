@@ -52,11 +52,11 @@ private:
 
     
 public:
-    
     void setAvalanchePos(double x, double y);
+    void setAvalanchePosFromOffset(double x, double y);
     void setStartPos(double x, double y);
     void printStatus();
-    
+
     HField(/* args */);
     V3D getHFieldVector(double posX, double posY);
     ~HField();

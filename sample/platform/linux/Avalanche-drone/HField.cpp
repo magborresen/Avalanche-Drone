@@ -146,8 +146,8 @@ Resulting avalanche position is in lat,long
 void HField::setAvalanchePos(double x, double y){
 
     //currently in lat,long domain calculate offset in latitude and logitude in normal meters as that is input
-    x = longConvertionFactor * x;
-    y = latConvertionFactor * y;
+    x = x * longConvertionFactor ;
+    y = y * latConvertionFactor;
     std::cout <<"LC" << longConvertionFactor;
     std::cout <<"\nLC2" << latConvertionFactor;
     avalanchePos.x = startPos.x - x;
@@ -155,9 +155,17 @@ void HField::setAvalanchePos(double x, double y){
     avalanchePos.z = 0;
 
     std::cout << "X: " <<  avalanchePos.x << " Y: " << avalanchePos.y << " Z: " << avalanchePos.z<< "\n";
+}
 
-
-
+/*
+    This function is for setting the avalanche reciever as a offset from the start postion
+    Done by just setting the venctor straight away
+*/
+void HField::setAvalanchePosFromOffset(double x, double y){
+    avalanchePos.x = -x;
+    avalanchePos.y = -y;
+    avalanchePos.z = 0;
+    std::cout << "X: " <<  avalanchePos.x << " Y: " << avalanchePos.y << " Z: " << avalanchePos.z<< "\n";
 }
 
 /*  Sets the drone start position which all calculation is normalized to
