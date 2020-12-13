@@ -20,9 +20,11 @@ HField::HField(/* args */)
     for (int i = 0; i < HFIELD_HPP_N; i++)
     {
         Xc[i] = std::cos(phi[i]) * Ra;
+        std::cout << "Xc" << Xc[i] << "\n"
     }
     for (int i = 0; i < HFIELD_HPP_N; i++)
     {
+        std::cout << "Yc" << Yc[i] << "\n"
         Yc[i] = std::sin(phi[i]) * Ra;
     }
 
@@ -48,13 +50,16 @@ HField::~HField()
     dl is the current element vector which will make up the coil
 */
 void HField::calculate_R_vector(double y , double z){
+    std::cout << "R_vector \n";
     for (int i = 0; i < (HFIELD_HPP_N-1); i++)
     {
         Rx[i] = -0.5 * (Xc[i] + Xc[i+1]);
         Ry[i] = (y - ( 0.5 * (Yc[i]+ Yc[i+1]) ));
         Rz[i] = z;
         dlx[i] = Xc[i+1]-Xc[i];
-        dly[i] = Yc[i+1]-Xc[i];
+        dly[i] = Yc[i+1]-Yc[i];
+        std::cout << "Rx,Ry,Rz: " << Rx[i] << "," <<  Ry[i] << "," <<  Rz[i];
+        std::cout << "    dlx,dly: " << dlx[i] << "," << dly[i] << "\n" ;
     }
     //set the last element
     Rx[HFIELD_HPP_N] = -0.5 * (Xc[HFIELD_HPP_N-1] + Xc[0]);
@@ -71,12 +76,14 @@ void HField::calculate_R_vector(double y , double z){
     XCross is X-component of the curl of dl and R, similarly I get Y and Z
 */
 void HField::calculate_Cross_vector(){
+    std::cout << "xCross,yCross,zCross,R \n";
     for (int i = 0; i < HFIELD_HPP_N; i++)
     {
         xCross[i] = dly[i]*Rz[i];
         yCross[i] = -dlx[i]*Rz[i];
         zCross[i] = (dlx[i]*Ry[i])-(dly[i]*Rx[i]);
         R[i] = std::sqrt(std::pow(Rx[i],2) + std::pow(Ry[i],2) + std::pow(Rz[i],2));
+        std::cout << i << ": "<<   xCross[i] << "," << yCross[i] << "," << zCross[i] << "," << R[i] << "\n";
     }
 }
 
@@ -85,11 +92,13 @@ void HField::calculate_Cross_vector(){
     This will be the biot savarts law equation
 */
 void HField::calculate_BIOT_vector(){
+    std::cout << "xB,yB,zB \n";
     for (int i = 0; i < HFIELD_HPP_N; i++)
     {
         xB[i] = I*mu0 / (std::pow(R[i],3)) * xCross[i];
         yB[i] = I*mu0 / (std::pow(R[i],3)) * yCross[i];
         zB[i] = I*mu0 / (std::pow(R[i],3)) * zCross[i];
+        std::cout << i << ": "<<   xB[i] << "," << yB[i] << "," << zB[i] << "\n";
     }
 }
 
@@ -150,7 +159,7 @@ void HField::setAvalanchePos(double x, double y){
 
 }
 
-/*  Sets the drone start position wich all calculation is normalized to
+/*  Sets the drone start position which all calculation is normalized to
     x is the positive longitude means postive x will move start pos EAST
     y is the postive latitude which means positive y will move start pos north
 */
@@ -183,8 +192,8 @@ V3D HField::calculate_Relative_Pos(V3D pos){
     bV.z = pos.z-avalanchePos.z;
 
     V3D cV;
-    cV.x = (avalanchePos.x + bV.x)*latConvertionFactor;
-    cV.y = (avalanchePos.x + bV.y)*longConvertionFactor;
+    cV.x = (avalanchePos.x + bV.x)/latConvertionFactor;
+    cV.y = (avalanchePos.x + bV.y)/longConvertionFactor;
     cV.z = avalanchePos.x + bV.z;
     return cV;
 }
