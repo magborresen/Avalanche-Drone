@@ -18,8 +18,8 @@
 #define SS_PI 3.14159265359
 #define earthRadius 6378137
 
-float64_t latConvertionFactor;
-float64_t longConvertionFactor; //deafult longitude, doesn't depend on position
+extern float64_t latConvertionFactor;
+extern float64_t longConvertionFactor; //deafult longitude, doesn't depend on position
 
 bool runSignalSearchMission(Vehicle* vehicle, uint8_t maxNumWaypoint, int responseTimeout);
 
