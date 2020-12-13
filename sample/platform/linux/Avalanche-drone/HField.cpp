@@ -11,6 +11,7 @@ HField::HField(/* args */)
     while(j < 3*PI/2){
         phi[k] = j;
         j +=2*PI/(HFIELD_HPP_N-1);
+        std::cout << "Phi(" << k << ") = " << phi[k];
         k++;
         if(k >= HFIELD_HPP_N){
             break;
@@ -20,11 +21,11 @@ HField::HField(/* args */)
     for (int i = 0; i < HFIELD_HPP_N; i++)
     {
         Xc[i] = std::cos(phi[i]) * Ra;
-        std::cout << "Xc" << Xc[i] << "\n"
+        std::cout << "Xc" << Xc[i] << "\n";
     }
     for (int i = 0; i < HFIELD_HPP_N; i++)
     {
-        std::cout << "Yc" << Yc[i] << "\n"
+        std::cout << "Yc" << Yc[i] << "\n";
         Yc[i] = std::sin(phi[i]) * Ra;
     }
 
