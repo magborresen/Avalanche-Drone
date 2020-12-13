@@ -206,6 +206,8 @@ V3D HField::calculate_Relative_Pos(V3D pos){
     cV.x = (avalanchePos.x + bV.x)/latConvertionFactor;
     cV.y = (avalanchePos.x + bV.y)/longConvertionFactor;
     cV.z = avalanchePos.x + bV.z;
+
+    cV.print();
     return cV;
 }
 
