@@ -32,7 +32,7 @@ fftw_complex *FFTinput2;
 fftw_plan plan1;
 fftw_plan plan2;
 
-volatile HField avaTrans;
+HField avaTrans;
 
 void setupSimulation();
 
@@ -58,6 +58,8 @@ int main()
 	void setupSimulation();
 
     V3D test;
+
+    
 
     for (int i = 0; i < 20; i++)
     {

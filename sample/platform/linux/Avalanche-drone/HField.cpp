@@ -186,3 +186,13 @@ V3D HField::calculate_Relative_Pos(V3D pos){
     cV.z = avalanchePos.x + bV.z;
     return cV;
 }
+
+
+void HField::printStatus(){
+    double Ra = 0.01; //radius of sending antenna
+    double I = 0.1399; //current in coil
+    int mu0 = 1; //u0
+    std::cout << "Ra: " << 0.01 << "\n I: " << I << "\n mu0: " << mu0 << "\n";
+    std::cout << "Startpos: " << startPos.x << "," << startPos.y << "," << startPos.z << "\n";
+    std::cout << "Avalanche pos: " << avalanchePos.x << "," << avalanchePos.y << "," << avalanchePos.z << "\n";
+}
