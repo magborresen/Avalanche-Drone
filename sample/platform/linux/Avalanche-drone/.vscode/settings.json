@@ -55,5 +55,6 @@
         "xtree": "cpp",
         "compare": "cpp",
         "concepts": "cpp"
-    }
+    },
+    "cmake.configureOnOpen": true
 }

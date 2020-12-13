@@ -4,7 +4,8 @@
             "name": "Win32",
             "includePath": [
                 "${workspaceFolder}/**",
-                "C:/Kode/Avalanche-Drone/osdk-core/**"
+                "C:/Code/AvalancheDrone/Avalanche-Drone/osdk-core",
+                "C:/Code/AvalancheDrone/Avalanche-Drone/osdk-core/api/inc/**"
             ],
             "defines": [
                 "_DEBUG",

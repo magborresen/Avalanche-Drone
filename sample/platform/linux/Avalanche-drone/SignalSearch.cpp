@@ -37,7 +37,7 @@ bool runSignalSearchMission(Vehicle* vehicle, uint8_t maxNumWaypoint, int respon
 
     float32_t fly_alt = 3; //sets the flying altitude to 3 meters
 
-    //initialize the mission manager, Sets fdata as the deafult waypoin setting, sets mission to waypoint mission
+    //initialize the mission manager, Sets fdata as the deafult waypoint setting, sets mission to waypoint mission
     ACK::ErrorCode initAck = vehicle->missionManager->init(DJI_MISSION_TYPE::WAYPOINT, responseTimeout, &fdata);
     if (ACK::getError(initAck))
     {
@@ -109,7 +109,7 @@ std::vector<DJI::OSDK::WayPointSettings> createWaypoints(DJI::OSDK::Vehicle* veh
     //gets the current GPS position of the drone
     start_pos_1 = vehicle->broadcast->getGlobalPosition();
     start_pos_2 = start_pos_1;
-	    calcLatConvertionFactor(start_pos_1.latitude);
+	calcLatConvertionFactor(start_pos_1.latitude);
     start_pos_2.longitude = start_pos_2.longitude + (longConvertionFactor*100); //move second starting point 100meter in longitude 
     std::vector<DJI::OSDK::WayPointSettings> wpVector = calculateWaypoints(start_pos_1, start_pos_2, maxNumWaypoint);
     return wpVector;
