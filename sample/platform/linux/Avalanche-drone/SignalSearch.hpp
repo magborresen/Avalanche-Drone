@@ -20,11 +20,11 @@
 // Helpers
 #include <dji_linux_helpers.hpp>
 
-#define SS_PI 3.14159265359;
-#define earthRadius 6378137;
+#define SS_PI 3.14159265359
+#define earthRadius 6378137
 
 float64_t latConvertionFactor    = 0.0000001567848; //deafult latconvertion is for 45 degrees
-float64_t longConvertionFactor   = 2*SS_PI/(earthRadius*2*SS_PI); //deafult longitude, doesn't depend on position
+float64_t longConvertionFactor   = 2 * SS_PI / (earthRadius * 2 * SS_PI ); //deafult longitude, doesn't depend on position
 
 
 
