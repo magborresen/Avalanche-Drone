@@ -20,13 +20,6 @@ using namespace DJI::OSDK::Telemetry;
 #define samples_per_period 20480
 //#define N 4096
 #define L 4096 //Tager 0,5ms samplingtid at fylde array
-int smph_FFT = 1;
-
-
-struct v2d{
-  double x;
-  double y;
-};
 
 uint16_t ADC_store1[samples_per_period];
 uint16_t ADC_store2[samples_per_period];
@@ -39,7 +32,7 @@ fftw_complex *FFTinput2;
 fftw_plan plan1;
 fftw_plan plan2;
 
-HField avaTrans;
+volatile HField avaTrans;
 
 void setupSimulation();
 
