@@ -142,7 +142,7 @@ void HField::setAvalanchePos(double x, double y){
     avalanchePos.y = startPos.y - y;
     avalanchePos.z = 0;
 
-    std::cout << "X: " <<  avalanchePos.x << " Y: " << avalanchePos.y << " Z: " << avalanchePos.z;
+    std::cout << "X: " <<  avalanchePos.x << " Y: " << avalanchePos.y << " Z: " << avalanchePos.z<< "\n";
 
 
 
@@ -155,6 +155,7 @@ void HField::setAvalanchePos(double x, double y){
 void HField::setStartPos(double x, double y){
     startPos.x = x;
     startPos.y = y;
+    std::cout << "X: " <<  startPos.x << " Y: " << startPos.y<< "\n";
 }
 
 /*

@@ -41,6 +41,7 @@ fftw_plan plan2;
 
 HField avaTrans;
 
+void setupSimulation();
 
 int main()
 {
