@@ -46,6 +46,7 @@ int main()
   */
   // FFT setup
   //setup fft
+
   FFTinput1 = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * N);
   FFToutput1 = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * N);
   FFTinput2 = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * N);
@@ -55,26 +56,12 @@ int main()
 
   // ADC setup
   startADCSPI();
+  while(true){
+    vector<uint16_t> sampledData = readADC(samples_per_period);
+  }
 
-  vector<uint16_t> sampledData = readADC(samples_per_period);
-
- 
   std::fstream file;
   file.open("TestData.txt", std::fstream::out | std::fstream::trunc);
-
-  for (int i = 0; i < samples_per_period/N; i++)
-  {
-    for (int j = 0; j < N; j++)
-    {
-      FFTinput1[j][0] = sampledData[j+i*N];
-      FFTinput1[j][1] = 0;
-    }
-    fftw_execute(plan1);
-    for (int k = 0; k < N; k++)
-    {
-      file << i << "," << FFTinput1[k][0] << "," << std::sqrt(std::pow(FFToutput2[k][0],2) + std::pow(FFToutput2[k][1],2)) << "\n";
-    }
-  }
   file.close();
   return 0;
 }
@@ -112,8 +99,6 @@ int main()
   
   } 
   */
-
-
 
 /* OLD STUFF
   // Setup variables for use
