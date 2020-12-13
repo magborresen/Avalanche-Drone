@@ -6,6 +6,7 @@ class V3D
 private:
     /* data */
 public:
+    void print();
     double x;
     double y;
     double z;

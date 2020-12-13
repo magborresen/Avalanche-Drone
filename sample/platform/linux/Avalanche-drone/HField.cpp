@@ -11,7 +11,7 @@ HField::HField(/* args */)
     while(j < 3*PI/2){
         phi[k] = j;
         j +=2*PI/(HFIELD_HPP_N-1);
-        std::cout << "Phi(" << k << ") = " << phi[k];
+        std::cout << "Phi(" << k << ") = " << phi[k] << "\n";
         k++;
         if(k >= HFIELD_HPP_N){
             break;
@@ -21,12 +21,12 @@ HField::HField(/* args */)
     for (int i = 0; i < HFIELD_HPP_N; i++)
     {
         Xc[i] = std::cos(phi[i]) * Ra;
-        std::cout << "Xc" << Xc[i] << "\n";
+        std::cout << "Xc: " << Xc[i] << "\n";
     }
     for (int i = 0; i < HFIELD_HPP_N; i++)
     {
-        std::cout << "Yc" << Yc[i] << "\n";
         Yc[i] = std::sin(phi[i]) * Ra;
+        std::cout << "Yc: " << Yc[i] << "\n";
     }
 
     //reset startPos to 0
@@ -63,11 +63,11 @@ void HField::calculate_R_vector(double y , double z){
         std::cout << "    dlx,dly: " << dlx[i] << "," << dly[i] << "\n" ;
     }
     //set the last element
-    Rx[HFIELD_HPP_N] = -0.5 * (Xc[HFIELD_HPP_N-1] + Xc[0]);
-    Ry[HFIELD_HPP_N] = (y - ( 0.5 * (Yc[HFIELD_HPP_N-1]+ Yc[0]) ));
-    Rz[HFIELD_HPP_N] = z;
-    dlx[HFIELD_HPP_N] = Xc[HFIELD_HPP_N-1]-Xc[0];
-    dly[HFIELD_HPP_N] = Yc[HFIELD_HPP_N-1]-Xc[0];
+    Rx[HFIELD_HPP_N-1] = -0.5 * (Xc[HFIELD_HPP_N]-1 + Xc[0]);
+    Ry[HFIELD_HPP_N-1] = (y - ( 0.5 * (Yc[HFIELD_HPP_N-1]+ Yc[0]) ));
+    Rz[HFIELD_HPP_N-1] = z;
+    dlx[HFIELD_HPP_N-1] = Xc[HFIELD_HPP_N-1]-Xc[0];
+    dly[HFIELD_HPP_N-1] = Yc[HFIELD_HPP_N-1]-Xc[0];
 }
 
 
@@ -135,6 +135,8 @@ V3D HField::getHFieldVector(double posX, double posY){
         returnVector.y = returnVector.y +zB[i];
         returnVector.z = returnVector.x +xB[i];
     }
+    returnVector.print();
+
     return returnVector;
 }
 
