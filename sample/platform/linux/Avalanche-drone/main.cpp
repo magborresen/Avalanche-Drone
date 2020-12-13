@@ -10,6 +10,8 @@
 #include <cmath>
 #include "HField.hpp"
 #include "SignalSearch.hpp"
+#include "V3D.hpp"
+
 
 using namespace DJI::OSDK;
 using namespace DJI::OSDK::Telemetry;
@@ -61,7 +63,7 @@ int main()
 	//setup the H-field simulation
 	void setupSimulation();
 
-    v3d test;
+    V3D test;
 
     for (int i = 0; i < 20; i++)
     {
