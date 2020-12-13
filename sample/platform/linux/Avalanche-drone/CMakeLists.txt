@@ -28,6 +28,7 @@ add_executable(${PROJECT_NAME}
     ADC.cpp
     IIRFilter.cpp
     HField.cpp
+    V3D.cpp
     )
 
 find_library(WIRINGPI_LIBRARIES NAMES wiringPi)

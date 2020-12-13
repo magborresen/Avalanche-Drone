@@ -4,6 +4,7 @@
             "name": "Win32",
             "includePath": [
                 "${workspaceFolder}/**",
+                "${workspaceFolder}/*",
                 "C:/Code/AvalancheDrone/Avalanche-Drone/osdk-core",
                 "C:/Code/AvalancheDrone/Avalanche-Drone/osdk-core/api/inc/**"
             ],

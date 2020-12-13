@@ -4,9 +4,6 @@
 
 HField::HField(/* args */)
 {
-    startPos = new V3D();
-    avalanchePos = new V3D();
-
     //initialize phi
     double j = -PI/2.0;
     int k = 0;
