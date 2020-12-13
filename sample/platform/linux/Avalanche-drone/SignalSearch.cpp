@@ -9,9 +9,6 @@ const float64_t pi = 3.14159265359;
 std::fstream myfile;
 std::string filename = "codeLog.txt";
 
-float64_t latConvertionFactor    = 0.0000001567848; //deafult latconvertion is for 45 degrees
-float64_t longConvertionFactor   = 2*pi/(earthRadius*2*pi); //deafult longitude, doesn't depend on position
-
 //function for clearing log file
 void openFile()
 {

@@ -16,7 +16,7 @@ using namespace DJI::OSDK::Telemetry;
 
 
 #define samples_per_period 20480
-#define N 4096
+//#define N 4096
 #define L 4096 //Tager 0,5ms samplingtid at fylde array
 int smph_FFT = 1;
 

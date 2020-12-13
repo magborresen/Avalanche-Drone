@@ -27,6 +27,7 @@ add_executable(${PROJECT_NAME}
     SignalSearch.cpp
     ADC.cpp
     IIRFilter.cpp
+    HField.cpp
     )
 
 find_library(WIRINGPI_LIBRARIES NAMES wiringPi)
