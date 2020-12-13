@@ -34,7 +34,16 @@ fftw_plan plan2;
 
 HField avaTrans;
 
-void setupSimulation();
+void setupSimulation(){
+  	//places virtual avalanchetransmitter
+	/*
+		Telemetry::GlobalPosition start_pos_1 = vehicle->broadcast->getGlobalPosition();
+		calcLatConvertionFactor(start_pos_1.latitude);
+		avaTrans.setStartPos(start_pos_1.latitude , start_pos_1.longitude);
+	*/
+	avaTrans.setStartPos(0 , 0);
+	avaTrans.setAvalanchePos(30 , 30);
+}
 
 int main()
 {
@@ -55,6 +64,8 @@ int main()
 	//setup fft
 
 	//setup the H-field simulation
+
+
 	void setupSimulation();
 
     V3D test;
@@ -97,17 +108,6 @@ int main()
 	file.close();
 	return 0;
 	*/
-}
-
-void setupSimulation(){
-  	//places virtual avalanchetransmitter
-	/*
-		Telemetry::GlobalPosition start_pos_1 = vehicle->broadcast->getGlobalPosition();
-		calcLatConvertionFactor(start_pos_1.latitude);
-		avaTrans.setStartPos(start_pos_1.latitude , start_pos_1.longitude);
-	*/
-	avaTrans.setStartPos(0 , 0);
-	avaTrans.setAvalanchePos(30 , 30);
 }
 
 void simulatingFlying(){
