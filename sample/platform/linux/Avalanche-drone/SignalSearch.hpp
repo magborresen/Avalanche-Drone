@@ -24,7 +24,7 @@
 #define earthRadius 6378137;
 
 float64_t latConvertionFactor    = 0.0000001567848; //deafult latconvertion is for 45 degrees
-float64_t longConvertionFactor   = 2*pi/(earthRadius*2*pi); //deafult longitude, doesn't depend on position
+float64_t longConvertionFactor   = 2*SS_PI/(earthRadius*2*SS_PI); //deafult longitude, doesn't depend on position
 
 
 
