@@ -7,8 +7,8 @@ using namespace DJI::OSDK::Telemetry;
 std::fstream myfile;
 std::string filename = "codeLog.txt";
 
-latConvertionFactor = 0.0000001567848; //deafult latconvertion is for 45 degrees
-longConvertionFactor   = 2 * SS_PI / (earthRadius * 2 * SS_PI );
+float64_t latConvertionFactor = 0.0000001567848; //deafult latconvertion is for 45 degrees
+float64_t longConvertionFactor   = 2 * SS_PI / (earthRadius * 2 * SS_PI );
 
 
 //function for clearing log file
