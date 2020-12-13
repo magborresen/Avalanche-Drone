@@ -6,7 +6,7 @@
 HField::HField(/* args */)
 {
     //initialize phi
-    double j = -PI/2.0
+    double j = -PI/2.0;
     int k = 0;
     while(j < 3*PI/2){
         phi[k] = j;
