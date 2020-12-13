@@ -112,7 +112,7 @@ v3d HField::getHFieldVector(double posX, double posY){
         By mapping ycoil -> xcoordinate the coil is places along the x axises
         and mapping zcoil -> y coordinates then the H-field will point "forward" in the z-axis.
     */
-    for (int i = 0; i < N; i++)
+    for (int i = 0; i < HFIELD_HPP_N; i++)
     {
         returnVector.x = returnVector.x +yB[i];
         returnVector.y = returnVector.y +zB[i];
