@@ -81,7 +81,7 @@ int main()
             counter++;
             for (int i = 0; i < 10; i++)
         {
-            std::cout << "A1: " << recivedSignal.A1[i] << "   A2: " << recivedSignal.A2[i];
+            std::cout << "A1:" << recivedSignal.A1[i] << "  A2: " << recivedSignal.A2[i] << "\n";
         }
         }
     }
