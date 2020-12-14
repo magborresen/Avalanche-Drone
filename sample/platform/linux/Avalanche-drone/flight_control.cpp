@@ -83,7 +83,6 @@ bool moveByPositionOffset(Vehicle *vehicle, float xOffsetDesired, float yawDesir
 	
 	char func[50];
 	
-	float yOffsetDesired, zOffsetDesired = 0;
 	
 	vehicle->control->velocityAndYawRateCtrl(10, 10, 1, 100);
 
@@ -103,8 +102,8 @@ bool moveByPositionOffset(Vehicle *vehicle, float xOffsetDesired, float yawDesir
 
 	// Get initial offset. Updated in the loop later
 	double xOffsetRemaining = xOffsetDesired - localOffset.x;
-	double yOffsetRemaining = yOffsetDesired - localOffset.y;
-	double zOffsetRemaining = zOffsetDesired - localOffset.z;
+	//double yOffsetRemaining = yOffsetDesired - localOffset.y;
+	//double zOffsetRemaining = zOffsetDesired - localOffset.z;
 
 	// Conversions
 	double yawDesiredRad     = DEG2RAD * yawDesired;
@@ -126,7 +125,8 @@ bool moveByPositionOffset(Vehicle *vehicle, float xOffsetDesired, float yawDesir
 	int   outOfBounds         = 0;
 	int   brakeCounter        = 0;
 	int   speedFactor         = 2;
-	float xCmd, yCmd, zCmd;
+	float xCmd
+	
 	/*! Calculate the inputs to send the position controller. We implement basic
 	*  receding setpoint position control and the setpoint is always 1 m away
 	*  from the current position - until we get within a threshold of the goal.
@@ -139,6 +139,7 @@ bool moveByPositionOffset(Vehicle *vehicle, float xOffsetDesired, float yawDesir
 	else
 	xCmd = 0;
 
+	/*
 	if (yOffsetDesired > 0)
 	yCmd = (yOffsetDesired < speedFactor) ? yOffsetDesired : speedFactor;
 	else if (yOffsetDesired < 0)
@@ -147,10 +148,11 @@ bool moveByPositionOffset(Vehicle *vehicle, float xOffsetDesired, float yawDesir
 	yCmd = 0;
 	
     zCmd = currentBroadcastGP.height + zOffsetDesired;
+	*/
 	
 	// Initialize control data struct. 
 	Control::CtrlData controlData = Control::CtrlData((Control::HorizontalLogic::HORIZONTAL_VELOCITY | Control::VerticalLogic::VERTICAL_VELOCITY | Control::YawLogic::YAW_ANGLE 
-						| Control::HorizontalCoordinate::HORIZONTAL_BODY | Control::StableMode::STABLE_ENABLE), xCmd, yCmd, zCmd, yawDesiredRad / DEG2RAD);
+						| Control::HorizontalCoordinate::HORIZONTAL_BODY | Control::StableMode::STABLE_ENABLE), xCmd, 0, 0, yawDesired);
 
 	//! Main closed-loop receding set-point position control
 	while (elapsedTimeInMs < timeoutInMilSec)
