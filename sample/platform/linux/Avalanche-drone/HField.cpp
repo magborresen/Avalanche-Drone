@@ -62,10 +62,12 @@ void HField::calculate_R_vector(double y , double z){
 
     //set the last element
     Rx[HFIELD_HPP_N-1] = -0.5 * (Xc[HFIELD_HPP_N-1] + Xc[0]);
-    Ry[HFIELD_HPP_N-1] = (y - ( 0.5 * (Yc[HFIELD_HPP_N-1]+ Yc[0]) ));
+    Ry[HFIELD_HPP_N-1] = (y - ( 0.5 * (Yc[HFIELD_HPP_N-1] + Yc[0]) ));
     Rz[HFIELD_HPP_N-1] = z;
     dlx[HFIELD_HPP_N-1] = -Xc[HFIELD_HPP_N-1]+Xc[0];
     dly[HFIELD_HPP_N-1] = -Yc[HFIELD_HPP_N-1]+Yc[0];
+    std::cout << HFIELD_HPP_N-1 << ": " << "Rx,Ry,Rz: " << Rx[i] << " , " <<  Ry[i] << " , " <<  Rz[i];
+        std::cout << "    dlx,dly: " << dlx[i] << " , " << dly[i] << "\n" ;
 }
 
 
