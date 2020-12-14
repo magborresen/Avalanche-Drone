@@ -40,8 +40,6 @@ HField::~HField()
 }
 
 
-
-
 /*
     calculate R-vector from the coil(X-Y plane)to Y-Z plane where we are 
     interested to find the magnetic field and also the dl-vector along the
@@ -96,9 +94,9 @@ void HField::calculate_BIOT_vector(){
     std::cout << "xB,yB,zB \n";
     for (int i = 0; i < HFIELD_HPP_N; i++)
     {
-        xB[i] = I*mu0 / (std::pow(R[i],3)) * xCross[i];
-        yB[i] = I*mu0 / (std::pow(R[i],3)) * yCross[i];
-        zB[i] = I*mu0 / (std::pow(R[i],3)) * zCross[i];
+        xB[i] = I*mu0 / (4*PI*std::pow(R[i],3)) * xCross[i];
+        yB[i] = I*mu0 / (4*PI*std::pow(R[i],3)) * yCross[i];
+        zB[i] = I*mu0 / (4*PI*std::pow(R[i],3)) * zCross[i];
         std::cout << i << ": "<<   xB[i] << "," << yB[i] << "," << zB[i] << "\n";
     }
 }
