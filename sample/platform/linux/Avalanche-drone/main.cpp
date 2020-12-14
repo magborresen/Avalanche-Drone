@@ -26,7 +26,6 @@ using namespace DJI::OSDK::Telemetry;
 uint16_t ADC_store1[samples_per_period];
 uint16_t ADC_store2[samples_per_period];
 
-std::chrono::steady_clock::time_point sampleClock;
 
 fftw_complex *FFToutput1;
 fftw_complex *FFTinput1;
@@ -62,17 +61,21 @@ int main()
 
     avaTransSim.setupSimulation(0,0,30,30);
 
-
     V3D posNow(0,0,0);
     V3D velNow(1,0,0);
     dataPack recivedSignal;
-    std::chrono::steady_clock::time_point timeStamp;
-    sampleClock = std::chrono::steady_clock::now();
+    auto sampleClock = std::chrono::high_resolution_clock::now();
+    auto timeNow = std::chrono::high_resolution_clock::now();
+
+    sampleClock = std::chrono::high_resolution_clock::now();
     int counter = 0;
 
     whlie(counter < 2){
-        timeStamp = std::chrono::steady_clock::now();
-        if(std::chrono::duration_cast<std::chrono::milliseconds>(sampleClock - timeStamp).count() > 10){
+    
+        auto timediff = timeNow-sampleClock;
+        auto timediffMS = std::chrono::duration_cast<std::chrono::milliseconds>(timediff).count();
+
+        if(timediffMS >= 10){
             avaTransSim.setPosition(posNow);
             avaTransSim.calculateErrorAngleAndSize(velNow);
             recivedSignal = avaTransSim.sample();
