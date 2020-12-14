@@ -220,8 +220,8 @@ bool moveByPositionOffset(Vehicle *vehicle, float xOffsetDesired, float yawDesir
 
 		if (elapsedTimeInMs >= timeoutInMilSec)
 		{
-		std::cout << "Task timeout!\n";
-	}
+			std::cout << "Task timeout!\n";
+		}
 
 	return ACK::SUCCESS;
 }

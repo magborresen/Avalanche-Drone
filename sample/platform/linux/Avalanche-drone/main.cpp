@@ -58,7 +58,7 @@ main(int argc, char** argv)
 	vehicle->obtainCtrlAuthority(functionTimeout);
 	
 	monitoredTakeoff(vehicle);
-	moveByPositionOffset(vehicle, 10, 60);
+	moveByPositionOffset(vehicle, 10, 0);
 	monitoredLanding(vehicle);
 
 
