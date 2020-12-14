@@ -77,29 +77,52 @@ int main(int argc, char** argv)
     uint8_t ctrl_flag_costum = (Control::HORIZONTAL_VELOCITY | Control::VERTICAL_POSITION  | Control::YAW_ANGLE | Control::HORIZONTAL_BODY | Control::STABLE_ENABLE );
 	
     //setup the H-field simulation
-    avaTransSim.setupSimulation(0,0,30,30);
     Telemetry::GlobalPosition currentBroadcastGP;
+    currentBroadcastGP = vehicle->broadcast->getGlobalPosition();
+    avaTransSim.setupSimulation(currentBroadcastGP.longitude,currentBroadcastGP.latitude,30,30);
+
+    
+
+    Control::CtrlData custumData(ctrl_flag_costum, 1 , 0, 2, 20);
+    vehicle->control->flightCtrl(custumData);
+    currentBroadcastGP = vehicle->broadcast->getGlobalPosition();
+    std::cout << "X: " << currentBroadcastGP.latitude << " Y: " << currentBroadcastGP.longitude << "\n";
+
+    Telemetry::Vector3d currentVel;
+    currentVel = vehicle->broadcast->getVelocity();
+    V3D posNow(currentBroadcastGP.longitude,currentBroadcastGP.latitude,0);
+    V3D velNow(currentVel.x,currentVel.y,0);
+
+    auto stampClockSample = std::chrono::high_resolution_clock::now();
+    auto stampClockControl = std::chrono::high_resolution_clock::now();
+    auto timeNow = std::chrono::high_resolution_clock::now();
+
+    dataPack recivedSignal;
     while(true){
         Control::CtrlData custumData(ctrl_flag_costum, 1 , 0, 2, 20);
         vehicle->control->flightCtrl(custumData);
-        currentBroadcastGP = vehicle->broadcast->getGlobalPosition();
-        std::cout << "X: " << currentBroadcastGP.latitude << " Y: " << currentBroadcastGP.longitude << "\n";
-        usleep(20 * 1000);
-    }
-    
-    /*
-    V3D posNow(0,0,0);
-    V3D velNow(1,0,0);
-    dataPack recivedSignal;
-    auto sampleClock = std::chrono::high_resolution_clock::now();
-    auto timeNow = std::chrono::high_resolution_clock::now();
-    int counter = 0;
 
-    while(counter < 2){
+        usleep(1000*20);
+        
+        currentBroadcastGP = vehicle->broadcast->getGlobalPosition();
+        currentVel = vehicle->broadcast->getVelocity();
+        posNow.x = currentBroadcastGP.longitude;
+        posNow.y = currentBroadcastGP.latitude;
+        velNow.x = currentVel.x;
+        velNow.y = currentVel.y;
+        avaTransSim.setPosition(posNow);
+        avaTransSim.calculateErrorAngleAndSize(velNow);
+
+        for (int i = 0; i < 5; i++)
+        {
+            std::cout << "A1:" << recivedSignal.A1[i] << "  A2: " << recivedSignal.A2[i] << "\n";
+        }
+
+
+        /*
         timeNow = std::chrono::high_resolution_clock::now();    
         auto timediff = timeNow-sampleClock;
         auto timediffMS = std::chrono::duration_cast<std::chrono::milliseconds>(timediff).count();
-
         if(timediffMS >= 10){
             avaTransSim.setPosition(posNow);
             avaTransSim.calculateErrorAngleAndSize(velNow);
@@ -111,9 +134,22 @@ int main(int argc, char** argv)
                 std::cout << "A1:" << recivedSignal.A1[i] << "  A2: " << recivedSignal.A2[i] << "\n";
             }
         }
+        */
     }
-    */
+
 }
+
+
+/*
+    while(true){
+        Control::CtrlData custumData(ctrl_flag_costum, 1 , 0, 2, 20);
+        vehicle->control->flightCtrl(custumData);
+        currentBroadcastGP = vehicle->broadcast->getGlobalPosition();
+        std::cout << "X: " << currentBroadcastGP.latitude << " Y: " << currentBroadcastGP.longitude << "\n";
+        usleep(20 * 1000);
+    }
+
+*/
 
 
 
