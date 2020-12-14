@@ -80,8 +80,6 @@ bool moveByPositionOffset(Vehicle *vehicle, float xOffsetDesired, float yawDesir
 	int outOfControlBoundsTimeLimit  = 10 * cycleTimeInMs; // 10 cycles
 	int withinControlBoundsTimeReqmt = 50 * cycleTimeInMs; // 50 cycles
 	int pkgIndex;
-	DJI::OSDK::Control::CtrlData((Control::HorizontalLogic::HORIZONTAL_VELOCITY | Control::VerticalLogic::VERTICAL_VELOCITY | Control::YawLogic::YAW_ANGLE 
-						| Control::HorizontalCoordinate::HORIZONTAL_BODY | Control::StableMode::STABLE_ENABLE), 0, 0, 0, 0);
 	
 	char func[50];
 	
@@ -178,7 +176,7 @@ bool moveByPositionOffset(Vehicle *vehicle, float xOffsetDesired, float yawDesir
 		}
 		if (std::abs(yOffsetRemaining) < speedFactor)
 		{
-		  yCmd = yOffsetRemaining;
+		  controlData.y = yOffsetRemaining;
 		}
 
 		if (std::abs(xOffsetRemaining) < posThresholdInM &&
@@ -215,8 +213,6 @@ bool moveByPositionOffset(Vehicle *vehicle, float xOffsetDesired, float yawDesir
 		{
 		  break;
 		}
-		controlData = DJI::OSDK::Control::CtrlData((Control::HorizontalLogic::HORIZONTAL_VELOCITY | Control::VerticalLogic::VERTICAL_VELOCITY | Control::YawLogic::YAW_ANGLE 
-						| Control::HorizontalCoordinate::HORIZONTAL_BODY | Control::StableMode::STABLE_ENABLE), xCmd, yCmd, zCmd, yawDesiredRad / DEG2RAD);
 	}
 
 		if (elapsedTimeInMs >= timeoutInMilSec)
