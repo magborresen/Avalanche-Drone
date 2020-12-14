@@ -110,8 +110,8 @@ void HField::calculate_BIOT_vector(){
 V3D HField::getHFieldVector(double posLong, double posLat){
     //normalize position so that it is relative to lavinetransmitter and start position
     V3D posV;
-    posV.x = posX;
-    posV.y = posY;
+    posV.x = posLong;
+    posV.y = posLat;
     posV.z = 0;
 
     posV = calculate_Relative_Pos(posV);
