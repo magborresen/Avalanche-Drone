@@ -50,7 +50,7 @@ int tick = 0;
 
 int main(int argc, char** argv)
 {
-	
+	int functionTimeout = 1;
     // Setup OSDK.
     LinuxSetup linuxEnvironment(argc, argv);
     Vehicle*   vehicle = linuxEnvironment.getVehicle();
