@@ -31,6 +31,7 @@
  */
 
 #include "SignalSearch.hpp"
+#include "flight_control.hpp"
 #include <wiringPi.h>
 
 using namespace DJI::OSDK;
@@ -39,64 +40,71 @@ using namespace DJI::OSDK::Telemetry;
 int
 main(int argc, char** argv)
 {
-  wiringPiSetup () ;
-  pinMode (1, OUTPUT) ;
-  // Initialize variables
-  int functionTimeout = 1;
+	wiringPiSetup () ;
+	pinMode (1, OUTPUT) ;
+	// Initialize variables
+	int functionTimeout = 1;
 
-  // Setup OSDK.
-  LinuxSetup linuxEnvironment(argc, argv);
-  Vehicle*   vehicle = linuxEnvironment.getVehicle();
-  if (vehicle == NULL)
-  {
-      std::cout << "Vehicle not initialized, exiting.\n";
-      return -1;
-  }
+	// Setup OSDK.
+	LinuxSetup linuxEnvironment(argc, argv);
+	Vehicle*   vehicle = linuxEnvironment.getVehicle();
+	if (vehicle == NULL)
+	{
+		std::cout << "Vehicle not initialized, exiting.\n";
+		return -1;
+	}
 
-  // Obtain Control Authority
-  vehicle->obtainCtrlAuthority(functionTimeout);
+	// Obtain Control Authority
+	vehicle->obtainCtrlAuthority(functionTimeout);
+	
+	monitoredTakeoff(vehicle);
+	moveByPositionOffset(vehicle, 10, 60);
+	monitoredLanding(vehicle);
 
-  runSignalSearchMission(vehicle, 8 , 1);
-  
-  for (;;)
-  {
-    digitalWrite (1, HIGH) ; delay (500) ;
-    digitalWrite (1,  LOW) ; delay (500) ;
-  }
-  return 0;
+
+	/*
+	runSignalSearchMission(vehicle, 8 , 1);
+
+	for (;;)
+	{
+	digitalWrite (1, HIGH) ; delay (500) ;
+	digitalWrite (1,  LOW) ; delay (500) ;
+	}
+	return 0;
+	}
+	*/
+
+	/* OLD STUFF
+	// Setup variables for use
+	uint8_t wayptPolygonSides;
+	int     hotptInitRadius;
+	int     responseTimeout = 1;
+
+	// Display interactive prompt
+	std::cout
+	<< "| Available commands:                                            |"
+	<< std::endl;
+	std::cout
+	<< "| [a] Waypoint Mission                                           |"
+	<< std::endl;
+	std::cout
+	<< "| [b] Hotpoint Mission                                           |"
+	<< std::endl;
+	char inputChar;
+	std::cin >> inputChar;
+	switch (inputChar)
+	{
+	case 'a':
+	  // Waypoint call
+	  wayptPolygonSides = 6;
+	  runWaypointMission(vehicle, wayptPolygonSides, responseTimeout);
+	  break;
+	case 'b':
+	  hotptInitRadius = 10;
+	  runHotpointMission(vehicle, hotptInitRadius, responseTimeout);
+	  break;
+	default:
+	  break;
+	}
+	*/
 }
-
-
-/* OLD STUFF
-  // Setup variables for use
-  uint8_t wayptPolygonSides;
-  int     hotptInitRadius;
-  int     responseTimeout = 1;
-
-  // Display interactive prompt
-  std::cout
-    << "| Available commands:                                            |"
-    << std::endl;
-  std::cout
-    << "| [a] Waypoint Mission                                           |"
-    << std::endl;
-  std::cout
-    << "| [b] Hotpoint Mission                                           |"
-    << std::endl;
-  char inputChar;
-  std::cin >> inputChar;
-  switch (inputChar)
-  {
-    case 'a':
-      // Waypoint call
-      wayptPolygonSides = 6;
-      runWaypointMission(vehicle, wayptPolygonSides, responseTimeout);
-      break;
-    case 'b':
-      hotptInitRadius = 10;
-      runHotpointMission(vehicle, hotptInitRadius, responseTimeout);
-      break;
-    default:
-      break;
-  }
-*/

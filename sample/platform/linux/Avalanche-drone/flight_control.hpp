@@ -36,7 +36,6 @@ bool monitoredTakeoff(DJI::OSDK::Vehicle* vehiclePtr, int timeout = 1);
     and use velocity control.
 !*/
 bool moveByPositionOffset(DJI::OSDK::Vehicle *vehicle, float xOffsetDesired,
-                          float yOffsetDesired, float zOffsetDesired,
                           float yawDesired, float posThresholdInM = 0.5,
                           float yawThresholdInDeg = 1.0);
 
