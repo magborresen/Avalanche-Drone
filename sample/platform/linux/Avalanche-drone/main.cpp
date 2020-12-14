@@ -71,8 +71,11 @@ int main()
     V3D test;
 
     avaTrans.printStatus();
+
+
+
     test = avaTrans.getHFieldVector(0,0);
-    test = avaTrans.getHFieldVector(0,1);
+    test = avaTrans.getHFieldVector(0,5*longConvertionFactor);
     /*
     for (int i = 0; i < 20; i++)
     {

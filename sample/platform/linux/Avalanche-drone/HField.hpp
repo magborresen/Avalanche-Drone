@@ -58,7 +58,7 @@ public:
     void printStatus();
 
     HField(/* args */);
-    V3D getHFieldVector(double posX, double posY);
+    V3D getHFieldVector(double posLong, double posLat);
     ~HField();
 };
 

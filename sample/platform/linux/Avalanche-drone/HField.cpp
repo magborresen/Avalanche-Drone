@@ -107,7 +107,7 @@ void HField::calculate_BIOT_vector(){
     Method for calculating the H-field vector at a given position.
     transform the position so that it is relative to start position and avalanche transmitter
 */
-V3D HField::getHFieldVector(double posX, double posY){
+V3D HField::getHFieldVector(double posLong, double posLat){
     //normalize position so that it is relative to lavinetransmitter and start position
     V3D posV;
     posV.x = posX;
@@ -198,13 +198,14 @@ void HField::setStartPos(double x, double y){
 */
 V3D HField::calculate_Relative_Pos(V3D pos){
     V3D bV;
-    bV.x = pos.x-avalanchePos.x;
-    bV.y = pos.y-avalanchePos.y;
-    bV.z = pos.z-avalanchePos.z;
+    //calculate b vector and convert vector from long,lat to meter
+    bV.x = (pos.x-startPos.x)/latConvertionFactor;
+    bV.y = (pos.y-startPos.y)/longConvertionFactor;
+    bV.z = (pos.z-startPos.z);
 
     V3D cV;
-    cV.x = (avalanchePos.x + bV.x)/latConvertionFactor;
-    cV.y = (avalanchePos.x + bV.y)/longConvertionFactor;
+    cV.x = (avalanchePos.x + bV.x);
+    cV.y = (avalanchePos.x + bV.y);
     cV.z = avalanchePos.x + bV.z;
     std::cout << "cV:  ";
     cV.print();
