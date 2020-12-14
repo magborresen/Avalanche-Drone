@@ -146,10 +146,11 @@ bool moveByPositionOffset(Vehicle *vehicle, float xOffsetDesired, float yawDesir
 	
     zCmd = currentBroadcastGP.height + zOffsetDesired;
 	
+	// Initialize control data struct. 
 	Control::CtrlData controlData = Control::CtrlData((Control::HorizontalLogic::HORIZONTAL_VELOCITY | Control::VerticalLogic::VERTICAL_VELOCITY | Control::YawLogic::YAW_ANGLE 
 						| Control::HorizontalCoordinate::HORIZONTAL_BODY | Control::StableMode::STABLE_ENABLE), xCmd, yCmd, zCmd, yawDesiredRad / DEG2RAD);
 
-  //! Main closed-loop receding set-point position control
+	//! Main closed-loop receding set-point position control
 	while (elapsedTimeInMs < timeoutInMilSec)
 	{
 		vehicle->control->flightCtrl(controlData);
