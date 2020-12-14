@@ -15,17 +15,17 @@ HField::HField(/* args */)
         k++;
     }
     phi[k] = j;
-    std::cout << "Phi(" << k << ") = " << phi[k] << "\n";
+    //std::cout << "Phi(" << k << ") = " << phi[k] << "\n";
 
     for (int i = 0; i < HFIELD_HPP_N; i++)
     {
         Xc[i] = std::cos(phi[i]) * Ra;
-        std::cout << "Xc: " << Xc[i] << "\n";
+        //std::cout << "Xc: " << Xc[i] << "\n";
     }
     for (int i = 0; i < HFIELD_HPP_N; i++)
     {
         Yc[i] = std::sin(phi[i]) * Ra;
-        std::cout << "Yc: " << Yc[i] << "\n";
+        //std::cout << "Yc: " << Yc[i] << "\n";
     }
 
     //reset startPos to 0
@@ -56,8 +56,8 @@ void HField::calculate_R_vector(double y , double z){
         Rz[i] = z;
         dlx[i] = Xc[i+1]-Xc[i];
         dly[i] = Yc[i+1]-Yc[i];
-        std::cout << i << ": " << "Rx,Ry,Rz: " << Rx[i] << " , " <<  Ry[i] << " , " <<  Rz[i];
-        std::cout << "    dlx,dly: " << dlx[i] << " , " << dly[i] << "\n" ;
+        //std::cout << i << ": " << "Rx,Ry,Rz: " << Rx[i] << " , " <<  Ry[i] << " , " <<  Rz[i];
+        //std::cout << "    dlx,dly: " << dlx[i] << " , " << dly[i] << "\n" ;
     }
 
     //set the last element
@@ -66,8 +66,8 @@ void HField::calculate_R_vector(double y , double z){
     Rz[HFIELD_HPP_N-1] = z;
     dlx[HFIELD_HPP_N-1] = - Xc[HFIELD_HPP_N-1] + Xc[0];
     dly[HFIELD_HPP_N-1] = - Yc[HFIELD_HPP_N-1] + Yc[0];
-    std::cout << HFIELD_HPP_N-1 << ": " << "Rx,Ry,Rz: " << Rx[HFIELD_HPP_N-1] << " , " <<  Ry[HFIELD_HPP_N-1] << " , " <<  Rz[HFIELD_HPP_N-1];
-        std::cout << "    dlx,dly: " << dlx[HFIELD_HPP_N-1] << " , " << dly[HFIELD_HPP_N-1] << "\n" ;
+    //std::cout << HFIELD_HPP_N-1 << ": " << "Rx,Ry,Rz: " << Rx[HFIELD_HPP_N-1] << " , " <<  Ry[HFIELD_HPP_N-1] << " , " <<  Rz[HFIELD_HPP_N-1];
+    //std::cout << "    dlx,dly: " << dlx[HFIELD_HPP_N-1] << " , " << dly[HFIELD_HPP_N-1] << "\n" ;
 }
 
 
@@ -84,7 +84,7 @@ void HField::calculate_Cross_vector(){
         yCross[i] = -dlx[i]*Rz[i];
         zCross[i] = (dlx[i]*Ry[i])-(dly[i]*Rx[i]);
         R[i] = std::sqrt(std::pow(Rx[i],2) + std::pow(Ry[i],2) + std::pow(Rz[i],2));
-        std::cout << i << ": "<<   xCross[i] << "," << yCross[i] << "," << zCross[i] << "," << R[i] << "\n";
+        //std::cout << i << ": "<<   xCross[i] << "," << yCross[i] << "," << zCross[i] << "," << R[i] << "\n";
     }
 }
 
@@ -99,7 +99,7 @@ void HField::calculate_BIOT_vector(){
         xB[i] = I*mu0 / (4*PI*std::pow(R[i],3)) * xCross[i];
         yB[i] = I*mu0 / (4*PI*std::pow(R[i],3)) * yCross[i];
         zB[i] = I*mu0 / (4*PI*std::pow(R[i],3)) * zCross[i];
-        std::cout << i << ": "<<   xB[i] << "," << yB[i] << "," << zB[i] << "\n";
+        //std::cout << i << ": "<<   xB[i] << "," << yB[i] << "," << zB[i] << "\n";
     }
 }
 
@@ -150,13 +150,13 @@ void HField::setAvalanchePos(double x, double y){
     //currently in lat,long domain calculate offset in latitude and logitude in normal meters as that is input
     x = x * longConvertionFactor ;
     y = y * latConvertionFactor;
-    std::cout <<"LC" << longConvertionFactor;
-    std::cout <<"\nLC2" << latConvertionFactor;
+    //std::cout <<"LC" << longConvertionFactor;
+    //std::cout <<"\nLC2" << latConvertionFactor;
     avalanchePos.x = startPos.x - x;
     avalanchePos.y = startPos.y - y;
     avalanchePos.z = 0;
 
-    std::cout << "X: " <<  avalanchePos.x << " Y: " << avalanchePos.y << " Z: " << avalanchePos.z<< "\n";
+    //std::cout << "X: " <<  avalanchePos.x << " Y: " << avalanchePos.y << " Z: " << avalanchePos.z<< "\n";
 }
 
 /*
@@ -167,7 +167,7 @@ void HField::setAvalanchePosFromOffset(double x, double y){
     avalanchePos.x = -x;
     avalanchePos.y = -y;
     avalanchePos.z = 0;
-    std::cout << "X: " <<  avalanchePos.x << " Y: " << avalanchePos.y << " Z: " << avalanchePos.z<< "\n";
+    //std::cout << "X: " <<  avalanchePos.x << " Y: " << avalanchePos.y << " Z: " << avalanchePos.z<< "\n";
 }
 
 /*  Sets the drone start position which all calculation is normalized to
@@ -177,7 +177,7 @@ void HField::setAvalanchePosFromOffset(double x, double y){
 void HField::setStartPos(double x, double y){
     startPos.x = x;
     startPos.y = y;
-    std::cout << "X: " <<  startPos.x << " Y: " << startPos.y<< "\n";
+    //std::cout << "X: " <<  startPos.x << " Y: " << startPos.y<< "\n";
 }
 
 /*
@@ -207,7 +207,7 @@ V3D HField::calculate_Relative_Pos(V3D pos){
     cV.x = (avalanchePos.x + bV.x);
     cV.y = (avalanchePos.x + bV.y);
     cV.z = 0;
-    std::cout << "cV:  ";
+    //std::cout << "cV:  ";
     cV.print();
     return cV;
 }
@@ -217,7 +217,7 @@ void HField::printStatus(){
     double Ra = 0.01; //radius of sending antenna
     double I = 0.1399; //current in coil
     int mu0 = 1; //u0
-    std::cout << "Ra: " << 0.01 << "\n I: " << I << "\n mu0: " << mu0 << "\n";
-    std::cout << "Startpos: " << startPos.x << "," << startPos.y << "," << startPos.z << "\n";
-    std::cout << "Avalanche pos: " << avalanchePos.x << "," << avalanchePos.y << "," << avalanchePos.z << "\n";
+    //std::cout << "Ra: " << 0.01 << "\n I: " << I << "\n mu0: " << mu0 << "\n";
+    //std::cout << "Startpos: " << startPos.x << "," << startPos.y << "," << startPos.z << "\n";
+    //std::cout << "Avalanche pos: " << avalanchePos.x << "," << avalanchePos.y << "," << avalanchePos.z << "\n";
 }

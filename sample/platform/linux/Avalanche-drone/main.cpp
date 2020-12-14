@@ -100,9 +100,9 @@ int main(int argc, char** argv)
     auto stampClockControl = std::chrono::high_resolution_clock::now();
     auto timeNow = std::chrono::high_resolution_clock::now();
     */
-
+    int counter = 0;
     dataPack recivedSignal;
-    
+
     while(true){
         Control::CtrlData custumData(ctrl_flag_costum, 1 , 0, 2, 20);
         vehicle->control->flightCtrl(custumData);
@@ -115,13 +115,20 @@ int main(int argc, char** argv)
         posNow.y = currentBroadcastGP.latitude;
         velNow.x = currentVel.x;
         velNow.y = currentVel.y;
+        cout << "vel X: " <<  velNow.x << "Y: " << velNow.y << "\n";
         avaTransSim.setPosition(posNow);
         avaTransSim.calculateErrorAngleAndSize(velNow);
-
-        for (int i = 0; i < 5; i++)
-        {
-            std::cout << "A1:" << recivedSignal.A1[i] << "  A2: " << recivedSignal.A2[i] << "\n";
+        if(counter == 10){
+            for (int i = 0; i < 5; i++)
+            {
+                std::cout << "A1:" << recivedSignal.A1[i] << "  A2: " << recivedSignal.A2[i] << "\n";
+            }
+            counter = 0
         }
+        else {
+            counter = 0;
+        }
+        
 
 
         /*
