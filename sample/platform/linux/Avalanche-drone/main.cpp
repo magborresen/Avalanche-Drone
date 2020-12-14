@@ -48,7 +48,7 @@ Simulation avaTransSim;
 int tick = 0;
 
 
-int main()
+int main(int argc, char** argv)
 {
 	
     // Setup OSDK.
