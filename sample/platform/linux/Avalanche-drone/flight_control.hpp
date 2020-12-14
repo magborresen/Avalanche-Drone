@@ -54,11 +54,12 @@ bool monitoredLanding(DJI::OSDK::Vehicle* vehiclePtr, int timeout = 1);
  *
  * Accurate when distances are small.
 !*/
-void localOffsetFromGpsOffset(DJI::OSDK::Vehicle*             vehicle,
-                              DJI::OSDK::Telemetry::Vector3f& deltaNed,
-                              void* target, void* origin);
+void localOffsetFromGpsOffset(DJI::OSDK::Vehicle* vehicle, DJI::OSDK::Telemetry::Vector3f& deltaNed, void* target, void* origin);
 
+/* Used to convert yaw to radians */
 DJI::OSDK::Telemetry::Vector3f toEulerAngle(void* quaternionData);
+
+/* Starts a telemtry broadcast to get global position */
 bool startGlobalPositionBroadcast(DJI::OSDK::Vehicle* vehicle);
 
 

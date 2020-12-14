@@ -70,7 +70,7 @@ bool monitoredTakeoff(Vehicle* vehicle, int timeout)
 	return true;
 }
 
-bool moveByPositionOffset(Vehicle *vehicle, float xOffsetDesired, float yOffsetDesired, float zOffsetDesired, float yawDesired, float posThresholdInM, float yawThresholdInDeg)
+bool moveByPositionOffset(Vehicle *vehicle, float xOffsetDesired, float yawDesired, float posThresholdInM, float yawThresholdInDeg)
 {
 	// Set timeout: this timeout is the time you allow the drone to take to finish the mission
 	int responseTimeout              = 1;
@@ -84,6 +84,8 @@ bool moveByPositionOffset(Vehicle *vehicle, float xOffsetDesired, float yOffsetD
 						| Control::HorizontalCoordinate::HORIZONTAL_BODY | Control::StableMode::STABLE_ENABLE), 0, 0, 0, 0);
 	
 	char func[50];
+	
+	float yOffsetDesired, zOffsetDesired = 0;
 
 	// Get data
 
@@ -149,7 +151,7 @@ bool moveByPositionOffset(Vehicle *vehicle, float xOffsetDesired, float yOffsetD
 	Control::CtrlData controlData = Control::CtrlData((Control::HorizontalLogic::HORIZONTAL_VELOCITY | Control::VerticalLogic::VERTICAL_VELOCITY | Control::YawLogic::YAW_ANGLE 
 						| Control::HorizontalCoordinate::HORIZONTAL_BODY | Control::StableMode::STABLE_ENABLE), xCmd, yCmd, zCmd, yawDesiredRad / DEG2RAD);
 
-  //! Main closed-loop receding setpoint position control
+  //! Main closed-loop receding set-point position control
 	while (elapsedTimeInMs < timeoutInMilSec)
 	{
 		vehicle->control->flightCtrl(controlData);
@@ -172,14 +174,14 @@ bool moveByPositionOffset(Vehicle *vehicle, float xOffsetDesired, float yOffsetD
 		//! See if we need to modify the setpoint
 		if (std::abs(xOffsetRemaining) < speedFactor)
 		{
-		  xCmd = xOffsetRemaining;
+		  controlData.x = xOffsetRemaining;
 		}
 		if (std::abs(yOffsetRemaining) < speedFactor)
 		{
 		  yCmd = yOffsetRemaining;
 		}
 
-		if (vehicle->isM100() && std::abs(xOffsetRemaining) < posThresholdInM &&
+		if (std::abs(xOffsetRemaining) < posThresholdInM &&
 			std::abs(yOffsetRemaining) < posThresholdInM &&
 			std::abs(yawInRad - yawDesiredRad) < yawThresholdInRad)
 		{
