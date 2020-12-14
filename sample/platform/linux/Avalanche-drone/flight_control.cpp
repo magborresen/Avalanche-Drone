@@ -83,7 +83,7 @@ bool moveByPositionOffset(Vehicle *vehicle, float xOffsetDesired, float yOffsetD
 	Control::CtrlData controlData;
 	
 	controlData.flag = (Control::HorizontalLogic::HORIZONTAL_VELOCITY | Control::VerticalLogic::VERTICAL_VELOCITY | Control::YawLogic::YAW_ANGLE 
-						| Control::HorizontalCoordinate::HORIZONTAL:BODY | Control::StableMode::STABLE_ENABLE);
+						| Control::HorizontalCoordinate::HORIZONTAL_BODY | Control::StableMode::STABLE_ENABLE);
 
 	char func[50];
 
