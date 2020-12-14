@@ -172,11 +172,11 @@ bool moveByPositionOffset(Vehicle *vehicle, float xOffsetDesired, float yOffsetD
 		//! See if we need to modify the setpoint
 		if (std::abs(xOffsetRemaining) < speedFactor)
 		{
-		  controlData.x = xOffsetRemaining;
+		  xCmd = xOffsetRemaining;
 		}
 		if (std::abs(yOffsetRemaining) < speedFactor)
 		{
-		  controlData.y = yOffsetRemaining;
+		  yCmd = yOffsetRemaining;
 		}
 
 		if (vehicle->isM100() && std::abs(xOffsetRemaining) < posThresholdInM &&
