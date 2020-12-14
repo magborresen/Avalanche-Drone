@@ -84,7 +84,9 @@ int main(int argc, char** argv)
     
 
     Control::CtrlData custumData(ctrl_flag_costum, 1 , 0, 2, 20);
+
     vehicle->control->flightCtrl(custumData);
+    usleep(1000*20);
     currentBroadcastGP = vehicle->broadcast->getGlobalPosition();
     std::cout << "X: " << currentBroadcastGP.latitude << " Y: " << currentBroadcastGP.longitude << "\n";
 
@@ -93,11 +95,14 @@ int main(int argc, char** argv)
     V3D posNow(currentBroadcastGP.longitude,currentBroadcastGP.latitude,0);
     V3D velNow(currentVel.x,currentVel.y,0);
 
+    /*
     auto stampClockSample = std::chrono::high_resolution_clock::now();
     auto stampClockControl = std::chrono::high_resolution_clock::now();
     auto timeNow = std::chrono::high_resolution_clock::now();
+    */
 
     dataPack recivedSignal;
+    
     while(true){
         Control::CtrlData custumData(ctrl_flag_costum, 1 , 0, 2, 20);
         vehicle->control->flightCtrl(custumData);
