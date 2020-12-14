@@ -80,7 +80,7 @@ int main(int argc, char** argv)
     avaTransSim.setupSimulation(0,0,30,30);
     Telemetry::GlobalPosition currentBroadcastGP;
     while(true){
-        Control::CtrlData custumData(ctrl_flag_costum, 1 , 0, 2, 5);
+        Control::CtrlData custumData(ctrl_flag_costum, 1 , 0, 2, 20);
         vehicle->control->flightCtrl(custumData);
         currentBroadcastGP = vehicle->broadcast->getGlobalPosition();
         std::cout << "X: " << currentBroadcastGP.latitude << " Y: " << currentBroadcastGP.longitude << "\n";
