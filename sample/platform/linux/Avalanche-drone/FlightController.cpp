@@ -7,6 +7,7 @@
 #include "FlightController.hpp"
 
 bool monitoredTakeoff(Vehicle* vehicle, int timeout){
+    char func[50];
     // Start takeoff
     ACK::ErrorCode takeoffStatus = vehicle->control->takeoff(timeout);
     if (ACK::getError(takeoffStatus) != ACK::SUCCESS)
