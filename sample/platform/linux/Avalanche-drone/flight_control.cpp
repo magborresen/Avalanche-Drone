@@ -84,6 +84,8 @@ bool moveByPositionOffset(Vehicle *vehicle, float xOffsetDesired, float yawDesir
 	char func[50];
 	
 	float yOffsetDesired, zOffsetDesired = 0;
+	
+	vehicle->control->velocityAndYawRateCtrl(10, 10, 1, 100);
 
 	// Get data
 
