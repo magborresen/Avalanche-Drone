@@ -206,7 +206,7 @@ V3D HField::calculate_Relative_Pos(V3D pos){
     V3D cV;
     cV.x = (avalanchePos.x + bV.x);
     cV.y = (avalanchePos.x + bV.y);
-    cV.z = avalanchePos.x + bV.z;
+    cV.z = 0;
     std::cout << "cV:  ";
     cV.print();
     return cV;
