@@ -69,7 +69,7 @@ int main()
     int counter = 0;
 
     while(counter < 2){
-    
+        timeNow = std::chrono::high_resolution_clock::now();    
         auto timediff = timeNow-sampleClock;
         auto timediffMS = std::chrono::duration_cast<std::chrono::milliseconds>(timediff).count();
 
@@ -79,15 +79,12 @@ int main()
             recivedSignal = avaTransSim.sample(counter);
             sampleClock = std::chrono::high_resolution_clock::now();
             counter++;
-        }
-        for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 10; i++)
         {
             std::cout << "A1: " << recivedSignal.A1[i] << "   A2: " << recivedSignal.A2[i];
         }
-
+        }
     }
-
-
 }
 
 
