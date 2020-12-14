@@ -70,7 +70,7 @@ bool monitoredTakeoff(Vehicle* vehicle, int timeout)
 	return true;
 }
 
-bool moveByPositionOffset(Vehicle *vehicle, float xOffsetDesired, float yOffsetDesired, float zOffsetDesired, float yawDesired, float posThresholdInM, float yawThresholdInDeg)
+bool moveByPositionOffset(Vehicle *vehicle, float xOffsetDesired, float yOffsetDesired = 0, float zOffsetDesired = 0, float yawDesired, float posThresholdInM, float yawThresholdInDeg)
 {
 	// Set timeout: this timeout is the time you allow the drone to take to finish the mission
 	int responseTimeout              = 1;
@@ -80,6 +80,10 @@ bool moveByPositionOffset(Vehicle *vehicle, float xOffsetDesired, float yOffsetD
 	int outOfControlBoundsTimeLimit  = 10 * cycleTimeInMs; // 10 cycles
 	int withinControlBoundsTimeReqmt = 50 * cycleTimeInMs; // 50 cycles
 	int pkgIndex;
+	Control::CtrlData controlData;
+	
+	controlData.flag = (Control::HorizontalLogic::HORIZONTAL_VELOCITY | Control::VerticalLogic::VERTICAL_VELOCITY | Control::YawLogic::YAW_ANGLE 
+						| Control::HorizontalCoordinate::HORIZONTAL:BODY | Control::StableMode::STABLE_ENABLE);
 
 	char func[50];
 
@@ -122,7 +126,6 @@ bool moveByPositionOffset(Vehicle *vehicle, float xOffsetDesired, float yOffsetD
 	int   outOfBounds         = 0;
 	int   brakeCounter        = 0;
 	int   speedFactor         = 2;
-	float xCmd, yCmd, zCmd;
 
 	/*! Calculate the inputs to send the position controller. We implement basic
 	*  receding setpoint position control and the setpoint is always 1 m away
@@ -130,38 +133,37 @@ bool moveByPositionOffset(Vehicle *vehicle, float xOffsetDesired, float yOffsetD
 	*  From that point on, we send the remaining distance as the setpoint.
 	*/
 	if (xOffsetDesired > 0)
-	xCmd = (xOffsetDesired < speedFactor) ? xOffsetDesired : speedFactor;
+	controlData.x = (xOffsetDesired < speedFactor) ? xOffsetDesired : speedFactor;
 	else if (xOffsetDesired < 0)
-	xCmd =
-	  (xOffsetDesired > -1 * speedFactor) ? xOffsetDesired : -1 * speedFactor;
+	controlData.x = (xOffsetDesired > -1 * speedFactor) ? xOffsetDesired : -1 * speedFactor;
 	else
-	xCmd = 0;
+	controlData.x = 0;
 
 	if (yOffsetDesired > 0)
-	yCmd = (yOffsetDesired < speedFactor) ? yOffsetDesired : speedFactor;
+	controlData.y = (yOffsetDesired < speedFactor) ? yOffsetDesired : speedFactor;
 	else if (yOffsetDesired < 0)
-	yCmd =
-	  (yOffsetDesired > -1 * speedFactor) ? yOffsetDesired : -1 * speedFactor;
+	controlData.y = (yOffsetDesired > -1 * speedFactor) ? yOffsetDesired : -1 * speedFactor;
 	else
-	yCmd = 0;
+	controlData.y = 0;
 	
-    zCmd = currentBroadcastGP.height + zOffsetDesired;
+    controlData.z = currentBroadcastGP.height + zOffsetDesired;
+	
+	controlData.yaw = yawDesiredRad / DEG2RAD;
 
   //! Main closed-loop receding setpoint position control
 	while (elapsedTimeInMs < timeoutInMilSec)
 	{
-		vehicle->control->positionAndYawCtrl(xCmd, yCmd, zCmd,
-											 yawDesiredRad / DEG2RAD);
+		vehicle->control->flightCtrl(controlData);
 
 		usleep(cycleTimeInMs * 1000);
 		elapsedTimeInMs += cycleTimeInMs;
 
 		//! Get current position in required coordinates and units
 
-		  broadcastQ         = vehicle->broadcast->getQuaternion();
-		  yawInRad           = toEulerAngle((static_cast<void*>(&broadcastQ))).z;
-		  currentBroadcastGP = vehicle->broadcast->getGlobalPosition();
-		  localOffsetFromGpsOffset(vehicle, localOffset, static_cast<void*>(&currentBroadcastGP), static_cast<void*>(&originBroadcastGP));
+		broadcastQ         = vehicle->broadcast->getQuaternion();
+		yawInRad           = toEulerAngle((static_cast<void*>(&broadcastQ))).z;
+		currentBroadcastGP = vehicle->broadcast->getGlobalPosition();
+		localOffsetFromGpsOffset(vehicle, localOffset, static_cast<void*>(&currentBroadcastGP), static_cast<void*>(&originBroadcastGP));
 
 		//! See how much farther we have to go
 		xOffsetRemaining = xOffsetDesired - localOffset.x;
@@ -171,11 +173,11 @@ bool moveByPositionOffset(Vehicle *vehicle, float xOffsetDesired, float yOffsetD
 		//! See if we need to modify the setpoint
 		if (std::abs(xOffsetRemaining) < speedFactor)
 		{
-		  xCmd = xOffsetRemaining;
+		  controlData.x = xOffsetRemaining;
 		}
 		if (std::abs(yOffsetRemaining) < speedFactor)
 		{
-		  yCmd = yOffsetRemaining;
+		  controlData.y = yOffsetRemaining;
 		}
 
 		if (vehicle->isM100() && std::abs(xOffsetRemaining) < posThresholdInM &&
