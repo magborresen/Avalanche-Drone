@@ -146,13 +146,13 @@ bool moveByPositionOffset(Vehicle *vehicle, float xOffsetDesired, float yOffsetD
 	
     zCmd = currentBroadcastGP.height + zOffsetDesired;
 	
-	
+	Control::CtrlData controlData = DJI::OSDK::Control::CtrlData((Control::HorizontalLogic::HORIZONTAL_VELOCITY | Control::VerticalLogic::VERTICAL_VELOCITY | Control::YawLogic::YAW_ANGLE 
+						| Control::HorizontalCoordinate::HORIZONTAL_BODY | Control::StableMode::STABLE_ENABLE), xCmd, yCmd, zCmd, yawDesiredRad / DEG2RAD)
 
   //! Main closed-loop receding setpoint position control
 	while (elapsedTimeInMs < timeoutInMilSec)
 	{
-		vehicle->control->flightCtrl(DJI::OSDK::Control::CtrlData((Control::HorizontalLogic::HORIZONTAL_VELOCITY | Control::VerticalLogic::VERTICAL_VELOCITY | Control::YawLogic::YAW_ANGLE 
-						| Control::HorizontalCoordinate::HORIZONTAL_BODY | Control::StableMode::STABLE_ENABLE), xCmd, yCmd, zCmd, yawDesiredRad / DEG2RAD));
+		vehicle->control->flightCtrl(controlData);
 
 		usleep(cycleTimeInMs * 1000);
 		elapsedTimeInMs += cycleTimeInMs;
