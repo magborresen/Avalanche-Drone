@@ -1,5 +1,5 @@
-#ifndef DJIOSDK_FLIGHTCONTROL_HPP
-#define DJIOSDK_FLIGHTCONTROL_HPP
+#ifndef FLIGHTCONTROL_HPP
+#define FLIGHTCONTROL_HPP
 
 // System Includes
 #include <cmath>
@@ -11,4 +11,6 @@
 // Helpers
 #include <dji_linux_helpers.hpp>
 
-bool monitoredTakeoff(Vehicle* vehicle, int timeout);
+bool monitoredTakeoff(Vehicle* vehicle, int timeout = 1);
+
+#endif
