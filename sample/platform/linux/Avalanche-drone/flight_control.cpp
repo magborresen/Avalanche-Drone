@@ -80,7 +80,8 @@ bool moveByPositionOffset(Vehicle *vehicle, float xOffsetDesired, float yOffsetD
 	int outOfControlBoundsTimeLimit  = 10 * cycleTimeInMs; // 10 cycles
 	int withinControlBoundsTimeReqmt = 50 * cycleTimeInMs; // 50 cycles
 	int pkgIndex;
-	DJI::OSDK::Control::CtrlData::CtrlData controlData;
+	DJI::OSDK::Control::CtrlData::CtrlData((Control::HorizontalLogic::HORIZONTAL_VELOCITY | Control::VerticalLogic::VERTICAL_VELOCITY | Control::YawLogic::YAW_ANGLE 
+						| Control::HorizontalCoordinate::HORIZONTAL_BODY | Control::StableMode::STABLE_ENABLE), 0, 0, 0, 0);
 	
 	controlData.flag = (Control::HorizontalLogic::HORIZONTAL_VELOCITY | Control::VerticalLogic::VERTICAL_VELOCITY | Control::YawLogic::YAW_ANGLE 
 						| Control::HorizontalCoordinate::HORIZONTAL_BODY | Control::StableMode::STABLE_ENABLE);
