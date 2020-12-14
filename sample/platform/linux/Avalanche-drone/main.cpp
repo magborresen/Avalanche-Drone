@@ -66,8 +66,6 @@ int main()
     dataPack recivedSignal;
     auto sampleClock = std::chrono::high_resolution_clock::now();
     auto timeNow = std::chrono::high_resolution_clock::now();
-
-    sampleClock = std::chrono::high_resolution_clock::now();
     int counter = 0;
 
     while(counter < 2){
@@ -78,8 +76,8 @@ int main()
         if(timediffMS >= 10){
             avaTransSim.setPosition(posNow);
             avaTransSim.calculateErrorAngleAndSize(velNow);
-            recivedSignal = avaTransSim.sample();
-            sampleClock = std::chrono::steady_clock::now();
+            recivedSignal = avaTransSim.sample(counter);
+            sampleClock = std::chrono::high_resolution_clock::now();
             counter++;
         }
         for (int i = 0; i < 10; i++)
@@ -88,10 +86,6 @@ int main()
         }
 
     }
-
-    std::chrono::duration_cast<std::chrono::milliseconds>(sampleClock - timeStamp).count() > 10
-
-    std::chrono::steady_clock::time_point timeStamp = std::chrono::steady_clock::now();
 
 
 }
