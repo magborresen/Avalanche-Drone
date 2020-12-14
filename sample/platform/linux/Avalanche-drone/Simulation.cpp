@@ -28,10 +28,10 @@ dataPack Simulation::sample(int flag){
         //calculate samples
         for (int i = 0; i < 30000; i++)
         {
-            returnPack.A1[i] = std::sin(sampleRate*signalFrequency*2*PI*i);
+            returnPack.A1[i] = std::sin(sampleRate*signalFrequency*2*PI*i)*antenna_main_Scale;
             //Make the second antenna sinus lag if the H field is 2 the right of the antenna.
             if(errorAngle > 0){
-                returnPack.A2[i] = std::sin(sampleRate*signalFrequency*2*PI*i) * antenna_main_Scale;
+                returnPack.A2[i] = std::sin(sampleRate*signalFrequency*2*PI*i)*antenna_second_Scale;
             }
             else{
                 returnPack.A2[i] = std::sin(sampleRate*signalFrequency*2*PI*i - PI/4) * antenna_second_Scale;

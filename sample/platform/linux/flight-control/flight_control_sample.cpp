@@ -222,10 +222,8 @@ monitoredTakeoff(Vehicle* vehicle, int timeout)
   // Final check: Finished takeoff
   if (!vehicle->isM100() && !vehicle->isLegacyM600())
   {
-    while (vehicle->subscribe->getValue<TOPIC_STATUS_DISPLAYMODE>() ==
-             VehicleStatus::DisplayMode::MODE_ASSISTED_TAKEOFF ||
-           vehicle->subscribe->getValue<TOPIC_STATUS_DISPLAYMODE>() ==
-             VehicleStatus::DisplayMode::MODE_AUTO_TAKEOFF)
+    while (vehicle->subscribe->getValue<TOPIC_STATUS_DISPLAYMODE>() == VehicleStatus::DisplayMode::MODE_ASSISTED_TAKEOFF ||
+           vehicle->subscribe->getValue<TOPIC_STATUS_DISPLAYMODE>() == VehicleStatus::DisplayMode::MODE_AUTO_TAKEOFF)
     {
       sleep(1);
     }
@@ -363,6 +361,7 @@ moveByPositionOffset(Vehicle *vehicle, float xOffsetDesired,
   // Global position retrieved via subscription
   Telemetry::TypeMap<TOPIC_GPS_FUSED>::type currentSubscriptionGPS;
   Telemetry::TypeMap<TOPIC_GPS_FUSED>::type originSubscriptionGPS;
+  
   // Global position retrieved via broadcast
   Telemetry::GlobalPosition currentBroadcastGP;
   Telemetry::GlobalPosition originBroadcastGP;
