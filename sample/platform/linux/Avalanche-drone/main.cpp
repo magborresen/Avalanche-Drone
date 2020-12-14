@@ -74,7 +74,7 @@ int main(int argc, char** argv)
         YAW_ANGLE - Set the control-mode to control yaw angle.
         STABLE_ENABLE - Enable the stable mode 
     */
-    uint8_t ctrl_flag_costum = (Control::HORIZONTAL_VELOCITY | Control::VERTICAL_POSITION  | Control::YAW_ANGLE | Control::HORIZONTAL_BODY | Control::STABLE_ENABLE )
+    uint8_t ctrl_flag_costum = (Control::HORIZONTAL_VELOCITY | Control::VERTICAL_POSITION  | Control::YAW_ANGLE | Control::HORIZONTAL_BODY | Control::STABLE_ENABLE );
 	
     //setup the H-field simulation
     avaTransSim.setupSimulation(0,0,30,30);
