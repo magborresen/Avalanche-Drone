@@ -30,6 +30,7 @@ add_executable(${PROJECT_NAME}
     HField.cpp
     V3D.cpp
     Simulation.cpp
+    FlightController.cpp
     )
 
 find_library(WIRINGPI_LIBRARIES NAMES wiringPi)
