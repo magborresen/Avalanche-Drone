@@ -88,7 +88,7 @@ int main(int argc, char** argv)
     currentBroadcastGP = vehicle->broadcast->getGlobalPosition();
     std::cout << "X: " << currentBroadcastGP.latitude << " Y: " << currentBroadcastGP.longitude << "\n";
 
-    Telemetry::Vector3d currentVel;
+    Telemetry::Vector3f currentVel;
     currentVel = vehicle->broadcast->getVelocity();
     V3D posNow(currentBroadcastGP.longitude,currentBroadcastGP.latitude,0);
     V3D velNow(currentVel.x,currentVel.y,0);
@@ -103,7 +103,7 @@ int main(int argc, char** argv)
         vehicle->control->flightCtrl(custumData);
 
         usleep(1000*20);
-        
+
         currentBroadcastGP = vehicle->broadcast->getGlobalPosition();
         currentVel = vehicle->broadcast->getVelocity();
         posNow.x = currentBroadcastGP.longitude;
