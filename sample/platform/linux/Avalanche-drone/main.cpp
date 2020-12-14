@@ -82,7 +82,7 @@ int main(int argc, char** argv)
         Control::CtrlData custumData(ctrl_flag_costum, 1 , 0, 2, 5);
         vehicle->control->flightCtrl(custumData);
         currentBroadcastGP = vehicle->broadcast->getGlobalPosition();
-        cous << "X: " << currentBroadcastGP.latitude << " Y: " << currentBroadcastGP.longitude << "\n";
+        std::cout << "X: " << currentBroadcastGP.latitude << " Y: " << currentBroadcastGP.longitude << "\n";
         usleep(20 * 1000);
     }
     
