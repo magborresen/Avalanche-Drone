@@ -115,7 +115,7 @@ int main(int argc, char** argv)
         posNow.y = currentBroadcastGP.latitude;
         velNow.x = currentVel.x;
         velNow.y = currentVel.y;
-        cout << "vel X: " <<  velNow.x << " Y: " << velNow.y << "\n";
+        std::cout << "vel X: " <<  velNow.x << " Y: " << velNow.y << "\n";
         avaTransSim.setPosition(posNow);
         avaTransSim.calculateErrorAngleAndSize(velNow);
         if(counter == 10){

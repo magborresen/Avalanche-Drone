@@ -11,7 +11,7 @@ HField::HField(/* args */)
     while(j < 3*PI/2){
         phi[k] = j;
         j +=2*PI/(HFIELD_HPP_N-1);
-        std::cout << "Phi(" << k << ") = " << phi[k] << "\n";
+        //std::cout << "Phi(" << k << ") = " << phi[k] << "\n";
         k++;
     }
     phi[k] = j;
@@ -77,7 +77,7 @@ void HField::calculate_R_vector(double y , double z){
     XCross is X-component of the curl of dl and R, similarly I get Y and Z
 */
 void HField::calculate_Cross_vector(){
-    std::cout << "xCross,yCross,zCross,R \n";
+    //std::cout << "xCross,yCross,zCross,R \n";
     for (int i = 0; i < HFIELD_HPP_N; i++)
     {
         xCross[i] = dly[i]*Rz[i];
@@ -93,7 +93,7 @@ void HField::calculate_Cross_vector(){
     This will be the biot savarts law equation
 */
 void HField::calculate_BIOT_vector(){
-    std::cout << "xB,yB,zB \n";
+    //std::cout << "xB,yB,zB \n";
     for (int i = 0; i < HFIELD_HPP_N; i++)
     {
         xB[i] = I*mu0 / (4*PI*std::pow(R[i],3)) * xCross[i];
@@ -208,7 +208,7 @@ V3D HField::calculate_Relative_Pos(V3D pos){
     cV.y = (avalanchePos.x + bV.y);
     cV.z = 0;
     //std::cout << "cV:  ";
-    cV.print();
+    //cV.print();
     return cV;
 }
 
