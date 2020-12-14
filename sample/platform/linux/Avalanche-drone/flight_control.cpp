@@ -152,7 +152,7 @@ bool moveByPositionOffset(Vehicle *vehicle, float xOffsetDesired, float yawDesir
 	
 	// Initialize control data struct. 
 	Control::CtrlData controlData = Control::CtrlData((Control::HorizontalLogic::HORIZONTAL_VELOCITY | Control::VerticalLogic::VERTICAL_VELOCITY | Control::YawLogic::YAW_ANGLE 
-						| Control::HorizontalCoordinate::HORIZONTAL_BODY | Control::StableMode::STABLE_ENABLE), xCmd, 0, 0, yawDesired);
+						| Control::HorizontalCoordinate::HORIZONTAL_BODY | Control::StableMode::STABLE_ENABLE), xCmd, 0, 2, yawDesired);
 
 	//! Main closed-loop receding set-point position control
 	while (elapsedTimeInMs < timeoutInMilSec)
