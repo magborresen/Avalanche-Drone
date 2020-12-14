@@ -7,6 +7,12 @@ V3D::V3D(){
     z = 0;
 }
 
+V3D::V3D(double X, double Y, double Z){
+    x = X;
+    y = Y;
+    z = Z;
+}
+
 V3D::~V3D(){
 }
 

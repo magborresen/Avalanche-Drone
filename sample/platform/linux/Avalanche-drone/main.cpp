@@ -12,10 +12,12 @@
 #include "SignalSearch.hpp"
 #include "V3D.hpp"
 
-#include "LavSimulation.hpp"
+#include "Simulation.hpp"
 
 using namespace DJI::OSDK;
 using namespace DJI::OSDK::Telemetry;
+
+
 
 #define samples_per_period 20480
 //#define N 4096
@@ -23,6 +25,8 @@ using namespace DJI::OSDK::Telemetry;
 
 uint16_t ADC_store1[samples_per_period];
 uint16_t ADC_store2[samples_per_period];
+
+std::chrono::steady_clock::time_point sampleClock;
 
 fftw_complex *FFToutput1;
 fftw_complex *FFTinput1;
@@ -32,7 +36,10 @@ fftw_complex *FFTinput2;
 fftw_plan plan1;
 fftw_plan plan2;
 
-LavSimulation avaTransSim;
+Simulation avaTransSim;
+
+
+int tick = 0;
 
 
 int main()
@@ -50,39 +57,45 @@ int main()
 		// Obtain Control Authority
 		vehicle->obtainCtrlAuthority(functionTimeout);
 	*/
-	// FFT setup
-	//setup fft
 
 	//setup the H-field simulation
 
-    avaTransSim.setupSimulation(0,0,30,30)
-    V3D test;
-
-    avaTrans.printStatus();
-
-    test = avaTrans.getHFieldVector(0,0);
-    test = avaTrans.getHFieldVector(0,5*longConvertionFactor);
+    avaTransSim.setupSimulation(0,0,30,30);
 
 
-    /*
-    for (int i = 0; i < 20; i++)
-    {
-        test = avaTrans.getHFieldVector(0,i);
-        std::cout << "x: " << test.x << " y: " << test.y << "\n"; 
+    V3D posNow(0,0,0);
+    V3D velNow(1,0,0);
+    dataPack recivedSignal;
+    std::chrono::steady_clock::time_point timeStamp;
+    sampleClock = std::chrono::steady_clock::now();
+    int counter = 0;
+
+    whlie(counter < 2){
+        timeStamp = std::chrono::steady_clock::now();
+        if(std::chrono::duration_cast<std::chrono::milliseconds>(sampleClock - timeStamp).count() > 10){
+            avaTransSim.setPosition(posNow);
+            avaTransSim.calculateErrorAngleAndSize(velNow);
+            recivedSignal = avaTransSim.sample();
+            sampleClock = std::chrono::steady_clock::now();
+            counter++;
+        }
+        for (int i = 0; i < 10; i++)
+        {
+            std::cout << "A1: " << recivedSignal.A1[i] << "   A2: " << recivedSignal.A2[i];
+        }
+
     }
-    for (int i = 0; i < 20; i++)
-    {
-        test = avaTrans.getHFieldVector(i,0);
-        std::cout << "x: " << test.x << " y: " << test.y << "\n"; 
-    }
-    for (int i = 0; i < 29; i++)
-    {
-        test = avaTrans.getHFieldVector(i,i);
-        std::cout << "x: " << test.x << " y: " << test.y << "\n"; 
-    }
-    */
 
-	/*
+    std::chrono::duration_cast<std::chrono::milliseconds>(sampleClock - timeStamp).count() > 10
+
+    std::chrono::steady_clock::time_point timeStamp = std::chrono::steady_clock::now();
+
+
+}
+
+
+
+/*
 	FFTinput1 = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * N);
 	FFToutput1 = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * N);
 	FFTinput2 = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * N);
@@ -100,8 +113,7 @@ int main()
 	file.open("TestData.txt", std::fstream::out | std::fstream::trunc);
 	file.close();
 	return 0;
-	*/
-}
+*/
 
  /*
   for(int j = 0; j < 20 ; j++){
