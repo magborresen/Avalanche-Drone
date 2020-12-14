@@ -123,7 +123,7 @@ int main(int argc, char** argv)
             {
                 std::cout << "A1:" << recivedSignal.A1[i] << "  A2: " << recivedSignal.A2[i] << "\n";
             }
-            counter = 0
+            counter = 0;
         }
         else {
             counter = 0;
