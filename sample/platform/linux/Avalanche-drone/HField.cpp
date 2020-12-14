@@ -12,10 +12,12 @@ HField::HField(/* args */)
         phi[k] = j;
         j +=2*PI/(HFIELD_HPP_N-1);
         std::cout << "Phi(" << k << ") = " << phi[k] << "\n";
+        /*
         k++;
         if(k >= HFIELD_HPP_N){
             break;
         }
+        */
     }
 
     for (int i = 0; i < HFIELD_HPP_N; i++)
@@ -64,8 +66,8 @@ void HField::calculate_R_vector(double y , double z){
     Rx[HFIELD_HPP_N-1] = -0.5 * (Xc[HFIELD_HPP_N]-1 + Xc[0]);
     Ry[HFIELD_HPP_N-1] = (y - ( 0.5 * (Yc[HFIELD_HPP_N-1]+ Yc[0]) ));
     Rz[HFIELD_HPP_N-1] = z;
-    dlx[HFIELD_HPP_N-1] = Xc[HFIELD_HPP_N-1]-Xc[0];
-    dly[HFIELD_HPP_N-1] = Yc[HFIELD_HPP_N-1]-Xc[0];
+    dlx[HFIELD_HPP_N-1] = -Xc[HFIELD_HPP_N-1]+Xc[0];
+    dly[HFIELD_HPP_N-1] = -Yc[HFIELD_HPP_N-1]+Xc[0];
 }
 
 
@@ -129,9 +131,9 @@ V3D HField::getHFieldVector(double posLong, double posLat){
     */
     for (int i = 0; i < HFIELD_HPP_N; i++)
     {
-        returnVector.x = returnVector.x +yB[i];
-        returnVector.y = returnVector.y +zB[i];
-        returnVector.z = returnVector.x +xB[i];
+        returnVector.x = returnVector.x + yB[i];
+        returnVector.y = returnVector.y + zB[i];
+        returnVector.z = returnVector.x + xB[i];
     }
     returnVector.print();
 
