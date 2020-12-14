@@ -70,7 +70,7 @@ bool monitoredTakeoff(Vehicle* vehicle, int timeout)
 	return true;
 }
 
-bool moveByPositionOffset(Vehicle *vehicle, float xOffsetDesired, float yOffsetDesired = 0, float zOffsetDesired = 0, float yawDesired, float posThresholdInM, float yawThresholdInDeg)
+bool moveByPositionOffset(Vehicle *vehicle, float xOffsetDesired, float yOffsetDesired, float zOffsetDesired, float yawDesired, float posThresholdInM, float yawThresholdInDeg)
 {
 	// Set timeout: this timeout is the time you allow the drone to take to finish the mission
 	int responseTimeout              = 1;
@@ -80,7 +80,7 @@ bool moveByPositionOffset(Vehicle *vehicle, float xOffsetDesired, float yOffsetD
 	int outOfControlBoundsTimeLimit  = 10 * cycleTimeInMs; // 10 cycles
 	int withinControlBoundsTimeReqmt = 50 * cycleTimeInMs; // 50 cycles
 	int pkgIndex;
-	Control::CtrlData controlData;
+	DJI::OSDK::Control::CtrlData controlData;
 	
 	controlData.flag = (Control::HorizontalLogic::HORIZONTAL_VELOCITY | Control::VerticalLogic::VERTICAL_VELOCITY | Control::YawLogic::YAW_ANGLE 
 						| Control::HorizontalCoordinate::HORIZONTAL_BODY | Control::StableMode::STABLE_ENABLE);
