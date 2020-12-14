@@ -70,7 +70,7 @@ int main()
     sampleClock = std::chrono::high_resolution_clock::now();
     int counter = 0;
 
-    whlie(counter < 2){
+    while(counter < 2){
     
         auto timediff = timeNow-sampleClock;
         auto timediffMS = std::chrono::duration_cast<std::chrono::milliseconds>(timediff).count();
