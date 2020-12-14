@@ -12,13 +12,10 @@ HField::HField(/* args */)
         phi[k] = j;
         j +=2*PI/(HFIELD_HPP_N-1);
         std::cout << "Phi(" << k << ") = " << phi[k] << "\n";
-        /*
         k++;
-        if(k >= HFIELD_HPP_N){
-            break;
-        }
-        */
     }
+    phi[k] = j;
+    std::cout << "Phi(" << k << ") = " << phi[k] << "\n";
 
     for (int i = 0; i < HFIELD_HPP_N; i++)
     {
