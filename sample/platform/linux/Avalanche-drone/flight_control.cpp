@@ -83,9 +83,6 @@ bool moveByPositionOffset(Vehicle *vehicle, float xOffsetDesired, float yOffsetD
 	DJI::OSDK::Control::CtrlData((Control::HorizontalLogic::HORIZONTAL_VELOCITY | Control::VerticalLogic::VERTICAL_VELOCITY | Control::YawLogic::YAW_ANGLE 
 						| Control::HorizontalCoordinate::HORIZONTAL_BODY | Control::StableMode::STABLE_ENABLE), 0, 0, 0, 0);
 	
-	controlData.flag = (Control::HorizontalLogic::HORIZONTAL_VELOCITY | Control::VerticalLogic::VERTICAL_VELOCITY | Control::YawLogic::YAW_ANGLE 
-						| Control::HorizontalCoordinate::HORIZONTAL_BODY | Control::StableMode::STABLE_ENABLE);
-
 	char func[50];
 
 	// Get data
@@ -127,34 +124,35 @@ bool moveByPositionOffset(Vehicle *vehicle, float xOffsetDesired, float yOffsetD
 	int   outOfBounds         = 0;
 	int   brakeCounter        = 0;
 	int   speedFactor         = 2;
-
+	float xCmd, yCmd, zCmd;
 	/*! Calculate the inputs to send the position controller. We implement basic
 	*  receding setpoint position control and the setpoint is always 1 m away
 	*  from the current position - until we get within a threshold of the goal.
 	*  From that point on, we send the remaining distance as the setpoint.
 	*/
 	if (xOffsetDesired > 0)
-	controlData.x = (xOffsetDesired < speedFactor) ? xOffsetDesired : speedFactor;
+	xCmd = (xOffsetDesired < speedFactor) ? xOffsetDesired : speedFactor;
 	else if (xOffsetDesired < 0)
-	controlData.x = (xOffsetDesired > -1 * speedFactor) ? xOffsetDesired : -1 * speedFactor;
+	xCmd = (xOffsetDesired > -1 * speedFactor) ? xOffsetDesired : -1 * speedFactor;
 	else
-	controlData.x = 0;
+	xCmd = 0;
 
 	if (yOffsetDesired > 0)
-	controlData.y = (yOffsetDesired < speedFactor) ? yOffsetDesired : speedFactor;
+	yCmd = (yOffsetDesired < speedFactor) ? yOffsetDesired : speedFactor;
 	else if (yOffsetDesired < 0)
-	controlData.y = (yOffsetDesired > -1 * speedFactor) ? yOffsetDesired : -1 * speedFactor;
+	yCmd = (yOffsetDesired > -1 * speedFactor) ? yOffsetDesired : -1 * speedFactor;
 	else
-	controlData.y = 0;
+	yCmd = 0;
 	
-    controlData.z = currentBroadcastGP.height + zOffsetDesired;
+    zCmd = currentBroadcastGP.height + zOffsetDesired;
 	
-	controlData.yaw = yawDesiredRad / DEG2RAD;
+	
 
   //! Main closed-loop receding setpoint position control
 	while (elapsedTimeInMs < timeoutInMilSec)
 	{
-		vehicle->control->flightCtrl(controlData);
+		vehicle->control->flightCtrl((Control::HorizontalLogic::HORIZONTAL_VELOCITY | Control::VerticalLogic::VERTICAL_VELOCITY | Control::YawLogic::YAW_ANGLE 
+						| Control::HorizontalCoordinate::HORIZONTAL_BODY | Control::StableMode::STABLE_ENABLE), xCmd, yCmd, zCmd, yawInRad / DEG2RAD);
 
 		usleep(cycleTimeInMs * 1000);
 		elapsedTimeInMs += cycleTimeInMs;
