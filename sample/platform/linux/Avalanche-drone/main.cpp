@@ -12,10 +12,10 @@
 #include "SignalSearch.hpp"
 #include "V3D.hpp"
 
+#include "LavSimulation.hpp"
 
 using namespace DJI::OSDK;
 using namespace DJI::OSDK::Telemetry;
-
 
 #define samples_per_period 20480
 //#define N 4096
@@ -32,18 +32,8 @@ fftw_complex *FFTinput2;
 fftw_plan plan1;
 fftw_plan plan2;
 
-HField avaTrans;
+LavSimulation avaTransSim;
 
-void setupSimulation(){
-  	//places virtual avalanchetransmitter
-	/*
-		Telemetry::GlobalPosition start_pos_1 = vehicle->broadcast->getGlobalPosition();
-		calcLatConvertionFactor(start_pos_1.latitude);
-		avaTrans.setStartPos(start_pos_1.latitude , start_pos_1.longitude);
-	*/
-	avaTrans.setStartPos(0 , 0);
-	avaTrans.setAvalanchePosFromOffset(30 , 30);
-}
 
 int main()
 {
@@ -65,17 +55,15 @@ int main()
 
 	//setup the H-field simulation
 
-
-	setupSimulation();
-
+    avaTransSim.setupSimulation(0,0,30,30)
     V3D test;
 
     avaTrans.printStatus();
 
-
-
     test = avaTrans.getHFieldVector(0,0);
     test = avaTrans.getHFieldVector(0,5*longConvertionFactor);
+
+
     /*
     for (int i = 0; i < 20; i++)
     {
@@ -114,13 +102,6 @@ int main()
 	return 0;
 	*/
 }
-
-void simulatingFlying(){
-
-
-
-}
-
 
  /*
   for(int j = 0; j < 20 ; j++){
