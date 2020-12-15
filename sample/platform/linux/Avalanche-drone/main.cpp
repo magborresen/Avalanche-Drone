@@ -184,8 +184,8 @@ int main(int argc, char** argv)
             ct = 0;
         }
 
-        fftA1 = doTheFFT(recivedSignal.A1);
-        fftA2 = doTheFFT(recivedSignal.A2);
+        fftA1 = doTheFFT(&recivedSignal.A1);
+        fftA2 = doTheFFT(&recivedSignal.A2);
         cout <<"A1: " << fftA1[0] << "A2" << fftA2[0];
     }
     
