@@ -177,11 +177,11 @@ int main(int argc, char** argv)
     //setup the H-field simulation
     Telemetry::GlobalPosition currentBroadcastGP;
     currentBroadcastGP = vehicle->broadcast->getGlobalPosition();
-    avaTransSim.setupSimulation(currentBroadcastGP.longitude,currentBroadcastGP.latitude,30,30);
+    avaTransSim.setupSimulation(currentBroadcastGP.longitude,currentBroadcastGP.latitude, 30, 30);
 
-    Control::CtrlData custumData(ctrl_flag_costum, 1 , 0, 2, 20);
+    Control::CtrlData custumData(ctrl_flag_costum, 0.1 , 0, 2, 0);
 
-    vehicle->control->flightCtrl(custumData);
+    //vehicle->control->flightCtrl(custumData);
     usleep(1000*20);
     currentBroadcastGP = vehicle->broadcast->getGlobalPosition();
     std::cout << "X: " << currentBroadcastGP.latitude << " Y: " << currentBroadcastGP.longitude << "\n";
@@ -212,7 +212,7 @@ int main(int argc, char** argv)
       Starting main loop
     */
     while(true){
-        Control::CtrlData custumData(ctrl_flag_costum, 1 , 0, 2, goalYaw);
+        Control::CtrlData custumData(ctrl_flag_costum, 0.5 , 0, 2, goalYaw);
         vehicle->control->flightCtrl(custumData);
         usleep(1000*20);
 
@@ -264,6 +264,10 @@ int main(int argc, char** argv)
             double yawInRad = toEulerAngle((static_cast<void*>(&quat))).z / DEG2RAD;
             //set new goalyaw
             goalYaw = yawInRad+errorAngle;
+            if(goalYaw < 0){
+                goalYaw = 360-goalYaw;
+            }
+
             std::cout << "Goal yaw: " << goalYaw << "\n";
         }
     }
