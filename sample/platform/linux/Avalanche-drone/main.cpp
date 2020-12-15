@@ -12,9 +12,8 @@
 #include "SignalSearch.hpp"
 #include "V3D.hpp"
 #include "FlightController.hpp"
-#include "fft_test.hpp"
 
-// DJI OSDK includes
+// DJI OSDK includesw
 #include "dji_status.hpp"
 #include <dji_vehicle.hpp>
 #include "dji_control.hpp"
@@ -31,41 +30,70 @@ using namespace DJI::OSDK::Telemetry;
 #define samples_per_period 20480
 //#define N 4096
 #define L 4096 //Tager 0,5ms samplingtid at fylde array
+#define fftbin 624
+#define FFTSize 4096
+#define REAL 0
+#define IMAG 1
+
 
 uint16_t ADC_store1[samples_per_period];
 uint16_t ADC_store2[samples_per_period];
 
 
-fftw_complex *FFToutput1;
-fftw_complex *FFTinput1;
-fftw_complex *FFToutput2;
-fftw_complex *FFTinput2;
-fftw_plan plan1;
-fftw_plan plan2;
+fftw_complex *FFToutput;
+fftw_complex *FFTinput;
+fftw_plan plan;
 
-#define FFTSize 4096
+
 
 Simulation avaTransSim;
 
 int tick = 0;
 
 
+//Move a double into the FFTinput array
+void moveToFFT(double signalToMove[], int offset_N){
+    for (int i = 0; i < FFTSize; i++)
+    {
+        FFTinput2[i][REAL] = signalToMove->A2[i+offset_N*FFTSize];
+        FFTinput2[i][IMAG] = 0;
+    }
+}
+
+std::vector<double> doTheFFT(double signalToFFT[]){
+    std::vector<double> returnVector;
+    int numberOfFFTs = samples_per_period/FFTSize;
+    int reminderOfFFT = samples_per_period % FFTSize;
+    for (int i = 0; i < numberOfFFTs; i++)
+    {
+        moveToFFT(signalToFFT, i);
+        fftw_execute(plan);
+        returnVector.push_back(FFToutput[fftbin]);
+    }
+    for (int i = 0; i < reminderOfFFT; i++)
+    {
+        FFTinput1[i][REAL] = dataPack->A2[i+numberOfFFTs*FFTSize];
+        FFTinput2[i][IMAG] = 0;
+    }
+    for (int i = 0; i < (FFTSize-reminderOfFFT); i++)
+    {
+        FFTinput1[i][REAL] = 0;
+        FFTinput2[i][IMAG] = 0;
+    }
+    fftw_execute(plan);
+    returnVector.push_back(FFToutput[fftbin]);
+    return returnVector;
+}
+
 int main(int argc, char** argv)
 {
-    fftTest();
-
-    /*
     //Setup FFT
-    FFTinput1 = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * FFTSize);
-	FFToutput1 = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * FFTSize);
-	FFTinput2 = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * FFTSize);
-	FFToutput2 = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * FFTSize);
-
-    plan1 = fftw_plan_dft_1d(FFTSize, FFTinput1, FFToutput1, FFTW_FORWARD, FFTW_ESTIMATE);
-	plan2 = fftw_plan_dft_1d(FFTSize, FFTinput2, FFToutput2, FFTW_FORWARD, FFTW_ESTIMATE);
-
+    FFTinput = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * FFTSize);
+	FFToutput = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * FFTSize);
+    plan = fftw_plan_dft_1d(FFTSize, FFTinput1, FFToutput1, FFTW_FORWARD, FFTW_ESTIMATE);
 
 	int functionTimeout = 1;
+
     // Setup OSDK.
     LinuxSetup linuxEnvironment(argc, argv);
     Vehicle*   vehicle = linuxEnvironment.getVehicle();
@@ -78,7 +106,7 @@ int main(int argc, char** argv)
     // Obtain Control Authority
     vehicle->obtainCtrlAuthority(functionTimeout);
 	monitoredTakeoff(vehicle);
-    */
+    
     /*
     From doc:
         HORIZONTAL_VELOCITY - Set the control-mode to control horizontal vehicle velocities.
@@ -87,7 +115,7 @@ int main(int argc, char** argv)
         YAW_ANGLE - Set the control-mode to control yaw angle.
         STABLE_ENABLE - Enable the stable mode 
     */
-   /*
+   /
     uint8_t ctrl_flag_costum = (Control::HORIZONTAL_VELOCITY | Control::VERTICAL_POSITION  | Control::YAW_ANGLE | Control::HORIZONTAL_BODY | Control::STABLE_ENABLE );
 	
     //setup the H-field simulation
@@ -106,22 +134,23 @@ int main(int argc, char** argv)
     currentVel = vehicle->broadcast->getVelocity();
     V3D posNow(currentBroadcastGP.longitude,currentBroadcastGP.latitude,0);
     V3D velNow(currentVel.x,currentVel.y,0);
-    */
+    
     /*
     auto stampClockSample = std::chrono::high_resolution_clock::now();
     auto stampClockControl = std::chrono::high_resolution_clock::now();
     auto timeNow = std::chrono::high_resolution_clock::now();
     */
-   /*
+   
     int counter = 0;
     int ct = 0;
     dataPack recivedSignal;
     double yaw = 0;
-    */
+    vector<double> fftA1;
+    vector<double> fftA2;
+    
     /*
       Starting main loop
     */
-   /*
     while(true){
         Control::CtrlData custumData(ctrl_flag_costum, 1 , 0, 2, yaw);
         vehicle->control->flightCtrl(custumData);
@@ -148,9 +177,16 @@ int main(int argc, char** argv)
         if(ct >=30){
             ct = 0;
         }
+
+        fftA1 = doTheFFT(recivedSignal.A1);
+        fftA2 = doTheFFT(recivedSignal.A2);
+        cout <<"A1: " << fftA1[0] << "A2" << fftA2[0];
     }
-    */
+    
 }
+
+
+
 
 
  /*
