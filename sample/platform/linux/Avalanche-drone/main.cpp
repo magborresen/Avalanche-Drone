@@ -80,7 +80,7 @@ void doTheFFT(double signalToFFT[], double retReal[], double retImag[]){
 
 double getFFTMagnitudeMean(double realVal[], double imagVal[]){
     double sum = 0;
-    for (int i = 0; i < count; i++)
+    for (int i = 0; i < 5; i++)
     {
         sum += std::sqrt(std::pow(realVal[i],2) + std::pow(imagVal[i],2))
     }
