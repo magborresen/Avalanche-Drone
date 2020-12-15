@@ -55,7 +55,7 @@ int tick = 0;
 void moveToFFT(double signalToMove[], int offset_N){
     for (int i = 0; i < FFTSize; i++)
     {
-        FFTinput2[i][REAL] = signalToMove->A2[i+offset_N*FFTSize];
+        FFTinput2[i][REAL] = signalToMove[i+offset_N*FFTSize];
         FFTinput2[i][IMAG] = 0;
     }
 }
@@ -72,13 +72,13 @@ std::vector<double> doTheFFT(double signalToFFT[]){
     }
     for (int i = 0; i < reminderOfFFT; i++)
     {
-        FFTinput1[i][REAL] = dataPack->A2[i+numberOfFFTs*FFTSize];
-        FFTinput2[i][IMAG] = 0;
+        FFTinput[i][REAL] = signalToFFT[i+numberOfFFTs*FFTSize];
+        FFTinput[i][IMAG] = 0;
     }
     for (int i = 0; i < (FFTSize-reminderOfFFT); i++)
     {
-        FFTinput1[i][REAL] = 0;
-        FFTinput2[i][IMAG] = 0;
+        FFTinput[i][REAL] = 0;
+        FFTinput[i][IMAG] = 0;
     }
     fftw_execute(plan);
     returnVector.push_back(FFToutput[fftbin]);
