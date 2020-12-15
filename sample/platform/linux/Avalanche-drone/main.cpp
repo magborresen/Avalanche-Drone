@@ -207,6 +207,7 @@ int main(int argc, char** argv)
     double fftA2Imag[5];
 
     double goalYaw = 0;
+    int tick = 0;
     /*
       Starting main loop
     */
@@ -250,7 +251,6 @@ int main(int argc, char** argv)
         Telemetry::Quaternion quat;
         quat = vehicle->broadcast->getQuaternion();
 
-        int tick = 0;
         if(A1meanMag > 0 || A2meanMag > 0){
             tick++;
         }
