@@ -220,7 +220,7 @@ int main(int argc, char** argv)
         double A2meanMag = getFFTMagnitudeMean(fftA2Real,fftA2Imag);
         double A1meanAngle = getFFTAngleMean(fftA1Real, fftA1Imag);
         double A2meanAngle = getFFTAngleMean(fftA2Real, fftA2Imag);
-
+        double errorAngle
         cout << "A1: " << A1meanMag << "A2: " << A2meanMag << "\n";
 
         int tick = 0;
@@ -232,7 +232,7 @@ int main(int argc, char** argv)
         }
 
         if(tick > 3){
-            double errorAngle = calculateErrorAngle(A1meanMag,A2meanMag,A1meanAngle,A2meanAngle);
+            errorAngle = calculateErrorAngle(A1meanMag,A2meanMag,A1meanAngle,A2meanAngle);
             tick = 0;
         }
         //Quaternion show der ikke er nogle der forstår tyv stjålet fra DJI
