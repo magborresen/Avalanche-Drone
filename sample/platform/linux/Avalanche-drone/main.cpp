@@ -12,6 +12,7 @@
 #include "SignalSearch.hpp"
 #include "V3D.hpp"
 #include "FlightController.hpp"
+#include "fft_test.hpp"
 
 // DJI OSDK includes
 #include "dji_status.hpp"
