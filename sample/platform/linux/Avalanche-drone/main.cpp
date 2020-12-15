@@ -267,9 +267,11 @@ int main(int argc, char** argv)
             tick = 0;
             //set new goalyaw
             goalYaw = yawInDegrees+errorAngle;
+            /*
             if(goalYaw < 0){
                 goalYaw = 360+goalYaw;
             }
+            */
 
             std::cout << "Goal yaw: " << goalYaw << "\n";
         }
