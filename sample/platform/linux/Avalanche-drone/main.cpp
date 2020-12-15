@@ -52,7 +52,7 @@ int tick = 0;
 
 int main(int argc, char** argv)
 {
-    fftTest()
+    fftTest();
 
     /*
     //Setup FFT
@@ -111,7 +111,8 @@ int main(int argc, char** argv)
     auto stampClockSample = std::chrono::high_resolution_clock::now();
     auto stampClockControl = std::chrono::high_resolution_clock::now();
     auto timeNow = std::chrono::high_resolution_clock::now();
-    *//*
+    */
+   /*
     int counter = 0;
     int ct = 0;
     dataPack recivedSignal;
