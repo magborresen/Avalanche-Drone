@@ -24,7 +24,7 @@ dataPack Simulation::sample(int flag){
     calculateAntennaSignalStrenght();
     dataPack returnPack;
     //checks if 10ms has passed since last time
-    if(flag = 1){
+    if(flag == 1){
         //calculate samples
         for (int i = 0; i < 60000; i++)
         {
