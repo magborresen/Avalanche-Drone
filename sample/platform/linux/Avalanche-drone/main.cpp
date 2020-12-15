@@ -68,7 +68,11 @@ std::vector<fftw_complex> doTheFFT(double signalToFFT[]){
     {
         moveToFFT(signalToFFT, i);
         fftw_execute(plan);
-        returnVector.push_back(FFToutput[fftbin][]);
+
+        fftw_complex var;
+        var[0] = FFToutput[fftbin][REAL];
+        var[1] = FFToutput[fftbin][IMAG];
+        returnVector.push_back(var);
     }
     for (int i = 0; i < reminderOfFFT; i++)
     {
@@ -81,7 +85,10 @@ std::vector<fftw_complex> doTheFFT(double signalToFFT[]){
         FFTinput[i][IMAG] = 0;
     }
     fftw_execute(plan);
-    returnVector.push_back(FFToutput[fftbin]);
+    fftw_complex var;
+    var[0] = FFToutput[fftbin][REAL];
+    var[1] = FFToutput[fftbin][IMAG];
+    returnVector.push_back(var);
     return returnVector;
 }
 
