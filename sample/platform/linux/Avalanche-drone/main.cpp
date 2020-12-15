@@ -34,7 +34,7 @@ using namespace DJI::OSDK::Telemetry;
 #define FFTSize 4096
 #define REAL 0
 #define IMAG 1
-
+#define DEG2RAD 0.01745329252
 
 uint16_t ADC_store1[samples_per_period];
 uint16_t ADC_store2[samples_per_period];
@@ -78,6 +78,9 @@ void doTheFFT(double signalToFFT[], double retReal[], double retImag[]){
     return;
 }
 
+/*
+    Calculate the Magnitude from the fft take the average of 5 times fft samples
+*/
 double getFFTMagnitudeMean(double realVal[], double imagVal[]){
     double sum = 0;
     for (int i = 0; i < 5; i++)
@@ -86,6 +89,34 @@ double getFFTMagnitudeMean(double realVal[], double imagVal[]){
     }
     return sum/5;
 }
+
+/*
+    Calculate the phase from the fft take the average of 5 times fft samples
+*/
+double getFFTAngleMean(double realVal[], double imagVal[]){
+    double sum = 0;
+    for (int i = 0; i < 5; i++)
+    {
+        sum += std::atan2(imagVal[i] , realVal[i]);
+    }
+    return sum/5;
+}
+
+
+/*
+    Calculate the error angle from magnitude from the two sinals and there angle
+    The output is in degrees and not radians
+*/
+double calculateErrorAngle(double Mag1, double Mag2, double ang1, double ang2){
+    double H = sqrt(pow(Mag1,2)+pow(Mag2,2)); // calculating the length of the H-field
+	double alpha = acos(Mag1/H)*180.0/PI; // the angle we want to find alpha = acos( A / |H| ) from A = cos(alhpa)* |H|
+	if(ang1 - ang2 ==0)
+    {
+        alpha = alpha*-1;
+    }
+	return alpha;
+}
+
 
 int main(int argc, char** argv)
 {
@@ -150,11 +181,13 @@ int main(int argc, char** argv)
     double fftA1Imag[5];
     double fftA2Real[5];
     double fftA2Imag[5];
+
+    double goalYaw = 0;
     /*
       Starting main loop
     */
     while(true){
-        Control::CtrlData custumData(ctrl_flag_costum, 1 , 0, 2, yaw);
+        Control::CtrlData custumData(ctrl_flag_costum, 1 , 0, 2, goalYaw);
         vehicle->control->flightCtrl(custumData);
         usleep(1000*20);
 
@@ -182,9 +215,32 @@ int main(int argc, char** argv)
 
         doTheFFT(recivedSignal.A1, fftA1Real , fftA1Imag);
         doTheFFT(recivedSignal.A2, fftA2Real , fftA2Imag);
+
         double A1meanMag = getFFTMagnitudeMean(fftA1Real,fftA1Imag);
         double A2meanMag = getFFTMagnitudeMean(fftA2Real,fftA2Imag);
+        double A1meanAngle = getFFTAngleMean(fftA1Real, fftA1Imag);
+        double A2meanAngle = getFFTAngleMean(fftA2Real, fftA2Imag);
+
         cout << "A1: " << A1meanMag << "A2: " << A2meanMag << "\n";
+
+        int tick = 0;
+        if(A1meanMag > 0 || A2meanMag > 0){
+            tick++;
+        }
+        else{
+            tick = 0;
+        }
+
+        if(tick > 3){
+            double errorAngle = calculateErrorAngle(A1meanMag,A2meanMag,A1meanAngle,A2meanAngle);
+            tick = 0;
+        }
+        //Quaternion show der ikke er nogle der forstår tyv stjålet fra DJI
+        Telemetry::Quaternion quat;
+        quat = vehicle->broadcast->getQuaternion();
+        yawInRad = toEulerAngle((static_cast<void*>(&quat))).z / DEG2RAD;
+        goalYaw = yawInRad+errorAngle;
+
     }
     
 }
