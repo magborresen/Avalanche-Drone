@@ -78,6 +78,15 @@ void doTheFFT(double signalToFFT[], double retReal[], double retImag[]){
     return;
 }
 
+double getFFTMagnitudeMean(double realVal[], double imagVal[]){
+    double sum = 0;
+    for (int i = 0; i < count; i++)
+    {
+        sum += std::sqrt(std::pow(realVal[i],2) + std::pow(imagVal[i],2))
+    }
+    return sum/5;
+}
+
 int main(int argc, char** argv)
 {
     //Setup FFT
@@ -173,7 +182,9 @@ int main(int argc, char** argv)
 
         doTheFFT(recivedSignal.A1, fftA1Real , fftA1Imag);
         doTheFFT(recivedSignal.A2, fftA2Real , fftA2Imag);
-        cout <<"A1: " << fftA1Real[0] << "A2" << fftA2Real[0];
+        double A1meanMag = getFFTMagnitudeMean(fftA1Real,fftA1Imag);
+        double A2meanMag = getFFTMagnitudeMean(fftA2Real,fftA2Imag);
+        cout << "A1: " << A1meanMag << "A2: " << A2meanMag << "\n";
     }
     
 }

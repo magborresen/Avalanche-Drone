@@ -6,6 +6,8 @@
 #include <time.h>
 #include <chrono>
 
+#define amplifierGain 50000 //50000 times gain from analog circuit
+
 struct dataPack
 {
     double A1[60000] = {0};
