@@ -8,8 +8,8 @@
 
 struct dataPack
 {
-    double A1[30000] = {0};
-    double A2[30000] = {0};
+    double A1[60000] = {0};
+    double A2[60000] = {0};
 };
 
 class Simulation
@@ -17,8 +17,8 @@ class Simulation
 private:
     HField hField;
     V3D currentPos;
-    double zeroArray[30000] = {0};
-    double signal[30000];
+    double zeroArray[60000] = {0};
+    double signal[60000];
     //std::chrono::steady_clock::time_point sampleClock;
     int tick;
     double sampleRate = 3000000; //set the sampleRate to 3MHz

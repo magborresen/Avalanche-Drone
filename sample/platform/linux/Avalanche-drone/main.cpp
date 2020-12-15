@@ -39,18 +39,31 @@ fftw_complex *FFToutput1;
 fftw_complex *FFTinput1;
 fftw_complex *FFToutput2;
 fftw_complex *FFTinput2;
-
 fftw_plan plan1;
 fftw_plan plan2;
 
-Simulation avaTransSim;
+#define FFTSize 4096
 
+Simulation avaTransSim;
 
 int tick = 0;
 
 
 int main(int argc, char** argv)
 {
+    fftTest()
+
+    /*
+    //Setup FFT
+    FFTinput1 = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * FFTSize);
+	FFToutput1 = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * FFTSize);
+	FFTinput2 = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * FFTSize);
+	FFToutput2 = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * FFTSize);
+
+    plan1 = fftw_plan_dft_1d(FFTSize, FFTinput1, FFToutput1, FFTW_FORWARD, FFTW_ESTIMATE);
+	plan2 = fftw_plan_dft_1d(FFTSize, FFTinput2, FFToutput2, FFTW_FORWARD, FFTW_ESTIMATE);
+
+
 	int functionTimeout = 1;
     // Setup OSDK.
     LinuxSetup linuxEnvironment(argc, argv);
@@ -64,8 +77,7 @@ int main(int argc, char** argv)
     // Obtain Control Authority
     vehicle->obtainCtrlAuthority(functionTimeout);
 	monitoredTakeoff(vehicle);
-
-
+    */
     /*
     From doc:
         HORIZONTAL_VELOCITY - Set the control-mode to control horizontal vehicle velocities.
@@ -74,14 +86,13 @@ int main(int argc, char** argv)
         YAW_ANGLE - Set the control-mode to control yaw angle.
         STABLE_ENABLE - Enable the stable mode 
     */
+   /*
     uint8_t ctrl_flag_costum = (Control::HORIZONTAL_VELOCITY | Control::VERTICAL_POSITION  | Control::YAW_ANGLE | Control::HORIZONTAL_BODY | Control::STABLE_ENABLE );
 	
     //setup the H-field simulation
     Telemetry::GlobalPosition currentBroadcastGP;
     currentBroadcastGP = vehicle->broadcast->getGlobalPosition();
     avaTransSim.setupSimulation(currentBroadcastGP.longitude,currentBroadcastGP.latitude,30,30);
-
-    
 
     Control::CtrlData custumData(ctrl_flag_costum, 1 , 0, 2, 20);
 
@@ -94,20 +105,24 @@ int main(int argc, char** argv)
     currentVel = vehicle->broadcast->getVelocity();
     V3D posNow(currentBroadcastGP.longitude,currentBroadcastGP.latitude,0);
     V3D velNow(currentVel.x,currentVel.y,0);
-
+    */
     /*
     auto stampClockSample = std::chrono::high_resolution_clock::now();
     auto stampClockControl = std::chrono::high_resolution_clock::now();
     auto timeNow = std::chrono::high_resolution_clock::now();
-    */
+    *//*
     int counter = 0;
     int ct = 0;
     dataPack recivedSignal;
     double yaw = 0;
+    */
+    /*
+      Starting main loop
+    */
+   /*
     while(true){
         Control::CtrlData custumData(ctrl_flag_costum, 1 , 0, 2, yaw);
         vehicle->control->flightCtrl(custumData);
-
         usleep(1000*20);
 
         currentBroadcastGP = vehicle->broadcast->getGlobalPosition();
@@ -116,13 +131,13 @@ int main(int argc, char** argv)
         posNow.y = currentBroadcastGP.latitude;
         velNow.x = currentVel.x;
         velNow.y = currentVel.y;
-        std::cout << "vel X: " <<  velNow.x << " Y: " << velNow.y << "\n";
+        //std::cout << "vel X: " <<  velNow.x << " Y: " << velNow.y << "\n";
+
         avaTransSim.setPosition(posNow);
         avaTransSim.calculateErrorAngleAndSize(velNow);
 
         if(ct < 5){
             recivedSignal = avaTransSim.sample(1);
-            yaw +=2;
         }
         else{
             recivedSignal = avaTransSim.sample(0);
@@ -131,62 +146,13 @@ int main(int argc, char** argv)
         if(ct >=30){
             ct = 0;
         }
-
-        if(counter == 10){
-            for (int i = 0; i < 5; i++)
-            {
-                std::cout << "A1:" << recivedSignal.A1[i] << "  A2: " << recivedSignal.A2[i] << "\n";
-            }
-            counter = 0;
-        }
-        else {
-            counter++;
-        }
-        
-
-
-        /*
-        timeNow = std::chrono::high_resolution_clock::now();    
-        auto timediff = timeNow-sampleClock;
-        auto timediffMS = std::chrono::duration_cast<std::chrono::milliseconds>(timediff).count();
-        if(timediffMS >= 10){
-            avaTransSim.setPosition(posNow);
-            avaTransSim.calculateErrorAngleAndSize(velNow);
-            recivedSignal = avaTransSim.sample(counter);
-            sampleClock = std::chrono::high_resolution_clock::now();
-            counter++;
-            for (int i = 0; i < 10; i++)
-            {
-                std::cout << "A1:" << recivedSignal.A1[i] << "  A2: " << recivedSignal.A2[i] << "\n";
-            }
-        }
-        */
     }
-
+    */
 }
 
 
-/*
-    while(true){
-        Control::CtrlData custumData(ctrl_flag_costum, 1 , 0, 2, 20);
-        vehicle->control->flightCtrl(custumData);
-        currentBroadcastGP = vehicle->broadcast->getGlobalPosition();
-        std::cout << "X: " << currentBroadcastGP.latitude << " Y: " << currentBroadcastGP.longitude << "\n";
-        usleep(20 * 1000);
-    }
-
-*/
-
-
-
-/*
-	FFTinput1 = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * N);
-	FFToutput1 = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * N);
-	FFTinput2 = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * N);
-	FFToutput2 = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * N);
-	plan1 = fftw_plan_dft_1d(N, FFTinput1, FFToutput1, FFTW_FORWARD, FFTW_ESTIMATE);
-	plan2 = fftw_plan_dft_1d(N, FFTinput2, FFToutput2, FFTW_FORWARD, FFTW_ESTIMATE);
-
+	
+	
 	// ADC setup
 	startADCSPI();
 	while(true){
@@ -197,7 +163,7 @@ int main(int argc, char** argv)
 	file.open("TestData.txt", std::fstream::out | std::fstream::trunc);
 	file.close();
 	return 0;
-*/
+
 
  /*
   for(int j = 0; j < 20 ; j++){
@@ -229,37 +195,3 @@ int main(int argc, char** argv)
   
   } 
   */
-
-/* OLD STUFF
-  // Setup variables for use
-  uint8_t wayptPolygonSides;
-  int     hotptInitRadius;
-  int     responseTimeout = 1;
-
-  // Display interactive prompt
-  std::cout
-    << "| Available commands:                                            |"
-    << std::endl;
-  std::cout
-    << "| [a] Waypoint Mission                                           |"
-    << std::endl;
-  std::cout
-    << "| [b] Hotpoint Mission                                           |"
-    << std::endl;
-  char inputChar;
-  std::cin >> inputChar;
-  switch (inputChar)
-  {
-    case 'a':
-      // Waypoint call
-      wayptPolygonSides = 6;
-      runWaypointMission(vehicle, wayptPolygonSides, responseTimeout);
-      break;
-    case 'b':
-      hotptInitRadius = 10;
-      runHotpointMission(vehicle, hotptInitRadius, responseTimeout);
-      break;
-    default:
-      break;
-  }
-*/

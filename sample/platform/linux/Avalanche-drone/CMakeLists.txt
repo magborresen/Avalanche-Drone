@@ -31,6 +31,7 @@ add_executable(${PROJECT_NAME}
     V3D.cpp
     Simulation.cpp
     FlightController.cpp
+    fft_test.cpp
     )
 
 find_library(WIRINGPI_LIBRARIES NAMES wiringPi)

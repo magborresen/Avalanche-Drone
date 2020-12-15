@@ -48,7 +48,7 @@ HField::~HField()
     dl is the current element vector which will make up the coil
 */
 void HField::calculate_R_vector(double y , double z){
-    std::cout << "R_vector \n";
+    //std::cout << "R_vector \n";
     for (int i = 0; i < (HFIELD_HPP_N-1); i++)
     {
         Rx[i] = -0.5 * (Xc[i] + Xc[i+1]);

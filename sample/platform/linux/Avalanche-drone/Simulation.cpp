@@ -26,7 +26,7 @@ dataPack Simulation::sample(int flag){
     //checks if 10ms has passed since last time
     if(flag = 1){
         //calculate samples
-        for (int i = 0; i < 30000; i++)
+        for (int i = 0; i < 60000; i++)
         {
             returnPack.A1[i] = std::sin(sampleRate*signalFrequency*2*PI*i)*antenna_main_Scale;
             //Make the second antenna sinus lag if the H field is 2 the right of the antenna.
