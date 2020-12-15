@@ -23,6 +23,8 @@ using namespace std;
 #define TOT_G 108500
 #define V_N_RMS 0.000052747
 #define M_PI 3.14159265359
+
+
 void acquire_from_somewhere(fftw_complex* signal) {
 	/* Generate two sine waves of different
 	frequencies and amplitudes. Also generate noise */

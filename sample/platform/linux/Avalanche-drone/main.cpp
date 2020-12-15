@@ -153,20 +153,6 @@ int main(int argc, char** argv)
 }
 
 
-	
-	
-	// ADC setup
-	startADCSPI();
-	while(true){
-		vector<uint16_t> sampledData = readADC(samples_per_period);
-	}
-
-	std::fstream file;
-	file.open("TestData.txt", std::fstream::out | std::fstream::trunc);
-	file.close();
-	return 0;
-
-
  /*
   for(int j = 0; j < 20 ; j++){
       //read L number of datapoints from ADC
