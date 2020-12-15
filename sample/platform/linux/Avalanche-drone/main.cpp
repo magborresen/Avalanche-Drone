@@ -97,7 +97,7 @@ int main(int argc, char** argv)
     //Setup FFT
     FFTinput = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * FFTSize);
 	FFToutput = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * FFTSize);
-    plan = fftw_plan_dft_1d(FFTSize, FFTinput1, FFToutput1, FFTW_FORWARD, FFTW_ESTIMATE);
+    plan = fftw_plan_dft_1d(FFTSize, FFTinput, FFToutput, FFTW_FORWARD, FFTW_ESTIMATE);
 
 	int functionTimeout = 1;
 
@@ -122,7 +122,6 @@ int main(int argc, char** argv)
         YAW_ANGLE - Set the control-mode to control yaw angle.
         STABLE_ENABLE - Enable the stable mode 
     */
-   /
     uint8_t ctrl_flag_costum = (Control::HORIZONTAL_VELOCITY | Control::VERTICAL_POSITION  | Control::YAW_ANGLE | Control::HORIZONTAL_BODY | Control::STABLE_ENABLE );
 	
     //setup the H-field simulation
