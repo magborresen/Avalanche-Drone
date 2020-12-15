@@ -177,17 +177,15 @@ int main(int argc, char** argv)
     //setup the H-field simulation
     Telemetry::GlobalPosition currentBroadcastGP;
     currentBroadcastGP = vehicle->broadcast->getGlobalPosition();
-    avaTransSim.setupSimulation(currentBroadcastGP.longitude,currentBroadcastGP.latitude, 30, 30);
+
+    avaTransSim.setupSimulation(currentBroadcastGP.longitude,currentBroadcastGP.latitude, 45, 45);
 
     Control::CtrlData custumData(ctrl_flag_costum, 0.1 , 0, 2, 0);
 
     //vehicle->control->flightCtrl(custumData);
     usleep(1000*20);
     currentBroadcastGP = vehicle->broadcast->getGlobalPosition();
-    std::cout << "X: " << currentBroadcastGP.latitude << " Y: " << currentBroadcastGP.longitude << "\n";
-
-    Telemetry::Vector3f currentVel;
-    currentVel = vehicle->broadcast->getVelocity();
+    Telemetry::Vector3f currentVel = vehicle->broadcast->getVelocity();
     V3D posNow(currentBroadcastGP.longitude,currentBroadcastGP.latitude,0);
     V3D velNow(currentVel.x,currentVel.y,0);
     
@@ -196,7 +194,9 @@ int main(int argc, char** argv)
     auto stampClockControl = std::chrono::high_resolution_clock::now();
     auto timeNow = std::chrono::high_resolution_clock::now();
     */
-   
+    fstream files;
+    files.open("testData", std::fstream::out | std::fstream::trunc);
+    files << "x,y,vx,vy,hx,hy,yaw,goalyaw\n";
     int counter = 0;
     int ct = 0;
     dataPack recivedSignal;
@@ -239,6 +239,8 @@ int main(int argc, char** argv)
             ct = 0;
         }
 
+
+
         doTheFFT(recivedSignal.A1, fftA1Real , fftA1Imag);
         doTheFFT(recivedSignal.A2, fftA2Real , fftA2Imag);
 
@@ -248,9 +250,10 @@ int main(int argc, char** argv)
         double A2meanAngle = getFFTAngleMean(fftA2Real, fftA2Imag);
         
 
-        //Quaternion show der ikke er nogle der forstår tyv stjålet fra DJI
+        //Quaternion show der ikke er nogle der forstår - tyv stjålet fra DJI
         Telemetry::Quaternion quat;
         quat = vehicle->broadcast->getQuaternion();
+        double yawInDegrees = toEulerAngle((static_cast<void*>(&quat))).z;
 
         if(A1meanMag > 0 || A2meanMag > 0){
             tick++;
@@ -262,7 +265,6 @@ int main(int argc, char** argv)
         if(tick > 3){
             double errorAngle = calculateErrorAngle(A1meanMag,A2meanMag,A1meanAngle,A2meanAngle);
             tick = 0;
-            double yawInRad = toEulerAngle((static_cast<void*>(&quat))).z / DEG2RAD;
             //set new goalyaw
             goalYaw = yawInRad+errorAngle;
             if(goalYaw < 0){
@@ -271,6 +273,12 @@ int main(int argc, char** argv)
 
             std::cout << "Goal yaw: " << goalYaw << "\n";
         }
+
+
+        V3D hfieldNow = avaTransSim.getCurrentHVector();
+        files << "x,y,vx,vy,hx,hy,yaw,goalyaw\n";
+        files << posNow.x << "," << posNow.y << "," velNow.x << "," << velNow.y 
+                << "," << hfieldNow.x << "," << hfieldNow.y  << "," << yawInDegrees << "," << goalYaw <<"\n";
     }
     
 }

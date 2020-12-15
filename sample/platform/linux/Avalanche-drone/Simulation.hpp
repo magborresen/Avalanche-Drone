@@ -36,7 +36,8 @@ public:
     void setupSimulation(double startLong, double startLat, double offsetLong, double offsetLat);
     void setPosition(V3D position);
     void printCurrentHVector();
-    
+    V3D getCurrentHVector();
+
     dataPack sample(int flag);
 
     //Constructors

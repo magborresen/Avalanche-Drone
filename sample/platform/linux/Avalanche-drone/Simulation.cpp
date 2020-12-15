@@ -44,6 +44,10 @@ dataPack Simulation::sample(int flag){
     }
 }
 
+V3D Simulation::getCurrentHVector(){
+    return curretnHVector;
+}
+
 
 void Simulation::printCurrentHVector(){
     curretnHVector.print();
