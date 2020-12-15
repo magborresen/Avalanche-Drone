@@ -60,8 +60,11 @@ void moveToFFT(double signalToMove[], int offset_N){
     }
 }
 
-std::vector<fftw_complex> doTheFFT(double signalToFFT[]){
-    std::vector<fftw_complex> returnVector;
+/*
+    retReal return real values
+    retImag return Imag values
+*/
+void doTheFFT(double signalToFFT[], double retReal[], double retImag[]){
     int numberOfFFTs = samples_per_period/FFTSize;
     int reminderOfFFT = samples_per_period % FFTSize;
     for (int i = 0; i < numberOfFFTs; i++)
@@ -69,27 +72,10 @@ std::vector<fftw_complex> doTheFFT(double signalToFFT[]){
         moveToFFT(signalToFFT, i);
         fftw_execute(plan);
 
-        fftw_complex var;
-        var[0] = FFToutput[fftbin][REAL];
-        var[1] = FFToutput[fftbin][IMAG];
-        returnVector.push_back(var);
+        retReal[i] = FFToutput[fftbin][REAL];
+        retImag[i] = FFToutput[fftbin][IMAG];
     }
-    for (int i = 0; i < reminderOfFFT; i++)
-    {
-        FFTinput[i][REAL] = signalToFFT[i+numberOfFFTs*FFTSize];
-        FFTinput[i][IMAG] = 0;
-    }
-    for (int i = 0; i < (FFTSize-reminderOfFFT); i++)
-    {
-        FFTinput[i][REAL] = 0;
-        FFTinput[i][IMAG] = 0;
-    }
-    fftw_execute(plan);
-    fftw_complex var;
-    var[0] = FFToutput[fftbin][REAL];
-    var[1] = FFToutput[fftbin][IMAG];
-    returnVector.push_back(var);
-    return returnVector;
+    return;
 }
 
 int main(int argc, char** argv)
@@ -151,9 +137,10 @@ int main(int argc, char** argv)
     int ct = 0;
     dataPack recivedSignal;
     double yaw = 0;
-    vector<fftw_complex> fftA1;
-    vector<fftw_complex> fftA2;
-    
+    double fftA1Real[5];
+    double fftA1Imag[5];
+    double fftA2Real[5];
+    double fftA2Imag[5];
     /*
       Starting main loop
     */
@@ -184,9 +171,9 @@ int main(int argc, char** argv)
             ct = 0;
         }
 
-        fftA1 = doTheFFT(&recivedSignal.A1);
-        fftA2 = doTheFFT(&recivedSignal.A2);
-        cout <<"A1: " << fftA1[0] << "A2" << fftA2[0];
+        doTheFFT(recivedSignal.A1, fftA1Real , fftA1Imag);
+        doTheFFT(recivedSignal.A2, fftA2Real , fftA2Imag);
+        cout <<"A1: " << fftA1Real[0] << "A2" << fftA2Real[0];
     }
     
 }
