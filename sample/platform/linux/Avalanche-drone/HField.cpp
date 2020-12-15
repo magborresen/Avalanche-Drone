@@ -135,7 +135,7 @@ V3D HField::getHFieldVector(double posLong, double posLat){
         returnVector.y = returnVector.y + zB[i];
         returnVector.z = returnVector.x + xB[i];
     }
-    returnVector.print();
+    //returnVector.print();
 
     return returnVector;
 }

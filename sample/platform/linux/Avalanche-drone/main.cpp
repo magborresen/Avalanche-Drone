@@ -101,6 +101,7 @@ int main(int argc, char** argv)
     auto timeNow = std::chrono::high_resolution_clock::now();
     */
     int counter = 0;
+    int ct = 0;
     dataPack recivedSignal;
 
     while(true){
@@ -118,6 +119,18 @@ int main(int argc, char** argv)
         std::cout << "vel X: " <<  velNow.x << " Y: " << velNow.y << "\n";
         avaTransSim.setPosition(posNow);
         avaTransSim.calculateErrorAngleAndSize(velNow);
+        
+        if(ct < 5){
+            recivedSignal = avaTransSim.sample(1);
+        }
+        else{
+            recivedSignal = avaTransSim.sample(0);
+        }
+        ct++;
+        if(ct >=30){
+            ct = 0;
+        }
+
         if(counter == 10){
             for (int i = 0; i < 5; i++)
             {
