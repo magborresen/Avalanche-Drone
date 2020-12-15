@@ -103,9 +103,9 @@ int main(int argc, char** argv)
     int counter = 0;
     int ct = 0;
     dataPack recivedSignal;
-
+    double yaw = 0;
     while(true){
-        Control::CtrlData custumData(ctrl_flag_costum, 1 , 0, 2, 20);
+        Control::CtrlData custumData(ctrl_flag_costum, 1 , 0, 2, yaw);
         vehicle->control->flightCtrl(custumData);
 
         usleep(1000*20);
@@ -119,9 +119,10 @@ int main(int argc, char** argv)
         std::cout << "vel X: " <<  velNow.x << " Y: " << velNow.y << "\n";
         avaTransSim.setPosition(posNow);
         avaTransSim.calculateErrorAngleAndSize(velNow);
-        
+
         if(ct < 5){
             recivedSignal = avaTransSim.sample(1);
+            yaw +=2
         }
         else{
             recivedSignal = avaTransSim.sample(0);
