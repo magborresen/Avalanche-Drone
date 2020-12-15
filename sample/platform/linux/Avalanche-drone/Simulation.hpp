@@ -19,6 +19,7 @@ class Simulation
 private:
     HField hField;
     V3D currentPos;
+    V3D curretnHVector;
     double zeroArray[60000] = {0};
     double signal[60000];
     //std::chrono::steady_clock::time_point sampleClock;
@@ -34,6 +35,8 @@ public:
     void calculateErrorAngleAndSize(V3D droneVelocityVector);
     void setupSimulation(double startLong, double startLat, double offsetLong, double offsetLat);
     void setPosition(V3D position);
+    void printCurrentHVector();
+    
     dataPack sample(int flag);
 
     //Constructors

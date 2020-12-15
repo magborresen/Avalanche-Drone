@@ -45,11 +45,13 @@ dataPack Simulation::sample(int flag){
 }
 
 
-
+void Simulation::printCurrentHVector(){
+    curretnHVector.print();
+}
 
 void Simulation::calculateErrorAngleAndSize(V3D droneVelocityVector){
     V3D hvector = hField.getHFieldVector(currentPos.x , currentPos.y);
-
+    curretnHVector = hvector;
     //Calculate lenght of droneVelocityVector vector and Hvector
     double lVV = std::sqrt(std::pow(droneVelocityVector.x,2) + std::pow(droneVelocityVector.y,2));
     double lHV = std::sqrt(std::pow(hvector.x,2) + std::pow(hvector.y,2));

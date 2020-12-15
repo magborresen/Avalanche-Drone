@@ -229,6 +229,7 @@ int main(int argc, char** argv)
 
         if(ct < 5){
             recivedSignal = avaTransSim.sample(1);
+            avaTransSim.printCurrentHVector();
         }
         else{
             recivedSignal = avaTransSim.sample(0);
@@ -265,7 +266,7 @@ int main(int argc, char** argv)
             //set new goalyaw
             goalYaw = yawInRad+errorAngle;
             if(goalYaw < 0){
-                goalYaw = 360-goalYaw;
+                goalYaw = 360+goalYaw;
             }
 
             std::cout << "Goal yaw: " << goalYaw << "\n";
