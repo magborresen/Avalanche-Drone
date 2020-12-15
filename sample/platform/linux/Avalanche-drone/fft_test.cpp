@@ -9,7 +9,7 @@
 #include <time.h>
 #include <cstdlib>
 #include <vector>
-#include <fftw3>
+#include <fftw3.h>
 
 
 using namespace std;
