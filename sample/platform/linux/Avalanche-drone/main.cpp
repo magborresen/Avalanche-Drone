@@ -220,8 +220,11 @@ int main(int argc, char** argv)
         double A2meanMag = getFFTMagnitudeMean(fftA2Real,fftA2Imag);
         double A1meanAngle = getFFTAngleMean(fftA1Real, fftA1Imag);
         double A2meanAngle = getFFTAngleMean(fftA2Real, fftA2Imag);
-        double errorAngle
-        cout << "A1: " << A1meanMag << "A2: " << A2meanMag << "\n";
+        
+
+        //Quaternion show der ikke er nogle der forstår tyv stjålet fra DJI
+        Telemetry::Quaternion quat;
+        quat = vehicle->broadcast->getQuaternion();
 
         int tick = 0;
         if(A1meanMag > 0 || A2meanMag > 0){
@@ -232,15 +235,13 @@ int main(int argc, char** argv)
         }
 
         if(tick > 3){
-            errorAngle = calculateErrorAngle(A1meanMag,A2meanMag,A1meanAngle,A2meanAngle);
+            double errorAngle = calculateErrorAngle(A1meanMag,A2meanMag,A1meanAngle,A2meanAngle);
             tick = 0;
+            double yawInRad = toEulerAngle((static_cast<void*>(&quat))).z / DEG2RAD;
+            //set new goalyaw
+            goalYaw = yawInRad+errorAngle;
+            std::cout << "Goal yaw: " << goalYaw << "\n";
         }
-        //Quaternion show der ikke er nogle der forstår tyv stjålet fra DJI
-        Telemetry::Quaternion quat;
-        quat = vehicle->broadcast->getQuaternion();
-        yawInRad = toEulerAngle((static_cast<void*>(&quat))).z / DEG2RAD;
-        goalYaw = yawInRad+errorAngle;
-
     }
     
 }
