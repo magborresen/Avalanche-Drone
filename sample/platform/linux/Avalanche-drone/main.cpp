@@ -122,7 +122,7 @@ int main(int argc, char** argv)
 
         if(ct < 5){
             recivedSignal = avaTransSim.sample(1);
-            yaw +=2
+            yaw +=2;
         }
         else{
             recivedSignal = avaTransSim.sample(0);
