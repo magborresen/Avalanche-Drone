@@ -261,7 +261,7 @@ int main(int argc, char** argv)
         if(tick > 3){
             double errorAngle = calculateErrorAngle(A1meanMag,A2meanMag,A1meanAngle,A2meanAngle);
             tick = 0;
-            double yawInRad = Telemetry::Vector3f::toEulerAngle((static_cast<void*>(&quat))).z / DEG2RAD;
+            double yawInRad = toEulerAngle((static_cast<void*>(&quat))).z / DEG2RAD;
             //set new goalyaw
             goalYaw = yawInRad+errorAngle;
             std::cout << "Goal yaw: " << goalYaw << "\n";
