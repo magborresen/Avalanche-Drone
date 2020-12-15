@@ -239,8 +239,6 @@ int main(int argc, char** argv)
             ct = 0;
         }
 
-
-
         doTheFFT(recivedSignal.A1, fftA1Real , fftA1Imag);
         doTheFFT(recivedSignal.A2, fftA2Real , fftA2Imag);
 
@@ -248,13 +246,12 @@ int main(int argc, char** argv)
         double A2meanMag = getFFTMagnitudeMean(fftA2Real,fftA2Imag);
         double A1meanAngle = getFFTAngleMean(fftA1Real, fftA1Imag);
         double A2meanAngle = getFFTAngleMean(fftA2Real, fftA2Imag);
-        
-
+    
         //Quaternion show der ikke er nogle der forstår - tyv stjålet fra DJI
         Telemetry::Quaternion quat;
         quat = vehicle->broadcast->getQuaternion();
         double yawInDegrees = toEulerAngle((static_cast<void*>(&quat))).z;
-
+        std::cout <<"A1 Mag: " <<  A1meanMag << "  A2 Mag: " << A2meanMag << "\n";
         if(A1meanMag > 0 || A2meanMag > 0){
             tick++;
         }
