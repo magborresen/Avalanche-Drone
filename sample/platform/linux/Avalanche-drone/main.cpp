@@ -178,7 +178,7 @@ int main(int argc, char** argv)
     Telemetry::GlobalPosition currentBroadcastGP;
     currentBroadcastGP = vehicle->broadcast->getGlobalPosition();
 
-    avaTransSim.setupSimulation(currentBroadcastGP.longitude,currentBroadcastGP.latitude, 45, 45);
+    avaTransSim.setupSimulation(currentBroadcastGP.longitude,currentBroadcastGP.latitude, 40, -20);
 
     Control::CtrlData custumData(ctrl_flag_costum, 0.1 , 0, 2, 0);
 
@@ -195,8 +195,8 @@ int main(int argc, char** argv)
     auto timeNow = std::chrono::high_resolution_clock::now();
     */
     fstream files;
-    files.open("testData", std::fstream::out | std::fstream::trunc);
-    files << "x,y,vx,vy,hx,hy,yaw,goalyaw\n";
+    files.open("testData.csv", std::fstream::out | std::fstream::trunc);
+    //files << "x,y,vx,vy,hx,hy,yaw,goalyaw\n";
     int counter = 0;
     int ct = 0;
     dataPack recivedSignal;
@@ -212,7 +212,7 @@ int main(int argc, char** argv)
       Starting main loop
     */
     while(true){
-        Control::CtrlData custumData(ctrl_flag_costum, 0.5 , 0, 2, goalYaw);
+        Control::CtrlData custumData(ctrl_flag_costum, 1 , 0, 2, goalYaw);
         vehicle->control->flightCtrl(custumData);
         usleep(1000*20);
 
@@ -276,7 +276,7 @@ int main(int argc, char** argv)
 
 
         V3D hfieldNow = avaTransSim.getCurrentHVector();
-        files << "x,y,vx,vy,hx,hy,yaw,goalyaw\n";
+        //files << "x,y,vx,vy,hx,hy,yaw,goalyaw\n";
         files << posNow.x << "," << posNow.y << "," << velNow.x << "," << velNow.y 
                 << "," << hfieldNow.x << "," << hfieldNow.y  << "," << yawInDegrees << "," << goalYaw <<"\n";
     }
