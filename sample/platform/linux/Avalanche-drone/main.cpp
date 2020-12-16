@@ -221,7 +221,7 @@ int main(int argc, char** argv)
 
         currentBroadcastGP = vehicle->broadcast->getGlobalPosition();
         currentVel = vehicle->broadcast->getVelocity();
-        posNow.x = currentBroadcastGP.;
+        posNow.x = currentBroadcastGP.latitude;
         posNow.y = currentBroadcastGP.longitude;
         velNow.x = currentVel.x;
         velNow.y = currentVel.y;
@@ -279,7 +279,7 @@ int main(int argc, char** argv)
 
         V3D hfieldNow = avaTransSim.getCurrentHVector();
         //files << "x,y,vx,vy,hx,hy,yaw,goalyaw\n";
-        files << std::setprecision(12) << currentBroadcastGP.longitude << "," << currentBroadcastGP.latitude << "," << velNow.x << "," << velNow.y 
+        files << std::setprecision(12) << currentBroadcastGP.latitude << "," << currentBroadcastGP.longitude << "," << velNow.x << "," << velNow.y 
                 << "," << hfieldNow.x << "," << hfieldNow.y  << "," << yawInDegrees << "," << goalYaw << "," << errorAngle << "\n";
     }
     
