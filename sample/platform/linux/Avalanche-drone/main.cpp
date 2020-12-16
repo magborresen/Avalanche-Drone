@@ -210,7 +210,7 @@ int main(int argc, char** argv)
 
     double goalYaw = 0;
     int tick = 0;
-    double errorAngle = 0;
+    double eAngle = 0;
     /*
       Starting main loop
     */
@@ -263,10 +263,10 @@ int main(int argc, char** argv)
         }
         
         if(tick > 3){
-            errorAngle = calculateErrorAngle(A1meanMag,A2meanMag,A1meanAngle,A2meanAngle);
+            eAngle = calculateErrorAngle(A1meanMag,A2meanMag,A1meanAngle,A2meanAngle);
             tick = 0;
             //set new goalyaw
-            goalYaw = yawInDegrees-errorAngle;
+            goalYaw = yawInDegrees-eAngle;
             /*
             if(goalYaw < 0){
                 goalYaw = 360+goalYaw;
@@ -280,7 +280,7 @@ int main(int argc, char** argv)
         V3D hfieldNow = avaTransSim.getCurrentHVector();
         //files << "x,y,vx,vy,hx,hy,yaw,goalyaw\n";
         files << std::setprecision(12) << currentBroadcastGP.latitude << "," << currentBroadcastGP.longitude << "," << velNow.x << "," << velNow.y 
-                << "," << hfieldNow.x << "," << hfieldNow.y  << "," << yawInDegrees << "," << goalYaw << "," << errorAngle << "\n";
+                << "," << hfieldNow.x << "," << hfieldNow.y  << "," << yawInDegrees << "," << goalYaw << "," << eAngle << "\n";
     }
     
 }

@@ -85,7 +85,7 @@ void Simulation::calculateAntennaSignalStrenght(){
     antenna_main_Scale = HFieldSize * std::cos(errorAngle);
 
     //calculate scale factor from A2 = |H|*cos(90-alpha)
-    antenna_second_Scale = HFieldSize * std::cos(90-errorAngle); 
+    antenna_second_Scale = HFieldSize * std::sin(errorAngle); 
 }
 
 /*
