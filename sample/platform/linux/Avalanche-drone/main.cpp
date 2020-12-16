@@ -254,7 +254,7 @@ int main(int argc, char** argv)
         Telemetry::Quaternion quat;
         quat = vehicle->broadcast->getQuaternion();
         double yawInDegrees = toEulerAngle((static_cast<void*>(&quat))).z*57.2958;
-        std::cout <<"A1 Mag: " <<  A1meanMag << "  A2 Mag: " << A2meanMag << "\n";
+        //std::cout <<"A1 Mag: " <<  A1meanMag << "  A2 Mag: " << A2meanMag << "\n";
         if(A1meanMag > 0 || A2meanMag > 0){
             tick++;
         }
@@ -276,13 +276,12 @@ int main(int argc, char** argv)
             std::cout << "Goal yaw: " << goalYaw << "\n";
         }
 
-
         V3D hfieldNow = avaTransSim.getCurrentHVector();
         //files << "x,y,vx,vy,hx,hy,yaw,goalyaw\n";
         files << std::setprecision(12) << currentBroadcastGP.latitude << "," << currentBroadcastGP.longitude << "," << velNow.x << "," << velNow.y 
-                << "," << hfieldNow.x << "," << hfieldNow.y  << "," << yawInDegrees << "," << goalYaw << "," << eAngle << "\n";
+                << "," << hfieldNow.x << "," << hfieldNow.y  << "," << yawInDegrees << "," << goalYaw 
+                << "," << eAngle << A1meanMag << "," << A2meanMag << "," << A1meanAngle<< "," << A2meanAngle <<"\n";
     }
-    
 }
 
 
