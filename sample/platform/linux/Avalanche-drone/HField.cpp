@@ -198,16 +198,19 @@ void HField::setStartPos(double x, double y){
 V3D HField::calculate_Relative_Pos(V3D pos){
     V3D bV;
     //calculate b vector and convert vector from long,lat to meter
+    std:cout << "start: ";
+    startPos.print();
     bV.x = (pos.x-startPos.x)/latConvertionFactor;
     bV.y = (pos.y-startPos.y)/longConvertionFactor;
     bV.z = (pos.z-startPos.z);
+    std:cout << "b: ";
     bV.print();
 
     V3D cV;
     cV.x = (avalanchePos.x + bV.x);
     cV.y = (avalanchePos.y + bV.y);
     cV.z = 0;
-    //std::cout << "cV:  ";
+    std::cout << "cV:  ";
     cV.print();
     return cV;
 }

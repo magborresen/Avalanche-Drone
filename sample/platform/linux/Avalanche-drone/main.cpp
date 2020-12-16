@@ -191,11 +191,6 @@ int main(int argc, char** argv)
     V3D posNow(currentBroadcastGP.latitude,currentBroadcastGP.longitude,0);
     V3D velNow(currentVel.x,currentVel.y,0);
     
-    /*
-    auto stampClockSample = std::chrono::high_resolution_clock::now();
-    auto stampClockControl = std::chrono::high_resolution_clock::now();
-    auto timeNow = std::chrono::high_resolution_clock::now();
-    */
     fstream files;
     files.open("testData.csv", std::fstream::out | std::fstream::trunc);
     //files << "x,y,vx,vy,hx,hy,yaw,goalyaw\n";
