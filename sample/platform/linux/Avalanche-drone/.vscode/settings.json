@@ -55,7 +55,10 @@
         "xtree": "cpp",
         "compare": "cpp",
         "concepts": "cpp",
-        "cctype": "cpp"
+        "cctype": "cpp",
+        "iomanip": "cpp",
+        "xlocmon": "cpp",
+        "xloctime": "cpp"
     },
     "cmake.configureOnOpen": true
 }

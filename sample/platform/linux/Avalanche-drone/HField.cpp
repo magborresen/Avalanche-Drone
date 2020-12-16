@@ -200,7 +200,8 @@ V3D HField::calculate_Relative_Pos(V3D pos){
     //calculate b vector and convert vector from long,lat to meter
     std::cout << "start: ";
     startPos.print();
-    pos.print()
+    std::cout << "Pos: ";
+    pos.print();
     bV.x = (pos.x-startPos.x)/latConvertionFactor;
     bV.y = (pos.y-startPos.y)/longConvertionFactor;
     bV.z = (pos.z-startPos.z);
