@@ -177,9 +177,10 @@ int main(int argc, char** argv)
     //setup the H-field simulation
     Telemetry::GlobalPosition currentBroadcastGP;
     currentBroadcastGP = vehicle->broadcast->getGlobalPosition();
-
     avaTransSim.setupSimulation(currentBroadcastGP.longitude,currentBroadcastGP.latitude, 40, -20);
 
+    calcLatConvertionFactor(currentBroadcastGP.latitude);
+    
     Control::CtrlData custumData(ctrl_flag_costum, 0.1 , 0, 2, 0);
 
     //vehicle->control->flightCtrl(custumData);
@@ -258,9 +259,9 @@ int main(int argc, char** argv)
         else{
             tick = 0;
         }
-
+        double errorAngle;
         if(tick > 3){
-            double errorAngle = calculateErrorAngle(A1meanMag,A2meanMag,A1meanAngle,A2meanAngle);
+            errorAngle = calculateErrorAngle(A1meanMag,A2meanMag,A1meanAngle,A2meanAngle);
             tick = 0;
             //set new goalyaw
             goalYaw = yawInDegrees+errorAngle;
@@ -276,8 +277,8 @@ int main(int argc, char** argv)
 
         V3D hfieldNow = avaTransSim.getCurrentHVector();
         //files << "x,y,vx,vy,hx,hy,yaw,goalyaw\n";
-        files << posNow.x << "," << posNow.y << "," << velNow.x << "," << velNow.y 
-                << "," << hfieldNow.x << "," << hfieldNow.y  << "," << yawInDegrees << "," << goalYaw <<"\n";
+        files << posNow.x/latConvertionFactor << "," << posNow.y/longConvertionFactor << "," << velNow.x << "," << velNow.y 
+                << "," << hfieldNow.x << "," << hfieldNow.y  << "," << yawInDegrees << "," << goalYaw << "," << errorAngle << "\n";
     }
     
 }
