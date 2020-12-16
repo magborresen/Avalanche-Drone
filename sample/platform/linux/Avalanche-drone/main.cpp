@@ -145,6 +145,9 @@ double calculateErrorAngle(double Mag1, double Mag2, double ang1, double ang2){
 
 int main(int argc, char** argv)
 {
+    std::cout << "STARTING MOVE YOUR ASSSSSS!!!!!!!\n";
+    sleep(30);
+
     //Setup FFT
     FFTinput = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * FFTSize);
 	FFToutput = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * FFTSize);
