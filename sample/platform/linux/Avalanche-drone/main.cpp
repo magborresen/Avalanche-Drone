@@ -178,7 +178,7 @@ int main(int argc, char** argv)
     //setup the H-field simulation
     Telemetry::GlobalPosition currentBroadcastGP;
     currentBroadcastGP = vehicle->broadcast->getGlobalPosition();
-    avaTransSim.setupSimulation(currentBroadcastGP.latitude,currentBroadcastGP.longitude, 40, -20);
+    avaTransSim.setupSimulation(currentBroadcastGP.latitude,currentBroadcastGP.longitude, -30, 40);
 
     calcLatConvertionFactor(currentBroadcastGP.latitude);
     
@@ -275,7 +275,7 @@ int main(int argc, char** argv)
         //files << "x,y,vx,vy,hx,hy,yaw,goalyaw\n";
         files << std::setprecision(12) << currentBroadcastGP.latitude << "," << currentBroadcastGP.longitude << "," << velNow.x << "," << velNow.y 
                 << "," << hfieldNow.x << "," << hfieldNow.y  << "," << yawInDegrees << "," << goalYaw 
-                << "," << eAngle << A1meanMag << "," << A2meanMag << "," << A1meanAngle<< "," << A2meanAngle <<"\n";
+                << "," << eAngle << "," << A1meanMag << "," << A2meanMag << "," << A1meanAngle<< "," << A2meanAngle <<"\n";
     }
 }
 
