@@ -262,7 +262,7 @@ int main(int argc, char** argv)
         }
         
         if(tick > 3){
-            errorAngle = calculateErrorAngle(A1meanMag,A2meanMag,A1meanAngle,A2meanAngle);
+            errorAngle = calculateErrorAngle(A2meanMag,A1meanMag,A2meanAngle,A1meanAngle);
             tick = 0;
             //set new goalyaw
             goalYaw = yawInDegrees+errorAngle;
@@ -278,7 +278,7 @@ int main(int argc, char** argv)
 
         V3D hfieldNow = avaTransSim.getCurrentHVector();
         //files << "x,y,vx,vy,hx,hy,yaw,goalyaw\n";
-        files << posNow.x << "," << posNow.y << "," << velNow.x << "," << velNow.y 
+        files << currentBroadcastGP.longitude << "," << currentBroadcastGP.latitude << "," << velNow.x << "," << velNow.y 
                 << "," << hfieldNow.x << "," << hfieldNow.y  << "," << yawInDegrees << "," << goalYaw << "," << errorAngle << "\n";
     }
     
