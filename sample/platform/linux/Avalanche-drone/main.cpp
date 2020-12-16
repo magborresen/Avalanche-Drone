@@ -252,7 +252,7 @@ int main(int argc, char** argv)
         //Quaternion show der ikke er nogle der forstår - tyv stjålet fra DJI
         Telemetry::Quaternion quat;
         quat = vehicle->broadcast->getQuaternion();
-        double yawInDegrees = toEulerAngle((static_cast<void*>(&quat))).z*57,2958;
+        double yawInDegrees = toEulerAngle((static_cast<void*>(&quat))).z*57.2958;
         std::cout <<"A1 Mag: " <<  A1meanMag << "  A2 Mag: " << A2meanMag << "\n";
         if(A1meanMag > 0 || A2meanMag > 0){
             tick++;
