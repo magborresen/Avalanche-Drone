@@ -10,7 +10,7 @@
     @offsetLong offset longitude in Meters
     @offsetLat offset latitude in Meters
 */
-void Simulation::setupSimulation(double startLong, double startLat,  double offsetLat,double offsetLong){
+void Simulation::setupSimulation(double startLat, double startLong,  double offsetLat,double offsetLong){
     hField.setStartPos(startLat,startLong);
 	hField.setAvalanchePosFromOffset(offsetLat,offsetLong);
     tick = 0;
@@ -56,7 +56,7 @@ void Simulation::printCurrentHVector(){
 void Simulation::calculateErrorAngleAndSize(V3D droneVelocityVector){
     V3D hvector = hField.getHFieldVector(currentPos.x , currentPos.y);
     curretnHVector = hvector;
-    
+
     //Calculate lenght of droneVelocityVector vector and Hvector
     double lVV = std::sqrt(std::pow(droneVelocityVector.x,2) + std::pow(droneVelocityVector.y,2));
     double lHV = std::sqrt(std::pow(hvector.x,2) + std::pow(hvector.y,2));
