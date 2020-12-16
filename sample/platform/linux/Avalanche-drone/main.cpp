@@ -6,6 +6,7 @@
 #include <vector>
 #include <iostream>
 #include <fstream>
+#include <iomaip>
 #include <chrono>
 #include <cmath>
 #include "HField.hpp"
@@ -278,7 +279,7 @@ int main(int argc, char** argv)
 
         V3D hfieldNow = avaTransSim.getCurrentHVector();
         //files << "x,y,vx,vy,hx,hy,yaw,goalyaw\n";
-        files << currentBroadcastGP.longitude << "," << currentBroadcastGP.latitude << "," << velNow.x << "," << velNow.y 
+        files << std::setprecision(12) << currentBroadcastGP.longitude << "," << currentBroadcastGP.latitude << "," << velNow.x << "," << velNow.y 
                 << "," << hfieldNow.x << "," << hfieldNow.y  << "," << yawInDegrees << "," << goalYaw << "," << errorAngle << "\n";
     }
     
