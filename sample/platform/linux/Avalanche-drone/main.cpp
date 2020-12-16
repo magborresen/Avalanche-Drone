@@ -177,7 +177,7 @@ int main(int argc, char** argv)
     //setup the H-field simulation
     Telemetry::GlobalPosition currentBroadcastGP;
     currentBroadcastGP = vehicle->broadcast->getGlobalPosition();
-    avaTransSim.setupSimulation(currentBroadcastGP.longitude,currentBroadcastGP.latitude, 40, -20);
+    avaTransSim.setupSimulation(currentBroadcastGP.latitude,currentBroadcastGP.longitude,, 40, -20);
 
     calcLatConvertionFactor(currentBroadcastGP.latitude);
     
@@ -187,7 +187,7 @@ int main(int argc, char** argv)
     usleep(1000*20);
     currentBroadcastGP = vehicle->broadcast->getGlobalPosition();
     Telemetry::Vector3f currentVel = vehicle->broadcast->getVelocity();
-    V3D posNow(currentBroadcastGP.longitude,currentBroadcastGP.latitude,0);
+    V3D posNow(currentBroadcastGP.latitude,currentBroadcastGP.longitude,0);
     V3D velNow(currentVel.x,currentVel.y,0);
     
     /*
@@ -220,8 +220,8 @@ int main(int argc, char** argv)
 
         currentBroadcastGP = vehicle->broadcast->getGlobalPosition();
         currentVel = vehicle->broadcast->getVelocity();
-        posNow.x = currentBroadcastGP.longitude;
-        posNow.y = currentBroadcastGP.latitude;
+        posNow.x = currentBroadcastGP.;
+        posNow.y = currentBroadcastGP.longitude;
         velNow.x = currentVel.x;
         velNow.y = currentVel.y;
         //std::cout << "vel X: " <<  velNow.x << " Y: " << velNow.y << "\n";
@@ -262,7 +262,7 @@ int main(int argc, char** argv)
         }
         
         if(tick > 3){
-            errorAngle = calculateErrorAngle(A2meanMag,A1meanMag,A2meanAngle,A1meanAngle);
+            errorAngle = calculateErrorAngle(A1meanMag,A2meanMag,A1meanAngle,A2meanAngle);
             tick = 0;
             //set new goalyaw
             goalYaw = yawInDegrees+errorAngle;

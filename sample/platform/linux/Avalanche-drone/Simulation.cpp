@@ -10,9 +10,9 @@
     @offsetLong offset longitude in Meters
     @offsetLat offset latitude in Meters
 */
-void Simulation::setupSimulation(double startLong, double startLat, double offsetLong, double offsetLat){
-    hField.setStartPos(startLong , startLat);
-	hField.setAvalanchePosFromOffset(offsetLong , offsetLat);
+void Simulation::setupSimulation(double startLong, double startLat,  double offsetLat,double offsetLong){
+    hField.setStartPos(startLat,startLong);
+	hField.setAvalanchePosFromOffset(offsetLat,offsetLong);
     tick = 0;
 }
 
