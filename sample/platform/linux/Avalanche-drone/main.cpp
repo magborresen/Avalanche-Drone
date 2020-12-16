@@ -266,7 +266,7 @@ int main(int argc, char** argv)
             errorAngle = calculateErrorAngle(A1meanMag,A2meanMag,A1meanAngle,A2meanAngle);
             tick = 0;
             //set new goalyaw
-            goalYaw = yawInDegrees+errorAngle;
+            goalYaw = yawInDegrees-errorAngle;
             /*
             if(goalYaw < 0){
                 goalYaw = 360+goalYaw;
