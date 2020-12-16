@@ -21,6 +21,8 @@
 extern float64_t latConvertionFactor;
 extern float64_t longConvertionFactor; //deafult longitude, doesn't depend on position
 
+void calcLatConvertionFactor(float64_t lat);
+
 bool runSignalSearchMission(Vehicle* vehicle, uint8_t maxNumWaypoint, int responseTimeout);
 
 void setWaypointDefaults(WayPointSettings* wp);
