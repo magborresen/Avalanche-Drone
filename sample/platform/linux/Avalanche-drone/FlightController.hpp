@@ -12,5 +12,5 @@
 #include <dji_linux_helpers.hpp>
 
 bool monitoredTakeoff(Vehicle* vehicle, int timeout = 1);
-
+bool monitoredLanding(Vehicle* vehicle, int timeout = 1);
 #endif

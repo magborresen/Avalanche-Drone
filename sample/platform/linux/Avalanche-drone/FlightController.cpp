@@ -59,3 +59,61 @@ bool monitoredTakeoff(Vehicle* vehicle, int timeout){
     // Cleanup
   return true;
 }
+
+bool monitoredLanding(Vehicle* vehicle, int timeout)
+{
+  //@todo: remove this once the getErrorCode function signature changes
+  char func[50];
+  int  pkgIndex;
+
+  // Start landing
+  ACK::ErrorCode landingStatus = vehicle->control->land(timeout);
+  if (ACK::getError(landingStatus) != ACK::SUCCESS)
+  {
+    ACK::getErrorCodeMessage(landingStatus, func);
+    return false;
+  }
+
+  // First check: Landing started
+  int landingNotStarted = 0;
+  int timeoutCycles     = 20;
+
+  while (vehicle->broadcast->getStatus().flight != DJI::OSDK::VehicleStatus::M100FlightStatus::LANDING && landingNotStarted < timeoutCycles)
+  {
+    landingNotStarted++;
+    usleep(100000);
+  }
+
+
+  if (landingNotStarted == timeoutCycles){
+    std::cout << "Landing failed. Aircraft is still in the air." << std::endl;
+    return false;
+  }
+  else{
+    std::cout << "Landing...\n";
+  }
+
+  // Second check: Finished landing
+  while (vehicle->broadcast->getStatus().flight == DJI::OSDK::VehicleStatus::M100FlightStatus::FINISHING_LANDING){
+    sleep(1);
+  }
+
+  Telemetry::GlobalPosition gp;
+
+  do{
+    sleep(2);
+    gp = vehicle->broadcast->getGlobalPosition();
+  } while (gp.altitude != 0);
+
+  if (gp.altitude != 0){
+    std::cout
+      << "Landing finished, but the aircraft is in an unexpected mode. "
+          "Please connect DJI GO.\n";
+    return false;
+  }
+  else{
+    std::cout << "Successful landing!\n";
+  }
+
+  return true;
+}
