@@ -178,7 +178,7 @@ int main(int argc, char** argv)
     //setup the H-field simulation
     Telemetry::GlobalPosition currentBroadcastGP;
     currentBroadcastGP = vehicle->broadcast->getGlobalPosition();
-    avaTransSim.setupSimulation(currentBroadcastGP.latitude,currentBroadcastGP.longitude,, 40, -20);
+    avaTransSim.setupSimulation(currentBroadcastGP.latitude,currentBroadcastGP.longitude, 40, -20);
 
     calcLatConvertionFactor(currentBroadcastGP.latitude);
     
