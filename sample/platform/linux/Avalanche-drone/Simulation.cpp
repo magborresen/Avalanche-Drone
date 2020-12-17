@@ -2,6 +2,7 @@
 #include "HField.hpp"
 #include <chrono>
 #include <thread>
+#include <random>
 
 /*
     Method for setting up the simulation give
@@ -14,6 +15,7 @@ void Simulation::setupSimulation(double startLat, double startLong,  double offs
     hField.setStartPos(startLat,startLong);
 	hField.setAvalanchePosFromOffset(offsetLat,offsetLong);
     tick = 0;
+    srand(time(NULL)); //setup random generator for noise
 }
 
 void Simulation::setPosition(V3D position){
@@ -70,6 +72,13 @@ void Simulation::calculateErrorAngleAndSize(V3D droneVelocityVector){
     else{
         errorAngle = -std::acos(dotProduct/(lVV*lHV));
     }
+
+    //try to add random noise to errorangle
+    unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+    double maxNumber = errorAngle * 0.05;
+    std::default_random_engine generator(seed);
+    std::uniform_real_distribution<double> distribution(0.0,maxNumber);
+    errorAngle = errorAngle+distribution(generator);
 
     //calculate field size as sqrt(x^2 + y^2)
     HFieldSize = std::sqrt(std::pow(hvector.x,2) + std::pow(hvector.y,2));
