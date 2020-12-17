@@ -11,15 +11,6 @@ double IIRFilter::filter(double input){
     }
     //return the final value,
     return y;
-
-    /*
-    OLD VERSION also clealy shows what the for loop is doing.
-    double y1 = section(0, input);
-    double y2 = section(1, y1);
-    double y3 = section(2, y2);
-    double y4 = section(3, y3);
-    double y5 = section(4, y4);
-    */
 }
 
 double IIRFilter::section(int sec, double in){

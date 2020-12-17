@@ -145,8 +145,8 @@ double calculateErrorAngle(double Mag1, double Mag2, double ang1, double ang2){
 
 int main(int argc, char** argv)
 {
-    std::cout << "STARTING MOVE YOUR ASSSSSS!!!!!!!\n";
-    sleep(30);
+    //std::cout << "STARTING MOVE YOUR ASSSSSS!!!!!!!\n";
+    //sleep(30);
 
     //Setup FFT
     FFTinput = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * FFTSize);
@@ -181,7 +181,7 @@ int main(int argc, char** argv)
     //setup the H-field simulation
     Telemetry::GlobalPosition currentBroadcastGP;
     currentBroadcastGP = vehicle->broadcast->getGlobalPosition();
-    avaTransSim.setupSimulation(currentBroadcastGP.latitude,currentBroadcastGP.longitude, 20, 20);
+    avaTransSim.setupSimulation(currentBroadcastGP.latitude,currentBroadcastGP.longitude, 40, 40);
 
     calcLatConvertionFactor(currentBroadcastGP.latitude);
     
@@ -209,6 +209,7 @@ int main(int argc, char** argv)
     double goalYaw = 0;
     int tick = 0;
     double eAngle = 0;
+
     /*
       Starting main loop
     */
