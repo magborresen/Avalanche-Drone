@@ -214,7 +214,7 @@ int main(int argc, char** argv)
       Starting main loop
     */
     while(true){
-        Control::CtrlData custumData(ctrl_flag_costum, 1 , 0, 2, goalYaw);
+        uint8_t ctrl_flag_costum = (Control::HORIZONTAL_VELOCITY | Control::VERTICAL_POSITION  | Control::YAW_ANGLE | Control::HORIZONTAL_BODY | Control::STABLE_ENABLE );
         vehicle->control->flightCtrl(custumData);
         usleep(1000*20);
 

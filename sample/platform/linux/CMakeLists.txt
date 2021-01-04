@@ -37,7 +37,7 @@ if(NOT FLIGHT_MODULES_HEADER_DIR)
 endif()
 
 #add_subdirectory(camera-gimbal)
-#add_subdirectory(flight-control)
+add_subdirectory(flight-control)
 #add_subdirectory(mfio)
 #add_subdirectory(missions)
 #add_subdirectory(mobile)

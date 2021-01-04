@@ -40,7 +40,10 @@ using namespace DJI::OSDK::Telemetry;
 int main(int argc, char** argv) {
   // Initialize variables
   int functionTimeout = 1;
-
+  
+  uint8_t ctrl_flag_custom = (Control::HORIZONTAL_VELOCITY | Control::VERTICAL_POSITION  | Control::YAW_ANGLE | Control::HORIZONTAL_BODY | Control::STABLE_ENABLE );
+  
+  Control::velocityAndYawRateCtrl(17, 1, 1, 150);
   // Setup OSDK.
   LinuxSetup linuxEnvironment(argc, argv);
   Vehicle* vehicle = linuxEnvironment.getVehicle();
@@ -76,9 +79,9 @@ int main(int argc, char** argv) {
       break;
     case 'b':
       monitoredTakeoff(vehicle);
-      moveByPositionOffset(vehicle, 0, 6, 6, 30);
-      moveByPositionOffset(vehicle, 6, 0, -3, -30);
-      moveByPositionOffset(vehicle, -6, -6, 0, 0);
+	  Control::CtrlData stepResponse(ctrl_flag_custom, 0, 0, 3, 0);
+      Control::CtrlData stepResponse(ctrl_flag_custom, 1, 0, 3, 10);
+	  vehicle->control->flightCtrl(stepResponse);
       monitoredLanding(vehicle);
       break;
 
