@@ -57,10 +57,9 @@ int main(int argc, char** argv) {
 
   vehicle->control->velocityAndYawRateCtrl(17, 1, 1, 150);
   monitoredTakeoff(vehicle);
-  usleep(1000*1000);
   Control::CtrlData goUp(ctrl_flag_custom, 0, 0, 3, 0);
   vehicle->control->flightCtrl(goUp);
-  usleep(1000*1000);
+  usleep(10000);
   Control::CtrlData stepResponse(ctrl_flag_custom, 1, 0, 3, 10);
   vehicle->control->flightCtrl(stepResponse);
   monitoredLanding(vehicle);
