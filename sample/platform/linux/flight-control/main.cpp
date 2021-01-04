@@ -43,7 +43,7 @@ int main(int argc, char** argv) {
   
   uint8_t ctrl_flag_custom = (Control::HORIZONTAL_VELOCITY | Control::VERTICAL_POSITION  | Control::YAW_ANGLE | Control::HORIZONTAL_BODY | Control::STABLE_ENABLE );
   
-  vehicle->control->velocityAndYawRateCtrl(17, 1, 1, 150);
+  
   // Setup OSDK.
   LinuxSetup linuxEnvironment(argc, argv);
   Vehicle* vehicle = linuxEnvironment.getVehicle();
@@ -55,6 +55,7 @@ int main(int argc, char** argv) {
   // Obtain Control Authority
   vehicle->obtainCtrlAuthority(functionTimeout);
 
+  vehicle->control->velocityAndYawRateCtrl(17, 1, 1, 150);
   monitoredTakeoff(vehicle);
   Control::CtrlData goUp(ctrl_flag_custom, 0, 0, 3, 0);
   vehicle->control->flightCtrl(goUp);
