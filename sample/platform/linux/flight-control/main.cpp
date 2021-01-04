@@ -57,7 +57,7 @@ int main(int argc, char** argv) {
 
   monitoredTakeoff(vehicle);
   Control::CtrlData goUp(ctrl_flag_custom, 0, 0, 3, 0);
-  vehicle->control->flightCtrl(goUp)
+  vehicle->control->flightCtrl(goUp);
   Control::CtrlData stepResponse(ctrl_flag_custom, 1, 0, 3, 10);
   vehicle->control->flightCtrl(stepResponse);
   monitoredLanding(vehicle);
