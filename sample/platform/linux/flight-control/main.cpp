@@ -64,7 +64,7 @@ int main(int argc, char** argv) {
   i++;
   }
   
-  i = 0
+  i = 0;
   while(i < 10000) {
   Control::CtrlData stepResponse(ctrl_flag_custom, 1, 0, 3, 10);
   vehicle->control->flightCtrl(stepResponse);
