@@ -55,73 +55,13 @@ int main(int argc, char** argv) {
   // Obtain Control Authority
   vehicle->obtainCtrlAuthority(functionTimeout);
 
-  // Display interactive prompt
-  std::cout
-      << "| Available commands:                                            |"
-      << std::endl;
-  std::cout
-      << "| [a] Monitored Takeoff + Landing                                |"
-      << std::endl;
-  std::cout
-      << "| [b] Monitored Takeoff + Position Control + Landing             |"
-      << std::endl;
-  std::cout << "| [c] Monitored Takeoff + Position Control + Force Landing "
-               "Avoid Ground  |"
-            << std::endl;
+  monitoredTakeoff(vehicle);
+  Control::CtrlData goUp(ctrl_flag_custom, 0, 0, 3, 0);
+  vehicle->control->flightCtrl(goUp)
+  Control::CtrlData stepResponse(ctrl_flag_custom, 1, 0, 3, 10);
+  vehicle->control->flightCtrl(stepResponse);
+  monitoredLanding(vehicle);
 
-  char inputChar;
-  std::cin >> inputChar;
-
-  switch (inputChar) {
-    case 'a':
-      monitoredTakeoff(vehicle);
-      monitoredLanding(vehicle);
-      break;
-    case 'b':
-      monitoredTakeoff(vehicle);
-	  Control::CtrlData stepResponse(ctrl_flag_custom, 0, 0, 3, 0);
-      Control::CtrlData stepResponse(ctrl_flag_custom, 1, 0, 3, 10);
-	  vehicle->control->flightCtrl(stepResponse);
-      monitoredLanding(vehicle);
-      break;
-
-    /*! @NOTE: case 'c' only support for m210 V2*/
-    case 'c':
-      /*! Turn off rtk switch */
-      ErrorCode::ErrorCodeType ret;
-      ret = vehicle->flightController->setRtkEnableSync(
-          FlightController::RtkEnabled::RTK_DISABLE, 1);
-      if (ret != ErrorCode::SysCommonErr::Success) {
-        DSTATUS("Turn off rtk switch failed, ErrorCode is:%8x", ret);
-      } else {
-        DSTATUS("Turn off rtk switch successfully");
-      }
-
-      /*!  Take off */
-      monitoredTakeoff(vehicle);
-
-      /*! Move to higher altitude */
-      moveByPositionOffset(vehicle, 0, 0, 30, 0);
-
-      /*! Move a short distance*/
-      moveByPositionOffset(vehicle, 10, 0, 0, -30);
-
-      /*! Set aircraft current position as new home location */
-      setNewHomeLocation(vehicle);
-
-      /*! Set new go home altitude */
-      setGoHomeAltitude(vehicle, 50);
-
-      /*! Move to another position */
-      moveByPositionOffset(vehicle, 40, 0, 0, 0);
-
-      /*! go home and  confirm landing */
-      goHomeAndConfirmLanding(vehicle, 1);
-      break;
-
-    default:
-      break;
-  }
 
   return 0;
 }
