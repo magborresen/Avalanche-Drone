@@ -274,7 +274,7 @@ int main(int argc, char** argv)
                 goalYaw = 360+goalYaw;
             }
             */
-            speed = 10 * std::exp(-0.01664*errorAngle);
+            speed = 10 * std::exp(-0.01664*eAngle);
             std::cout << "Goal yaw: " << goalYaw << "\n";
             std::cout << "Speed goal: " << speed << "\n";
         }
