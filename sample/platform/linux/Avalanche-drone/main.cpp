@@ -213,8 +213,9 @@ int main(int argc, char** argv)
     /*
       Starting main loop
     */
+    double speed = 0.5;
     while(true){
-        Control::CtrlData custumData(ctrl_flag_costum, 1 , 0, 2, goalYaw);
+        Control::CtrlData custumData(ctrl_flag_costum, speed , 0, 2, goalYaw);
         vehicle->control->flightCtrl(custumData);
         usleep(1000*20);
 
@@ -271,7 +272,7 @@ int main(int argc, char** argv)
                 goalYaw = 360+goalYaw;
             }
             */
-
+            speed = 10 * std::exp(-0.01664*std::abs(eAngle));
             std::cout << "Goal yaw: " << goalYaw << "\n";
         }
 
@@ -281,7 +282,7 @@ int main(int argc, char** argv)
         //files << "x,y,vx,vy,hx,hy,yaw,goalyaw\n";
         files << std::setprecision(12) << currentBroadcastGP.latitude << "," << currentBroadcastGP.longitude << "," << velNow.x << "," << velNow.y 
                 << "," << hfieldNow.x << "," << hfieldNow.y  << "," << yawInDegrees << "," << goalYaw 
-                << "," << eAngle << "," << A1meanMag << "," << A2meanMag << "," << A1meanAngle<< "," << A2meanAngle <<"\n";
+                << "," << eAngle << "," << A1meanMag << "," << A2meanMag << "," << A1meanAngle<< "," << A2meanAngle << "," << speed <<"\n";
 
         //if signal strenght is large break from loop
         if(A1meanMag > 50){
