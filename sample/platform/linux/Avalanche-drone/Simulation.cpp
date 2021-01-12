@@ -93,6 +93,13 @@ void Simulation::calculateAntennaSignalStrenght(){
     Constructor with startLong, startLat, offsetLong, offsetLat
     Calls the setup simulation from start
 */
+
+
+double Simulation::getErrorAngle(){
+    return errorAngle;
+}
+
+
 Simulation::Simulation(double startLong, double startLat, double offsetLong, double offsetLat){
     setupSimulation(startLong , startLat,offsetLong , offsetLat);
     tick = 0;

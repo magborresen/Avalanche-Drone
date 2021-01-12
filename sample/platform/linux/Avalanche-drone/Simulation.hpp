@@ -36,6 +36,7 @@ public:
     void setupSimulation(double startLong, double startLat, double offsetLong, double offsetLat);
     void setPosition(V3D position);
     void printCurrentHVector();
+    double getErrorAngle();
     V3D getCurrentHVector();
 
     dataPack sample(int flag);

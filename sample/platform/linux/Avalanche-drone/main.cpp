@@ -213,8 +213,11 @@ int main(int argc, char** argv)
     /*
       Starting main loop
     */
+
+    double speed = 0.5;
+
     while(true){
-        Control::CtrlData custumData(ctrl_flag_costum, 1 , 0, 2, goalYaw);
+        Control::CtrlData custumData(ctrl_flag_costum, speed , 0, 2, goalYaw);
         vehicle->control->flightCtrl(custumData);
         usleep(1000*20);
 
@@ -228,7 +231,7 @@ int main(int argc, char** argv)
 
         avaTransSim.setPosition(posNow);
         avaTransSim.calculateErrorAngleAndSize(velNow);
-
+        
         if(ct < 5){
             recivedSignal = avaTransSim.sample(1);
             avaTransSim.printCurrentHVector();
@@ -271,11 +274,10 @@ int main(int argc, char** argv)
                 goalYaw = 360+goalYaw;
             }
             */
-
+            speed = 10 * std::exp(-16.64*10^(-3)*errorAngle);
             std::cout << "Goal yaw: " << goalYaw << "\n";
+            std::cout << "Speed goal: " << speed << "\n";
         }
-
-
 
         V3D hfieldNow = avaTransSim.getCurrentHVector();
         //files << "x,y,vx,vy,hx,hy,yaw,goalyaw\n";
