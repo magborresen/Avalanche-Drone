@@ -283,7 +283,7 @@ int main(int argc, char** argv)
         //files << "x,y,vx,vy,hx,hy,yaw,goalyaw\n";
         files << std::setprecision(12) << currentBroadcastGP.latitude << "," << currentBroadcastGP.longitude << "," << velNow.x << "," << velNow.y 
                 << "," << hfieldNow.x << "," << hfieldNow.y  << "," << yawInDegrees << "," << goalYaw 
-                << "," << eAngle << "," << A1meanMag << "," << A2meanMag << "," << A1meanAngle<< "," << A2meanAngle << "," speed <<"\n";
+                << "," << eAngle << "," << A1meanMag << "," << A2meanMag << "," << A1meanAngle<< "," << A2meanAngle << "," << speed <<"\n";
 
         //if signal strenght is large break from loop
         if(A1meanMag > 50){
