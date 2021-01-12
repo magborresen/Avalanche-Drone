@@ -59,11 +59,11 @@ int main(int argc, char** argv) {
   monitoredTakeoff(vehicle);
   int i = 0;
   usleep(1000);
-  while(i < 1000) {
-  Control::CtrlData goUp(ctrl_flag_custom, 0, 0, 3, 0);
-  vehicle->control->flightCtrl(goUp);
-  i++;
-  }
+  //while(i < 1000) {
+  //Control::CtrlData goUp(ctrl_flag_custom, 0, 0, 3, 0);
+  //vehicle->control->flightCtrl(goUp);
+  //i++;
+  //}
   
   i = 0;
   usleep(1000);
