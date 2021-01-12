@@ -41,7 +41,7 @@ int main(int argc, char** argv) {
   // Initialize variables
   int functionTimeout = 1;
   
-  uint8_t ctrl_flag_custom = (Control::HORIZONTAL_VELOCITY | Control::VERTICAL_POSITION  | Control::YAW_ANGLE | Control::HORIZONTAL_BODY | Control::STABLE_ENABLE );
+  uint8_t ctrl_flag_custom = (Control::HORIZONTAL_POSITION | Control::VERTICAL_POSITION  | Control::YAW_ANGLE | Control::HORIZONTAL_BODY | Control::STABLE_ENABLE );
   
   
   // Setup OSDK.
@@ -58,18 +58,18 @@ int main(int argc, char** argv) {
   vehicle->control->velocityAndYawRateCtrl(17, 1, 1, 150);
   monitoredTakeoff(vehicle);
   int i = 0;
-  while(i < 10000) {
+  //while(i < 10000) {
   Control::CtrlData goUp(ctrl_flag_custom, 0, 0, 3, 0);
   vehicle->control->flightCtrl(goUp);
-  i++;
-  }
+  //i++;
+  //}
   
   i = 0;
-  while(i < 10000) {
+  //while(i < 10000) {
   Control::CtrlData stepResponse(ctrl_flag_custom, 1, 0, 3, 10);
   vehicle->control->flightCtrl(stepResponse);
-  i++;
-  }
+  //i++;
+  //}
   monitoredLanding(vehicle);
 
 
