@@ -76,10 +76,12 @@ void Simulation::calculateErrorAngleAndSize(V3D droneVelocityVector){
 
     //try to add random noise to errorangle
     unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
-    double maxNumber = 25 * PI /180;
+    double maxNumber = 10 * PI /180;
     std::default_random_engine generator(seed);
     std::normal_distribution<double> distribution(-maxNumber,maxNumber);
-    errorAngle = errorAngle+distribution(generator);
+    double error = distribution(generator);
+    std::cout << "error: " << error << "\n";
+    errorAngle = errorAngle+error;
     std::cout << "E" << errorAngle <<"\n";
     //calculate field size as sqrt(x^2 + y^2)
     HFieldSize = std::sqrt(std::pow(hvector.x,2) + std::pow(hvector.y,2));
