@@ -207,13 +207,17 @@ int main(int argc, char** argv)
     double fftA2Imag[5];
 
     double goalYaw = 0;
+    double preGoalYaw = 0;
+    double measureYaw = 0;
     int tick = 0;
     double eAngle = 0;
+    double T = 0.020;
 
     /*
       Starting main loop
     */
     double speed = 0.5;
+    
     while(true){
         Control::CtrlData custumData(ctrl_flag_costum, speed , 0, 2, goalYaw);
         vehicle->control->flightCtrl(custumData);
@@ -266,7 +270,7 @@ int main(int argc, char** argv)
             eAngle = calculateErrorAngle(A1meanMag,A2meanMag,A1meanAngle,A2meanAngle);
             tick = 0;
             //set new goalyaw
-            goalYaw = yawInDegrees-eAngle;
+            measureYaw = yawInDegrees-eAngle;
             /*
             if(goalYaw < 0){
                 goalYaw = 360+goalYaw;
@@ -276,7 +280,7 @@ int main(int argc, char** argv)
             std::cout << "Goal yaw: " << goalYaw << "\n";
         }
 
-
+        goalYaw = measureYaw*T - preGoalYaw*T+preGoalYaw;
 
         V3D hfieldNow = avaTransSim.getCurrentHVector();
         //files << "x,y,vx,vy,hx,hy,yaw,goalyaw\n";
