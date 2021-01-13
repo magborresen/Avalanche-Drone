@@ -78,7 +78,7 @@ void Simulation::calculateErrorAngleAndSize(V3D droneVelocityVector){
     unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
     double maxNumber = 25 * PI /180;
     std::default_random_engine generator(seed);
-    std::uniform_real_distribution<double> distribution(-maxNumber,maxNumber);
+    std::normal_distribution<double> distribution(-maxNumber,maxNumber);
     errorAngle = errorAngle+distribution(generator);
     std::cout << "E" << errorAngle <<"\n";
     //calculate field size as sqrt(x^2 + y^2)
