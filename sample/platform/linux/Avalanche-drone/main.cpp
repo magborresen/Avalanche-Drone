@@ -281,7 +281,7 @@ int main(int argc, char** argv)
         }
 
         goalYaw = measureYaw*T - preGoalYaw*T+preGoalYaw;
-
+        preGoalYaw = goalYaw;
         V3D hfieldNow = avaTransSim.getCurrentHVector();
         //files << "x,y,vx,vy,hx,hy,yaw,goalyaw\n";
         files << std::setprecision(12) << currentBroadcastGP.latitude << "," << currentBroadcastGP.longitude << "," << velNow.x << "," << velNow.y 
