@@ -279,9 +279,9 @@ int main(int argc, char** argv)
             speed = 10 * std::exp(-0.01664*std::abs(eAngle));
             std::cout << "Goal yaw: " << goalYaw << "\n";
         }
-        goalYaw = measureYaw;
-        //goalYaw = measureYaw*T - preGoalYaw*T+preGoalYaw;
-        //preGoalYaw = goalYaw;
+        //goalYaw = measureYaw;
+        goalYaw = 1.803*measureYaw*T - 1.8*preGoalYaw*T+preGoalYaw;
+        preGoalYaw = goalYaw;
         V3D hfieldNow = avaTransSim.getCurrentHVector();
         //files << "x,y,vx,vy,hx,hy,yaw,goalyaw\n";
         files << std::setprecision(12) << currentBroadcastGP.latitude << "," << currentBroadcastGP.longitude << "," << velNow.x << "," << velNow.y 
